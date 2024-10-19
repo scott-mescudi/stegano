@@ -7,6 +7,9 @@ import (
 	"image/jpeg"
 	"os"
 	"path/filepath"
+
+
+	"image/color"
 )
 
 type rgbChannel struct {
@@ -195,19 +198,51 @@ func extractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
 	return byteSlice
 }
 
+func saveImage(embeddedRGBChannels []rgbChannel, filename string, height, width int) error {
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	// Loop through the rgbSlice and set the pixels
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			// Get the index in the slice (assuming rgbSlice has enough elements)
+			i := y*width + x
+			rgb := embeddedRGBChannels[i]
+
+			// Set the pixel at (x, y)
+			img.Set(x, y, color.RGBA{
+				R: uint8(rgb.r),
+				G: uint8(rgb.g),
+				B: uint8(rgb.b),
+				A: 255, // Fully opaque
+			})
+		}
+	}
+
+	// Save the image to a file
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	png.Encode(file, img)
+
+	return nil
+}
+
 func main() {
-	img, err := decodeImage("input.png")
+	imagev, err := decodeImage("input.png")
 	if err!= nil {
         fmt.Println("Error decoding image:", err)
         return
     }
 
-	imgHeight := img.Bounds().Dy()
-	imgWidth := img.Bounds().Dx()
-	fmt.Printf("Image height: %dpx, width: %dpx\n", imgHeight, imgWidth)
+	height := imagev.Bounds().Dy()
+	width := imagev.Bounds().Dx()
+	fmt.Printf("Image height: %dpx, width: %dpx\n", height, width)
 
 
-	RGBchannels := extractRGBChannelsFromImage(img)
+	RGBchannels := extractRGBChannelsFromImage(imagev)
 
 	str := "sigma sg=igma"
 
@@ -216,6 +251,10 @@ func main() {
 	for i := 0; i < len(str); i++ {
 		fmt.Printf("%v", string(data[i]))
 	}
+
+	// Create a new RGBA image
+	saveImage(embeddedRGBChannels, "sky.png", height, width)
+	
 }
 
 //TODO: store data len in rgb channel
