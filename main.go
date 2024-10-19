@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"image"
-	"image/png"
 	"image/jpeg"
+	"image/png"
 	"os"
 	"path/filepath"
-
 
 	"image/color"
 )
@@ -259,4 +258,4 @@ func main() {
 
 //TODO: store data len in rgb channel
 //gonna strore datliek this:
-// len of bytes to read -- AESencrypted_data(huffman_encoded_data(file_EXT + data))
+// len of bytes to read -- huffman_encoded_data(file_EXT + data)
