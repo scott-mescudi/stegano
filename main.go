@@ -70,7 +70,7 @@ func stringToBinary(s string) []int {
     return bits
 }
 
-func flipLSB(num uint8) uint8 {
+func flipLSB(num uint32) uint32 {
     return num ^ 1 // Flip the LSB using XOR
 }
 
@@ -129,13 +129,24 @@ func main() {
 
 	// Extract LSB image
 	RGBchannels := extractRGBChannels(img)
-	lsbs := getLsbFromChannels(RGBchannels)
+	// lsbs := getLsbFromChannels(RGBchannels)
 
 	z := splitIntoGroupsOfThree(stringToBinary("HI"))
 
+	for i := 0; i < len(z)-1; i++ {
+		fmt.Println(RGBchannels[i])
+	}
 
 	for i := 0; i < len(z)-1; i++ {
-		fmt.Printf("%b - %v - %v\n", RGBchannels[i], lsbs[i], z[i])
+		RGBchannels[i].r = flipLSB(RGBchannels[i].r)
+		RGBchannels[i].g = flipLSB(RGBchannels[i].g)
+		RGBchannels[i].b = flipLSB(RGBchannels[i].b)
+	}
+
+	fmt.Println()
+
+	for i := 0; i < len(z)-1; i++ {
+		fmt.Println(RGBchannels[i])
 	}
 }
 
