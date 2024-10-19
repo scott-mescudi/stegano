@@ -27,7 +27,7 @@ func getLSB(value uint32) uint8 {
 	return uint8(value & 1)
 }
 
-func extractRGBChannels(img image.Image) []rgbChannel {
+func extractRGBChannelsFromImage(img image.Image) []rgbChannel {
 	var lsbs []rgbChannel
 	bounds := img.Bounds()
 	width, height := bounds.Max.X, bounds.Max.Y
@@ -122,7 +122,7 @@ func decodeImage(filename string) (image.Image, error){
 	}
 }
 var zx int
-func embed(RGBchannels []rgbChannel, data []byte) []rgbChannel {
+func embedIntoRGBchannels(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 	z := splitIntoGroupsOfThree(bytesToBinary(data))
 	zx = len(z)
 	for i := 0; i < len(z); i++ {
@@ -143,7 +143,7 @@ func embed(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 }
 
 //this doesnt work but has the right idea
-func extract(RGBchannels []rgbChannel) []byte {
+func extractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
 	var byteSlice = make([]byte, 0)
 	var currentByte uint8 = 0
 	bitCount := 0
@@ -207,20 +207,17 @@ func main() {
 	fmt.Printf("Image height: %dpx, width: %dpx\n", imgHeight, imgWidth)
 
 
-	RGBchannels := extractRGBChannels(img)
+	RGBchannels := extractRGBChannelsFromImage(img)
 
 	str := "sigma sg=igma"
 
-	embeddedRGBChannels := embed(RGBchannels, []byte(str))
-	data := extract(embeddedRGBChannels)
+	embeddedRGBChannels := embedIntoRGBchannels(RGBchannels, []byte(str))
+	data := extractDataFromRGBchannels(embeddedRGBChannels)
 	for i := 0; i < len(str); i++ {
 		fmt.Printf("%v", string(data[i]))
 	}
 }
 
 //TODO: store data len in rgb channel
-
-// iterate over each rgb channel and get the lsb then check if the bit == the data bit, if it does i leave it but if it dont then flip it?
-
 //gonna strore datliek this:
 // len of bytes to read -- AESencrypted_data(huffman_encoded_data(file_EXT + data))
