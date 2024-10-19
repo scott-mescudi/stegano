@@ -121,10 +121,10 @@ func decodeImage(filename string) (image.Image, error){
         return nil, fmt.Errorf("unsupported file format: %s", ext)
 	}
 }
-
+var zx int
 func embed(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 	z := splitIntoGroupsOfThree(bytesToBinary(data))
-
+	zx = len(z)
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
 			RGBchannels[i].r = flipLSB(RGBchannels[i].r)
@@ -190,9 +190,20 @@ func main() {
 
 	// Extract LSB image
 	RGBchannels := extractRGBChannels(img)
-	image := embed(RGBchannels, []byte("LSB"))
-	data := extract(image)
-	fmt.Printf("Decoded: %v\n", data)
+		for i := range 8{
+		fmt.Printf("%b\n",RGBchannels[i])
+	}
+	fmt.Println()
+
+	embeddedRGBChannels := embed(RGBchannels, []byte("LSB"))
+
+
+	for i := range zx{
+		fmt.Printf("%b\n",embeddedRGBChannels[i])
+	}
+
+
+
 
 }
 
