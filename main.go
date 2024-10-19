@@ -75,7 +75,7 @@ func flipLSB(num uint32) uint32 {
 }
 
 type bin struct {
-	r, g, b int
+	r, g, b uint8
 }
 
 func splitIntoGroupsOfThree(nums []int) []bin {
@@ -85,13 +85,13 @@ func splitIntoGroupsOfThree(nums []int) []bin {
 		// Create a new bin for each group of three
 		var b bin
 		if i < len(nums) {
-			b.r = nums[i]
+			b.r = uint8(nums[i])
 		}
 		if i+1 < len(nums) {
-			b.g = nums[i+1]
+			b.g = uint8(nums[i+1])
 		}
 		if i+2 < len(nums) {
-			b.b = nums[i+2]
+			b.b = uint8(nums[i+2])
 		}
 		result = append(result, b)
 	}
@@ -129,27 +129,41 @@ func main() {
 
 	// Extract LSB image
 	RGBchannels := extractRGBChannels(img)
-	// lsbs := getLsbFromChannels(RGBchannels)
 
 	z := splitIntoGroupsOfThree(stringToBinary("HI"))
+	for _,v := range z{
+		fmt.Println(v)
+	}
+	
+	fmt.Println()
 
-	for i := 0; i < len(z)-1; i++ {
-		fmt.Println(RGBchannels[i])
+	for i := 0; i < len(z); i++ {
+		fmt.Printf("{%v %v %v}\n", getLSB(RGBchannels[i].r), getLSB(RGBchannels[i].g), getLSB(RGBchannels[i].b))
 	}
 
-	for i := 0; i < len(z)-1; i++ {
-		RGBchannels[i].r = flipLSB(RGBchannels[i].r)
-		RGBchannels[i].g = flipLSB(RGBchannels[i].g)
-		RGBchannels[i].b = flipLSB(RGBchannels[i].b)
+	
+
+	for i := 0; i < len(z); i++ {
+		if z[i].r != getLSB(RGBchannels[i].r){
+			RGBchannels[i].r = flipLSB(RGBchannels[i].r)
+		}
+
+		if z[i].g != getLSB(RGBchannels[i].g){
+            RGBchannels[i].g = flipLSB(RGBchannels[i].g)
+        }
+		
+        if z[i].b != getLSB(RGBchannels[i].b){
+            RGBchannels[i].b = flipLSB(RGBchannels[i].b)
+        }
+
 	}
 
 	fmt.Println()
 
-	for i := 0; i < len(z)-1; i++ {
-		fmt.Println(RGBchannels[i])
+	for i := 0; i < len(z); i++ {
+		fmt.Printf("{%v %v %v}\n", getLSB(RGBchannels[i].r), getLSB(RGBchannels[i].g), getLSB(RGBchannels[i].b))
 	}
 }
-
 
 
 
