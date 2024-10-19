@@ -22,6 +22,7 @@ type bin struct {
 }
 
 
+
 func getLSB(value uint32) uint8 {
 	return uint8(value & 1)
 }
@@ -42,8 +43,6 @@ func extractRGBChannels(img image.Image) []rgbChannel {
 
 	return lsbs
 }
-
-
 
 
 func getLsbFromChannels(channels []rgbChannel) []lsb {
@@ -123,28 +122,8 @@ func decodeImage(filename string) (image.Image, error){
 	}
 }
 
-func main() {
-	img, err := decodeImage("input.png")
-	if err!= nil {
-        fmt.Println("Error decoding image:", err)
-        return
-    }
-
-	// Extract LSB image
-	RGBchannels := extractRGBChannels(img)
-
-	z := splitIntoGroupsOfThree(bytesToBinary([]byte("hi")))
-	for _,v := range z{
-		fmt.Println(v)
-	}
-	
-	fmt.Println()
-
-	for i := 0; i < len(z); i++ {
-		fmt.Printf("{%v %v %v}\n", getLSB(RGBchannels[i].r), getLSB(RGBchannels[i].g), getLSB(RGBchannels[i].b))
-	}
-
-	
+func embed(RGBchannels []rgbChannel, data []byte) []rgbChannel {
+	z := splitIntoGroupsOfThree(bytesToBinary(data))
 
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
@@ -158,14 +137,63 @@ func main() {
         if z[i].b != getLSB(RGBchannels[i].b){
             RGBchannels[i].b = flipLSB(RGBchannels[i].b)
         }
-
 	}
 
-	fmt.Println()
+	return RGBchannels
+}
 
-	for i := 0; i < len(z); i++ {
-		fmt.Printf("{%v %v %v}\n", getLSB(RGBchannels[i].r), getLSB(RGBchannels[i].g), getLSB(RGBchannels[i].b))
+//this doesnt work but has the right idea
+func extract(RGBchannels []rgbChannel) []byte {
+	var byteSlice []byte
+	var currentByte uint8 = 0
+	bitCount := 0
+
+	for i := 0; i < len(RGBchannels); i++ {
+		// Extract LSB from the red channel
+		r := getLSB(RGBchannels[i].r)
+		currentByte = (currentByte << 1) | (r & 1)
+		bitCount++
+
+		// Extract LSB from the green channel
+		g := getLSB(RGBchannels[i].g)
+		currentByte = (currentByte << 1) | (g & 1)
+		bitCount++
+
+		// Extract LSB from the blue channel
+		b := getLSB(RGBchannels[i].b)
+		currentByte = (currentByte << 1) | (b & 1)
+		bitCount++
+
+		// If we've collected 8 bits, append the current byte
+		if bitCount == 8 {
+			byteSlice = append(byteSlice, currentByte)
+			currentByte = 0
+			bitCount = 0
+		}
 	}
+
+	// // If there are remaining bits after processing, append the last byte (with zero padding)
+	// if bitCount > 0 {
+	// 	currentByte = currentByte << (8 - bitCount)  // Left-align the remaining bits
+	// 	byteSlice = append(byteSlice, currentByte)
+	// }
+
+	return byteSlice
+}
+
+func main() {
+	img, err := decodeImage("input.png")
+	if err!= nil {
+        fmt.Println("Error decoding image:", err)
+        return
+    }
+
+	// Extract LSB image
+	RGBchannels := extractRGBChannels(img)
+	image := embed(RGBchannels, []byte("LSB"))
+	data := extract(image)
+	fmt.Printf("Decoded: %v\n", data)
+
 }
 
 // iterate over each rgb channel and get the lsb then check if the bit == the data bit, if it does i leave it but if it dont then flip it?
