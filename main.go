@@ -144,27 +144,41 @@ func embed(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 
 //this doesnt work but has the right idea
 func extract(RGBchannels []rgbChannel) []byte {
-	var byteSlice []byte
+	var byteSlice = make([]byte, 0)
 	var currentByte uint8 = 0
 	bitCount := 0
 
 	for i := 0; i < len(RGBchannels); i++ {
+		// If we've collected 8 bits, append the current byte
+
+
 		// Extract LSB from the red channel
 		r := getLSB(RGBchannels[i].r)
 		currentByte = (currentByte << 1) | (r & 1)
 		bitCount++
+
+		if bitCount == 8 {
+			byteSlice = append(byteSlice, currentByte)
+			currentByte = 0
+			bitCount = 0
+		}
 
 		// Extract LSB from the green channel
 		g := getLSB(RGBchannels[i].g)
 		currentByte = (currentByte << 1) | (g & 1)
 		bitCount++
 
+		if bitCount == 8 {
+			byteSlice = append(byteSlice, currentByte)
+			currentByte = 0
+			bitCount = 0
+		}
+
 		// Extract LSB from the blue channel
 		b := getLSB(RGBchannels[i].b)
 		currentByte = (currentByte << 1) | (b & 1)
 		bitCount++
 
-		// If we've collected 8 bits, append the current byte
 		if bitCount == 8 {
 			byteSlice = append(byteSlice, currentByte)
 			currentByte = 0
@@ -172,11 +186,11 @@ func extract(RGBchannels []rgbChannel) []byte {
 		}
 	}
 
-	// // If there are remaining bits after processing, append the last byte (with zero padding)
-	// if bitCount > 0 {
-	// 	currentByte = currentByte << (8 - bitCount)  // Left-align the remaining bits
-	// 	byteSlice = append(byteSlice, currentByte)
-	// }
+	// If there are remaining bits after processing, append the last byte (with zero padding)
+	if bitCount > 0 {
+		currentByte = currentByte << (8 - bitCount)  // Left-align the remaining bits
+		byteSlice = append(byteSlice, currentByte)
+	}
 
 	return byteSlice
 }
@@ -188,23 +202,25 @@ func main() {
         return
     }
 
-	// Extract LSB image
+	imgHeight := img.Bounds().Dy()
+	imgWidth := img.Bounds().Dx()
+	fmt.Printf("Image height: %dpx, width: %dpx\n", imgHeight, imgWidth)
+
+
 	RGBchannels := extractRGBChannels(img)
-		for i := range 8{
-		fmt.Printf("%b\n",RGBchannels[i])
+
+	str := "sigma sg=igma"
+
+	embeddedRGBChannels := embed(RGBchannels, []byte(str))
+	data := extract(embeddedRGBChannels)
+	for i := 0; i < len(str); i++ {
+		fmt.Printf("%v", string(data[i]))
 	}
-	fmt.Println()
-
-	embeddedRGBChannels := embed(RGBchannels, []byte("LSB"))
-
-
-	for i := range zx{
-		fmt.Printf("%b\n",embeddedRGBChannels[i])
-	}
-
-
-
-
 }
 
+//TODO: store data len in rgb channel
+
 // iterate over each rgb channel and get the lsb then check if the bit == the data bit, if it does i leave it but if it dont then flip it?
+
+//gonna strore datliek this:
+// len of bytes to read -- AESencrypted_data(huffman_encoded_data(file_EXT + data))
