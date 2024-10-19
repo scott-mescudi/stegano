@@ -62,19 +62,18 @@ func getLsbFromChannels(channels []rgbChannel) []lsb {
 }
 
 // stringToBinary converts a string to a slice of bits (0s and 1s).
-func stringToBinary(s string) []int {
-    var bits []int
+func bytesToBinary(data []byte) []int {
+	var bits []int
 
-    for _, char := range s {
-        // Convert character to binary and append to bits slice
-        for i := 7; i >= 0; i-- {
-            // Use bitwise AND to extract each bit and append it
-            bit := (char >> i) & 1
-            bits = append(bits, int(bit))
-        }
-    }
+	// Iterate over each byte in the byte slice
+	for _, b := range data {
+		for i := 7; i >= 0; i-- {
+			bit := (b >> i) & 1 // Extract each bit from the byte
+			bits = append(bits, int(bit)) // Append the bit to the slice
+		}
+	}
 
-    return bits
+	return bits
 }
 
 func flipLSB(num uint32) uint32 {
@@ -134,7 +133,7 @@ func main() {
 	// Extract LSB image
 	RGBchannels := extractRGBChannels(img)
 
-	z := splitIntoGroupsOfThree(stringToBinary("hi"))
+	z := splitIntoGroupsOfThree(bytesToBinary([]byte("hi")))
 	for _,v := range z{
 		fmt.Println(v)
 	}
@@ -149,16 +148,16 @@ func main() {
 
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
-			RGBchannels[i].r = flipLSB(RGBchannels[i].r);
-		};
+			RGBchannels[i].r = flipLSB(RGBchannels[i].r)
+		}
 
 		if z[i].g != getLSB(RGBchannels[i].g){
-            RGBchannels[i].g = flipLSB(RGBchannels[i].g);
-        };
+            RGBchannels[i].g = flipLSB(RGBchannels[i].g)
+        }
 		
         if z[i].b != getLSB(RGBchannels[i].b){
-            RGBchannels[i].b = flipLSB(RGBchannels[i].b);
-        };
+            RGBchannels[i].b = flipLSB(RGBchannels[i].b)
+        }
 
 	}
 
@@ -168,8 +167,5 @@ func main() {
 		fmt.Printf("{%v %v %v}\n", getLSB(RGBchannels[i].r), getLSB(RGBchannels[i].g), getLSB(RGBchannels[i].b))
 	}
 }
-
-
-
 
 // iterate over each rgb channel and get the lsb then check if the bit == the data bit, if it does i leave it but if it dont then flip it?
