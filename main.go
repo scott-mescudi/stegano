@@ -9,12 +9,21 @@ import (
 	"path/filepath"
 )
 
-func getLSB(value uint32) uint8 {
-	return uint8(value & 1)
-}
-
 type rgbChannel struct {
 	r, g, b uint32
+}
+
+type lsb struct {
+	r, g, b uint8
+}
+
+type bin struct {
+	r, g, b uint8
+}
+
+
+func getLSB(value uint32) uint8 {
+	return uint8(value & 1)
 }
 
 func extractRGBChannels(img image.Image) []rgbChannel {
@@ -35,9 +44,7 @@ func extractRGBChannels(img image.Image) []rgbChannel {
 }
 
 
-type lsb struct {
-	r, g, b uint8
-}
+
 
 func getLsbFromChannels(channels []rgbChannel) []lsb {
 	var lsbs []lsb
@@ -74,9 +81,6 @@ func flipLSB(num uint32) uint32 {
     return num ^ 1 // Flip the LSB using XOR
 }
 
-type bin struct {
-	r, g, b uint8
-}
 
 func splitIntoGroupsOfThree(nums []int) []bin {
 	var result []bin
@@ -130,7 +134,7 @@ func main() {
 	// Extract LSB image
 	RGBchannels := extractRGBChannels(img)
 
-	z := splitIntoGroupsOfThree(stringToBinary("HI"))
+	z := splitIntoGroupsOfThree(stringToBinary("hi"))
 	for _,v := range z{
 		fmt.Println(v)
 	}
@@ -145,16 +149,16 @@ func main() {
 
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
-			RGBchannels[i].r = flipLSB(RGBchannels[i].r)
-		}
+			RGBchannels[i].r = flipLSB(RGBchannels[i].r);
+		};
 
 		if z[i].g != getLSB(RGBchannels[i].g){
-            RGBchannels[i].g = flipLSB(RGBchannels[i].g)
-        }
+            RGBchannels[i].g = flipLSB(RGBchannels[i].g);
+        };
 		
         if z[i].b != getLSB(RGBchannels[i].b){
-            RGBchannels[i].b = flipLSB(RGBchannels[i].b)
-        }
+            RGBchannels[i].b = flipLSB(RGBchannels[i].b);
+        };
 
 	}
 
