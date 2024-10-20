@@ -7,6 +7,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"image/color"
 )
@@ -102,8 +103,41 @@ func decodeImage(filename string) (image.Image, error){
 	}
 }
 
+func int32ToBinary(num int32) []int {
+    var bits []int
+
+    // Iterate over each bit position from 31 to 0
+    for i := 31; i >= 0; i-- {
+        bit := (num >> i) & 1 // Extract each bit from the integer
+        bits = append(bits, int(bit)) // Append the bit to the slice
+    }
+
+    return bits
+}
+
+func GetlenOfData(test []byte) (int,error) {
+    container := ""
+    for i := 0; i < 4; i++ {
+        b := test[i]
+        binary := fmt.Sprintf("%08b", b)
+        container += binary
+    }
+
+    n, err :=  strconv.ParseInt(container, 2, 32)
+    if err!= nil {
+        return 0, fmt.Errorf("Error parsing binary to int: %e", err)
+    }
+
+    return int(n), nil
+}
+
 func embedIntoRGBchannels(RGBchannels []rgbChannel, data []byte) []rgbChannel {
-	z := splitIntoGroupsOfThree(bytesToBinary(data))
+	lenOfDataInBinary := int32ToBinary(int32(len(data)))
+	binaryData := bytesToBinary(data)
+
+	combinedData := append(lenOfDataInBinary, binaryData...)
+
+	z := splitIntoGroupsOfThree(combinedData)
 	
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
@@ -218,21 +252,26 @@ func main() {
 
 	embeddedRGBChannels := embedIntoRGBchannels(RGBchannels, []byte(str))
 	data := extractDataFromRGBchannels(embeddedRGBChannels)
-	for i := 0; i < len(str); i++ {
-		fmt.Printf("%v", string(data[i]))
+	lenData, err := GetlenOfData(data)
+	if err!= nil {
+        fmt.Println("Error getting length of data:", err)
+        return
+    }
+
+	fmt.Printf("Length of data: %d\n", lenData)
+
+	var moddedData = make([]byte, 0)
+	for i := 4; i < lenData+4; i++ {
+		moddedData = append(moddedData, data[i])
 	}
+
+	fmt.Println(string(moddedData))
 
 	// Create a new RGBA image
 	saveImage(embeddedRGBChannels, "sky.png", height, width)
 	
 }
 
-//TODO: store data len in rgb channel
 //gonna strore datliek this:
 // len of bytes to read -- huffman_encoded_data(data)
 
-//11110100001001000000
-
-// 00001111 01000010 01000000
-
-// WHY IS STORING THE LENGTH SO FUCKIONG HARD??????

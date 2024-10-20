@@ -1,0 +1,36 @@
+package main
+
+import (
+	"fmt"
+	"strconv"
+)
+
+//0 1111 1000010 1000000
+
+var test = []byte{0, 56, 18, 178}
+
+func GetlenOfData(test []byte) (int,error) {
+    container := ""
+    for i := 0; i < 4; i++ {
+        b := test[i]
+        binary := fmt.Sprintf("%08b", b)
+        container += binary
+    }
+
+    n, err :=  strconv.ParseInt(container, 2, 32)
+    if err!= nil {
+        return 0, fmt.Errorf("Error parsing binary to int: %e", err)
+    }
+
+    return int(n), nil
+}
+
+func main() {
+    lenOfData, err := GetlenOfData(test)
+    if err!= nil {
+        fmt.Printf("Error: %v\n", err)
+        return
+    }
+    fmt.Printf("Length of data: %d\n", lenOfData)
+
+}
