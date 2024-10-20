@@ -236,6 +236,33 @@ func saveImage(embeddedRGBChannels []rgbChannel, filename string, height, width 
 	return nil
 }
 
+
+func store(imagev image.Image, data []byte, outputFilename string){
+	height := imagev.Bounds().Dy()
+	width := imagev.Bounds().Dx()
+	RGBchannels := extractRGBChannelsFromImage(imagev)
+	embeddedRGBChannels := embedIntoRGBchannels(RGBchannels, data)	// Create a new RGBA image
+	saveImage(embeddedRGBChannels, outputFilename, height, width)
+}
+
+
+func remove(imagez image.Image) []byte{
+	RGBchannels2 := extractRGBChannelsFromImage(imagez)
+	data := extractDataFromRGBchannels(RGBchannels2)
+	lenData, err := GetlenOfData(data)
+	if err!= nil {
+        fmt.Println("Error getting length of data:", err)
+        return nil
+    }
+
+	var moddedData = make([]byte, 0)
+	for i := 4; i < lenData+4; i++ {
+		moddedData = append(moddedData, data[i])
+	}
+
+	return moddedData
+}
+
 func main() {
 	imagev, err := decodeImage("input.png")
 	if err!= nil {
@@ -243,35 +270,18 @@ func main() {
         return
     }
 
-	height := imagev.Bounds().Dy()
-	width := imagev.Bounds().Dx()
 
-	RGBchannels := extractRGBChannelsFromImage(imagev)
-
-	str := "sigma sg=igma"
-
-	embeddedRGBChannels := embedIntoRGBchannels(RGBchannels, []byte(str))
-	data := extractDataFromRGBchannels(embeddedRGBChannels)
-	lenData, err := GetlenOfData(data)
+	imagez, err := decodeImage("sky.png")
 	if err!= nil {
-        fmt.Println("Error getting length of data:", err)
+        fmt.Println("Error decoding image:", err)
         return
     }
 
-	fmt.Printf("Length of data: %d\n", lenData)
-
-	var moddedData = make([]byte, 0)
-	for i := 4; i < lenData+4; i++ {
-		moddedData = append(moddedData, data[i])
-	}
+	store(imagev, []byte("Hello, World!"), "output.png")
+	moddedData := remove(imagez)
 
 	fmt.Println(string(moddedData))
-
-	// Create a new RGBA image
-	saveImage(embeddedRGBChannels, "sky.png", height, width)
-	
 }
 
 //gonna strore datliek this:
 // len of bytes to read -- huffman_encoded_data(data)
-
