@@ -291,3 +291,5 @@ func main() {
 
 //gonna strore datliek this:
 // len of bytes to read -- huffman_encoded_data(data)
+
+//TODO: implement huffman encoding for data
