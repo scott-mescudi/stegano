@@ -7,7 +7,6 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
-	"time"
 
 	"image/color"
 )
@@ -16,14 +15,9 @@ type rgbChannel struct {
 	r, g, b uint32
 }
 
-type lsb struct {
-	r, g, b uint8
-}
-
 type bin struct {
 	r, g, b uint8
 }
-
 
 
 func getLSB(value uint32) uint8 {
@@ -45,22 +39,6 @@ func extractRGBChannelsFromImage(img image.Image) []rgbChannel {
 	}
 
 	return lsbs
-}
-
-
-func getLsbFromChannels(channels []rgbChannel) []lsb {
-	var lsbs []lsb
-
-    for _, channel := range channels {
-        lsb := lsb{
-            r: getLSB(channel.r),
-            g: getLSB(channel.g),
-            b: getLSB(channel.b),
-        }
-        lsbs = append(lsbs, lsb)
-    }
-
-    return lsbs
 }
 
 // stringToBinary converts a string to a slice of bits (0s and 1s).
@@ -124,10 +102,10 @@ func decodeImage(filename string) (image.Image, error){
         return nil, fmt.Errorf("unsupported file format: %s", ext)
 	}
 }
-var zx int
+var zx int//debug
 func embedIntoRGBchannels(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 	z := splitIntoGroupsOfThree(bytesToBinary(data))
-	zx = len(z)
+	zx = len(z)//debug
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
 			RGBchannels[i].r = flipLSB(RGBchannels[i].r)
@@ -145,17 +123,13 @@ func embedIntoRGBchannels(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 	return RGBchannels
 }
 
-//this doesnt work but has the right idea
+
 func extractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
 	var byteSlice = make([]byte, 0)
 	var currentByte uint8 = 0
 	bitCount := 0
 
 	for i := 0; i < len(RGBchannels); i++ {
-		// If we've collected 8 bits, append the current byte
-
-
-		// Extract LSB from the red channel
 		r := getLSB(RGBchannels[i].r)
 		currentByte = (currentByte << 1) | (r & 1)
 		bitCount++
@@ -166,7 +140,6 @@ func extractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
 			bitCount = 0
 		}
 
-		// Extract LSB from the green channel
 		g := getLSB(RGBchannels[i].g)
 		currentByte = (currentByte << 1) | (g & 1)
 		bitCount++
