@@ -7,6 +7,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"time"
 
 	"image/color"
 )
@@ -240,7 +241,6 @@ func main() {
 	width := imagev.Bounds().Dx()
 	fmt.Printf("Image height: %dpx, width: %dpx\n", height, width)
 
-
 	RGBchannels := extractRGBChannelsFromImage(imagev)
 
 	str := "sigma sg=igma"
@@ -258,4 +258,4 @@ func main() {
 
 //TODO: store data len in rgb channel
 //gonna strore datliek this:
-// len of bytes to read -- huffman_encoded_data(file_EXT + data)
+// len of bytes to read -- huffman_encoded_data(data)
