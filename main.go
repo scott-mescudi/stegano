@@ -101,10 +101,10 @@ func decodeImage(filename string) (image.Image, error){
         return nil, fmt.Errorf("unsupported file format: %s", ext)
 	}
 }
-var zx int//debug
+
 func embedIntoRGBchannels(RGBchannels []rgbChannel, data []byte) []rgbChannel {
 	z := splitIntoGroupsOfThree(bytesToBinary(data))
-	zx = len(z)//debug
+	
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].r){
 			RGBchannels[i].r = flipLSB(RGBchannels[i].r)
@@ -211,7 +211,6 @@ func main() {
 
 	height := imagev.Bounds().Dy()
 	width := imagev.Bounds().Dx()
-	fmt.Printf("Image height: %dpx, width: %dpx\n", height, width)
 
 	RGBchannels := extractRGBChannelsFromImage(imagev)
 
@@ -231,3 +230,9 @@ func main() {
 //TODO: store data len in rgb channel
 //gonna strore datliek this:
 // len of bytes to read -- huffman_encoded_data(data)
+
+//11110100001001000000
+
+// 00001111 01000010 01000000
+
+// WHY IS STORING THE LENGTH SO FUCKIONG HARD??????
