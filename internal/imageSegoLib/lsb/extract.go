@@ -1,18 +1,18 @@
 package lsb
 
-type rgbChannel struct {
-    r, g, b uint32
-}
+import(
+    s "lsb/internal/imageSegoLib"
+)
 
 
 // extractDataFromRGBchannels extracts the hidden data from the image's RGB channels.
-func ExtractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
+func ExtractDataFromRGBchannels(RGBchannels []s.RgbChannel) []byte {
     var byteSlice = make([]byte, 0)
     var currentByte uint8 = 0
     bitCount := 0
 
     for i := 0; i < len(RGBchannels); i++ {
-        r := getLSB(RGBchannels[i].r)
+        r := getLSB(RGBchannels[i].R)
         currentByte = (currentByte << 1) | (r & 1)
         bitCount++
 
@@ -22,7 +22,7 @@ func ExtractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
             bitCount = 0
         }
 
-        g := getLSB(RGBchannels[i].g)
+        g := getLSB(RGBchannels[i].G)
         currentByte = (currentByte << 1) | (g & 1)
         bitCount++
 
@@ -32,7 +32,7 @@ func ExtractDataFromRGBchannels(RGBchannels []rgbChannel) []byte {
             bitCount = 0
         }
 
-        b := getLSB(RGBchannels[i].b)
+        b := getLSB(RGBchannels[i].B)
         currentByte = (currentByte << 1) | (b & 1)
         bitCount++
 

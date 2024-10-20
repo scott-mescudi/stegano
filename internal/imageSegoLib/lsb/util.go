@@ -1,10 +1,8 @@
 package lsb
 
-
-// Struct for holding binary data in 8-bit chunks
-type bin struct {
-    r, g, b uint8
-}
+import (
+	s "lsb/internal/imageSegoLib"
+)
 
 // getLSB returns the least significant bit of a 32-bit value.
 func getLSB(value uint32) uint8 {
@@ -31,18 +29,18 @@ func bytesToBinary(data []byte) []int {
 }
 
 // splitIntoGroupsOfThree splits a slice of bits into groups of three.
-func splitIntoGroupsOfThree(nums []int) []bin {
-    var result []bin
+func splitIntoGroupsOfThree(nums []int) []s.Bin {
+    var result []s.Bin
     for i := 0; i < len(nums); i += 3 {
-        var b bin
+        var b s.Bin
         if i < len(nums) {
-            b.r = uint8(nums[i])
+            b.R = uint8(nums[i])
         }
         if i+1 < len(nums) {
-            b.g = uint8(nums[i+1])
+            b.G = uint8(nums[i+1])
         }
         if i+2 < len(nums) {
-            b.b = uint8(nums[i+2])
+            b.B = uint8(nums[i+2])
         }
         result = append(result, b)
     }
