@@ -261,6 +261,7 @@ func remove(imagez image.Image) []byte{
         return nil
     }
 
+	//4 because im atoring a i32, for i64 use 8
 	var moddedData = make([]byte, 0)
 	for i := 4; i < lenData+4; i++ {
 		moddedData = append(moddedData, data[i])
@@ -291,5 +292,4 @@ func main() {
 
 //gonna strore datliek this:
 // len of bytes to read -- huffman_encoded_data(data)
-
 //TODO: implement huffman encoding for data
