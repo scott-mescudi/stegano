@@ -237,12 +237,18 @@ func saveImage(embeddedRGBChannels []rgbChannel, filename string, height, width 
 }
 
 
-func store(imagev image.Image, data []byte, outputFilename string){
+func store(imagev image.Image, data []byte, outputFilename string) error{
 	height := imagev.Bounds().Dy()
 	width := imagev.Bounds().Dx()
 	RGBchannels := extractRGBChannelsFromImage(imagev)
+	if len(data) * 8 > len(RGBchannels) * 3{
+
+        return fmt.Errorf("error: Data too large to embed into the image.")
+	}
 	embeddedRGBChannels := embedIntoRGBchannels(RGBchannels, data)	// Create a new RGBA image
 	saveImage(embeddedRGBChannels, outputFilename, height, width)
+
+	return nil
 }
 
 
@@ -271,13 +277,13 @@ func main() {
     }
 
 
-	imagez, err := decodeImage("sky.png")
+	imagez, err := decodeImage("output.png")
 	if err!= nil {
         fmt.Println("Error decoding image:", err)
         return
     }
 
-	store(imagev, []byte("Hello, World!"), "output.png")
+	store(imagev, []byte("Hello, World!"), "sky.png")
 	moddedData := remove(imagez)
 
 	fmt.Println(string(moddedData))
