@@ -32,7 +32,6 @@ func extractRGBChannelsFromImage(img image.Image) []rgbChannel {
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			// Get pixel at (x, y)
 			r, g, b, _ := img.At(x, y).RGBA()
 			lsbs = append(lsbs, rgbChannel{r, g, b})
 		}
