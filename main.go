@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"image/png"
-	s "lsb/internal"
+	s "lsb/stegano"
 	"os"
 )
 

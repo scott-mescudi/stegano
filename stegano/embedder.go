@@ -3,7 +3,7 @@ package png
 import (
 	"fmt"
 	"image"
-	s "lsb/internal/png"
+	s "lsb/stegano/png"
 )
 
 type PngEmbedder struct {
