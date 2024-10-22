@@ -48,3 +48,5 @@ func (m PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error) {
 
 	return moddedData, nil
 }
+
+//todo implement huffman encoding
