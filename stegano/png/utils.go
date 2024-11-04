@@ -19,7 +19,7 @@ func bytesToBinary(data []byte) []int {
 
 func flipLSB(num uint32) uint32 {
 	return num ^ 1 // Flip the LSB using XOR
-}
+}		
 
 func int32ToBinary(num int32) []int {
 	var bits []int
