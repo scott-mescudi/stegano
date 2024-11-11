@@ -3,7 +3,6 @@ package png
 import (
 	"fmt"
 	"image"
-	"log"
 	c "lsb/stegano/compression"
 	s "lsb/stegano/png"
 )
@@ -28,10 +27,7 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 	if err != nil {
 		return err
 	}
-	log.Println(len(data))
-	log.Println(len(compressedData))
 	
-
 	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, compressedData)
 	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
@@ -60,8 +56,6 @@ func (m PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	log.Println(len(datas))
 
 	return datas, nil
 }

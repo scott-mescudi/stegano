@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"image/png"
+	"log"
 	s "lsb/stegano"
 	"os"
 )
 
 func main() {
-	inputfile := "D:\\lsb\\testimages\\in\\input.png"
-	outputfile := "D:\\lsb\\testimages\\out\\output.png"
+	inputfile := "testimages/in/input.png"
+	outputfile := "testimages/out/out.png"
 
 	file, err := os.Open(inputfile)
 	if err!= nil {
@@ -17,12 +18,16 @@ func main() {
         return
     }
 
-	imagev , err  := png.Decode(file)
+	data, err := os.ReadFile("main.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	imagev , err  := png.Decode(file)
 	embedder := s.NewPngEncoder()
 
 	// Encode data into the image
-	err = embedder.EncodePngImage(imagev, []byte("skilsjlbikdjfvjbsdfbvsdjbfibvisdhbvbncdvbirhoidfbbsdiofhvodaihfvbidhbfvoihbadihfbvidfbvihdbaovibdfhibvbdidi"), outputfile)
+	err = embedder.EncodePngImage(imagev, data, outputfile)
 	if err != nil {
 		fmt.Println("Error encoding image:", err)
 		return
