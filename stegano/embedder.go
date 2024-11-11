@@ -14,6 +14,10 @@ func NewPngEncoder() PngEmbedder {
 	return PngEmbedder{}
 }
 
+func (m PngEmbedder) GetImageCapacity(coverImage image.Image) int {
+	return (len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8
+}
+
 func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string) error {
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()

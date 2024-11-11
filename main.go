@@ -26,6 +26,8 @@ func main() {
 	imagev , err  := png.Decode(file)
 	embedder := s.NewPngEncoder()
 
+	fmt.Printf("Image can hold %d bytes", embedder.GetImageCapacity(imagev))
+
 	// Encode data into the image
 	err = embedder.EncodePngImage(imagev, data, outputfile)
 	if err != nil {
