@@ -22,12 +22,12 @@ func main() {
 	embedder := s.NewPngEncoder()
 
 	// Encode data into the image
-	err = embedder.EncodePngImage(imagev, []byte("skibdidi"), outputfile)
+	err = embedder.EncodePngImage(imagev, []byte("skilsjlbikdjfvjbsdfbvsdjbfibvisdhbvbncdvbirhoidfbbsdiofhvodaihfvbidhbfvoihbadihfbvidfbvihdbaovibdfhibvbdidi"), outputfile)
 	if err != nil {
 		fmt.Println("Error encoding image:", err)
 		return
 	}
-
+		
 
 	file2, err := os.Open(outputfile)
 	if err!= nil {

@@ -3,6 +3,8 @@ package png
 import (
 	"fmt"
 	"image"
+	"log"
+	c "lsb/stegano/compression"
 	s "lsb/stegano/png"
 )
 
@@ -22,8 +24,16 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
 
-	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, data)
-	err := s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
+	compressedData, err := c.CompressZSTD(data)
+	if err != nil {
+		return err
+	}
+	log.Println(len(data))
+	log.Println(len(compressedData))
+	
+
+	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, compressedData)
+	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
@@ -46,7 +56,14 @@ func (m PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error) {
 		moddedData = append(moddedData, data[i])
 	}
 
-	return moddedData, nil
+	datas, err := c.DecompressZSTD(moddedData)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Println(len(datas))
+
+	return datas, nil
 }
 
 //todo implement huffman encoding
