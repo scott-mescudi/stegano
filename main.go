@@ -23,13 +23,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	imagev , err  := png.Decode(file)
+	coverimage , err  := png.Decode(file)
 	embedder := s.NewPngEncoder()
 
-	fmt.Printf("Image can hold %d bytes", embedder.GetImageCapacity(imagev))
+	fmt.Printf("Image can hold %d bytes", embedder.GetImageCapacity(coverimage))
 
 	// Encode data into the image
-	err = embedder.EncodePngImage(imagev, data, outputfile)
+	err = embedder.EncodePngImage(coverimage, data, outputfile)
 	if err != nil {
 		fmt.Println("Error encoding image:", err)
 		return
