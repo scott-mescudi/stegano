@@ -17,10 +17,9 @@ func getLSB(value uint32) uint8 {
 func ExtractRGBChannelsFromImage(img image.Image) []rgbChannel {
 	var lsbs []rgbChannel
 	bounds := img.Bounds()
-	width, height := bounds.Max.X, bounds.Max.Y
 
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
 			r, g, b, _ := img.At(x, y).RGBA()
 			lsbs = append(lsbs, rgbChannel{r, g, b})
 		}

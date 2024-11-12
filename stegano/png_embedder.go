@@ -32,12 +32,14 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 		return err
 	}
 	
+	
 	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, compressedData)
+	
 	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
-
+	
 	return nil
 }
 

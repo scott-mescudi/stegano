@@ -6,10 +6,11 @@ import (
 	"log"
 	s "lsb/stegano"
 	"os"
+	"time"
 )
 
 func main() {
-	inputfile := "testimages/in/in.jpeg"
+	inputfile := "testimages/in/input.png"
 	outputfile := "testimages/out/out.png"
 
 	file, err := os.Open(inputfile)
@@ -27,14 +28,15 @@ func main() {
 	coverimage , err  := png.Decode(file)
 	embedder := s.NewPngEncoder()
 
-	fmt.Printf("Image can hold %d bytes", embedder.GetImageCapacity(coverimage))
+	fmt.Printf("Image can hold %d bytes\n", embedder.GetImageCapacity(coverimage))
 
-	// Encode data into the image
+	start := time.Now()
 	err = embedder.EncodePngImage(coverimage, data, outputfile)
 	if err != nil {
 		fmt.Println("Error encoding image:", err)
 		return
 	}
+	fmt.Println("total: ", time.Since(start))
 		
 
 	file2, err := os.Open(outputfile)
@@ -45,13 +47,13 @@ func main() {
 
 	imagez , err  := png.Decode(file2)
 	// Decode the embedded data from the image
-	embeddedData, err := embedder.DecodePngImage(imagez)
+	_, err = embedder.DecodePngImage(imagez)
 	if err != nil {
 		fmt.Println("Error decoding image:", err)
 		return
 	}
 
-	fmt.Println(string(embeddedData))
+	// fmt.Println(string(embeddedData))
 }
 
 //TODO: implement huffman encoding for embedded data

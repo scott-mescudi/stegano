@@ -1,4 +1,4 @@
-package png
+package jpeg
 
 import (
 	"image"
@@ -6,6 +6,24 @@ import (
 	"image/png"
 	"os"
 )
+
+type rgbChannel struct {
+	r, g, b uint32
+}
+
+func extractRGBChannelsFromJpeg(img image.Image) []rgbChannel {
+	bounds := img.Bounds()
+	var pixels []rgbChannel
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			pixels = append(pixels, rgbChannel{r: r >> 8, g: g >> 8, b: b >> 8})
+		}
+	}
+
+	return pixels
+}
 
 func SaveImage(embeddedRGBChannels []rgbChannel, filename string, height, width int) error {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
