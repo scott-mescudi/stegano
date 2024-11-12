@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image/jpeg"
 	"image/png"
 	"log"
 	s "lsb/stegano"
@@ -18,13 +17,14 @@ func main() {
         fmt.Println("Error opening file:", err)
         return
     }
+	defer file.Close()
 
 	data, err := os.ReadFile("main.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	coverimage , err  := jpeg.Decode(file)
+	coverimage , err  := png.Decode(file)
 	embedder := s.NewPngEncoder()
 
 	fmt.Printf("Image can hold %d bytes", embedder.GetImageCapacity(coverimage))
