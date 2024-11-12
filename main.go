@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"image/jpeg"
 	"image/png"
 	"log"
 	s "lsb/stegano"
@@ -9,7 +10,7 @@ import (
 )
 
 func main() {
-	inputfile := "testimages/in/input.png"
+	inputfile := "testimages/in/in.jpeg"
 	outputfile := "testimages/out/out.png"
 
 	file, err := os.Open(inputfile)
@@ -23,7 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	coverimage , err  := png.Decode(file)
+	coverimage , err  := jpeg.Decode(file)
 	embedder := s.NewPngEncoder()
 
 	fmt.Printf("Image can hold %d bytes", embedder.GetImageCapacity(coverimage))
@@ -43,7 +44,6 @@ func main() {
     }
 
 	imagez , err  := png.Decode(file2)
-
 	// Decode the embedded data from the image
 	embeddedData, err := embedder.DecodePngImage(imagez)
 	if err != nil {
@@ -52,6 +52,6 @@ func main() {
 	}
 
 	fmt.Println(string(embeddedData))
-}//
+}
 
 //TODO: implement huffman encoding for embedded data
