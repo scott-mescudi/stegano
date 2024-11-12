@@ -52,6 +52,6 @@ func main() {
 	}
 
 	fmt.Println(string(embeddedData))
-}
+}//
 
 //TODO: implement huffman encoding for embedded data
