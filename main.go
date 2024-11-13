@@ -10,13 +10,12 @@ import (
 	"time"
 )
 
-func main() {
-	jpegtest()
-}
 
 func jpegtest() {
 	inputfile := "testimages/in/in.jpeg"
-	outputfile := "testimages/out/out.png"
+	outputfile := "testimages/out/outjpeg.png"
+
+	
 
 	file, err := os.Open(inputfile)
 	if err!= nil {
@@ -51,18 +50,17 @@ func jpegtest() {
     }
 
 	imagez , err  := png.Decode(file2)
-	// Decode the embedded data from the image
-	embeddedData, err := embedder.DecodeJPEGImage(imagez)
+	_, err = embedder.DecodeJPEGImage(imagez)
 	if err != nil {
 		fmt.Println("Error decoding image:", err)
 		return
 	}
 
-	fmt.Println(string(embeddedData))
+	// fmt.Println(string(embeddedData))
 }
 
 func pngtest() {
-		inputfile := "testimages/in/input.png"
+	inputfile := "testimages/in/input.png"
 	outputfile := "testimages/out/out.png"
 
 	file, err := os.Open(inputfile)
@@ -108,4 +106,7 @@ func pngtest() {
 	// fmt.Println(string(embeddedData))
 }
 
-//TODO: put jpeg together
+func main() {
+	pngtest()
+	jpegtest()
+}
