@@ -3,8 +3,8 @@ package stegano
 import (
 	"fmt"
 	"image"
-	c "lsb/stegano/compression"
-	s "lsb/stegano/png"
+	c "github.com/scott-mescudi/stegano/compression"
+	s "github.com/scott-mescudi/stegano/png"
 )
 
 type PngEmbedder struct {

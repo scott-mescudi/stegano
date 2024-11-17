@@ -3,8 +3,8 @@ package stegano
 import (
 	"fmt"
 	"image"
-	c "lsb/stegano/compression"
-	x "lsb/stegano/jpeg"
+	c "github.com/scott-mescudi/stegano/compression"
+	x "github.com/scott-mescudi/stegano/jpeg"
 	
 )
 

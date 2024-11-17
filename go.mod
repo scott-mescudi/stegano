@@ -1,4 +1,4 @@
-module lsb
+module github.com/scott-mescudi/stegano
 
 go 1.23.2
 

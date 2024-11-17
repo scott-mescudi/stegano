@@ -1,1 +1,6 @@
 *.png
+*.jpeg
+*.jpg
+/test
+/testy
+/testies
