@@ -45,7 +45,7 @@ func (m PngEmbedder) HasData(coverImage image.Image) bool {
 	return true
 }
 
-func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string) error {
+func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string, defaultCompression bool) error {
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 
@@ -54,15 +54,18 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
 
-	compressedData, err := c.CompressZSTD(data)
-	if err != nil {
-		return err
+	var indata []byte = data
+	if defaultCompression {
+		compressedData, err := c.CompressZSTD(data)
+		if err != nil {
+			return err
+		}
+		indata = compressedData
 	}
+
+	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
 	
-	
-	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, compressedData)
-	
-	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
+	err := s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
@@ -70,7 +73,7 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 	return nil
 }
 
-func (m PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error) {
+func (m PngEmbedder) DecodePngImage(coverImage image.Image, isDefaultCompressed bool) ([]byte, error) {
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
@@ -85,10 +88,14 @@ func (m PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error) {
 		moddedData = append(moddedData, data[i])
 	}
 
-	datas, err := c.DecompressZSTD(moddedData)
-	if err != nil {
-		return nil, err
+	if isDefaultCompressed {
+		outdata, err := c.DecompressZSTD(moddedData)
+		if err != nil {
+			return nil, err
+		}
+
+		return outdata, nil
 	}
 
-	return datas, nil
+	return moddedData, nil
 }

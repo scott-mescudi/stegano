@@ -19,7 +19,7 @@ func (m JpegEmbedder) GetImageCapacity(coverImage image.Image) int {
 	return (len(s.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8
 }
 
-func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outputFilename string) error {
+func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outputFilename string, defaultCompression bool) error {
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 
@@ -28,14 +28,19 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outpu
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
 
-	compressedData, err := c.CompressZSTD(data)
-	if err != nil {
-		return err
+	var indata []byte = data
+	if defaultCompression{
+		compressedData, err := c.CompressZSTD(data)
+		if err != nil {
+			return err
+		}
+		indata = compressedData
 	}
+
 	
-	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, compressedData)
+	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
 	
-	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
+	err := s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
@@ -43,7 +48,7 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outpu
 	return nil
 }
 
-func (m JpegEmbedder) DecodeJPEGImage(coverImage image.Image) ([]byte, error) {
+func (m JpegEmbedder) DecodeJPEGImage(coverImage image.Image, isDefaultCompressed bool) ([]byte, error) {
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
@@ -58,10 +63,14 @@ func (m JpegEmbedder) DecodeJPEGImage(coverImage image.Image) ([]byte, error) {
 		moddedData = append(moddedData, data[i])
 	}
 
-	datas, err := c.DecompressZSTD(moddedData)
-	if err != nil {
-		return nil, err
+	if isDefaultCompressed {
+		outdata, err := c.DecompressZSTD(moddedData)
+		if err != nil {
+			return nil, err
+		}
+
+		return outdata, nil
 	}
 
-	return datas, nil
+	return moddedData, nil
 }
