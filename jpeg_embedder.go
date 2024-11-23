@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"image"
 	c "github.com/scott-mescudi/stegano/compression"
-	x "github.com/scott-mescudi/stegano/jpeg"
+	s "github.com/scott-mescudi/stegano/jpeg"
 	
 )
 
@@ -16,14 +16,14 @@ func NewJpegEncoder() JpegEmbedder {
 }
 
 func (m JpegEmbedder) GetImageCapacity(coverImage image.Image) int {
-	return (len(x.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8
+	return (len(s.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8
 }
 
 func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outputFilename string) error {
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 
-	RGBchannels := x.ExtractRGBChannelsFromJpeg(coverImage)
+	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
 	if len(data)*8 > len(RGBchannels)*3 {
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
@@ -33,9 +33,9 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outpu
 		return err
 	}
 	
-	embeddedRGBChannels := x.EmbedIntoRGBchannels(RGBchannels, compressedData)
+	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, compressedData)
 	
-	err = x.SaveImage(embeddedRGBChannels, outputFilename, height, width)
+	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
@@ -44,11 +44,11 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outpu
 }
 
 func (m JpegEmbedder) DecodeJPEGImage(coverImage image.Image) ([]byte, error) {
-	RGBchannels := x.ExtractRGBChannelsFromJpeg(coverImage)
-	data := x.ExtractDataFromRGBchannels(RGBchannels)
+	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
+	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
-	lenData, err := x.GetlenOfData(data)
-	if err != nil {
+	lenData, err := s.GetlenOfData(data)
+	if err != nil || lenData == 0 {
 		return nil, err
 	}
 

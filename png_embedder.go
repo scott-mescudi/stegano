@@ -18,6 +18,33 @@ func (m PngEmbedder) GetImageCapacity(coverImage image.Image) int {
 	return (len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8
 }
 
+
+/* 
+Checks if a coverimage has data in it by extracting the len of data,
+if len data is 0 it returns false since image is empty
+*/
+
+
+func (m PngEmbedder) HasData(coverImage image.Image) bool {
+	var lsbs []s.RgbChannel
+	bounds := coverImage.Bounds()
+
+	for x := bounds.Min.X; x < 11; x++ {
+		r, g, b, _ := coverImage.At(x, 0).RGBA()
+		lsbs = append(lsbs, s.RgbChannel{R:r, G:g, B:b})
+	}
+
+	data := s.ExtractDataFromRGBchannels(lsbs)
+
+	lenData, _ := s.GetlenOfData(data)
+	fmt.Println(lenData)
+	if lenData == 0{
+		return false
+	}
+
+	return true
+}
+
 func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string) error {
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
@@ -48,7 +75,7 @@ func (m PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error) {
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
 	lenData, err := s.GetlenOfData(data)
-	if err != nil {
+	if err != nil || lenData == 0 {
 		return nil, err
 	}
 

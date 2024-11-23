@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func SaveImage(embeddedRGBChannels []rgbChannel, filename string, height, width int) error {
+func SaveImage(embeddedRGBChannels []RgbChannel, filename string, height, width int) error {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	for y := 0; y < height; y++ {
@@ -16,9 +16,9 @@ func SaveImage(embeddedRGBChannels []rgbChannel, filename string, height, width 
 			rgb := embeddedRGBChannels[i]
 
 			img.Set(x, y, color.RGBA{
-				R: uint8(rgb.r),
-				G: uint8(rgb.g),
-				B: uint8(rgb.b),
+				R: uint8(rgb.R),
+				G: uint8(rgb.G),
+				B: uint8(rgb.B),
 				A: 255,
 			})
 		}
