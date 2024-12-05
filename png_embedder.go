@@ -2,28 +2,28 @@ package stegano
 
 import (
 	"fmt"
-	"image"
 	c "github.com/scott-mescudi/stegano/compression"
 	s "github.com/scott-mescudi/stegano/png"
 	u "github.com/scott-mescudi/stegano/utils"
+	"image"
 )
 
 type PngEmbedder struct {
 }
 
-// NewPngEncoder initializes and returns a new PNG encoder instance 
+// NewPngEncoder initializes and returns a new PNG encoder instance
 // for embedding or extracting data.
 func NewPngEncoder() PngEmbedder {
 	return PngEmbedder{}
 }
 
-// GetImageCapacity calculates the maximum amount of data (in bytes) 
+// GetImageCapacity calculates the maximum amount of data (in bytes)
 // that can be embedded into the given image.
 func (m PngEmbedder) GetImageCapacity(coverImage image.Image) int {
 	return (len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8
 }
 
-// EmbedDataIntoRgbChannels embeds the provided data into the RGB channels 
+// EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
 // of the given image. Compression can be applied if `defaultCompression` is true.
 func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byte, defaultCompression bool) ([]s.RgbChannel, error) {
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
@@ -42,11 +42,10 @@ func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byt
 
 	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
 
-	
 	return embeddedRGBChannels, nil
 }
 
-// ExtractDataFromRgbChannels retrieves embedded data from the RGB channels 
+// ExtractDataFromRgbChannels retrieves embedded data from the RGB channels
 // of an image. Decompression is applied if `isDefaultCompressed` is true.
 func (m PngEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isDefaultCompressed bool) ([]byte, error) {
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
@@ -80,21 +79,21 @@ func (m PngEmbedder) HasData(coverImage image.Image) bool {
 
 	for x := bounds.Min.X; x < 11; x++ {
 		r, g, b, _ := coverImage.At(x, 0).RGBA()
-		lsbs = append(lsbs, s.RgbChannel{R:r, G:g, B:b})
+		lsbs = append(lsbs, s.RgbChannel{R: r, G: g, B: b})
 	}
 
 	data := s.ExtractDataFromRGBchannels(lsbs)
 
 	lenData, _ := u.GetlenOfData(data)
 	fmt.Println(lenData)
-	if lenData == 0{
+	if lenData == 0 {
 		return false
 	}
 
 	return true
 }
 
-// EncodePngImage embeds data into an image and saves it as a new file. 
+// EncodePngImage embeds data into an image and saves it as a new file.
 // Compression can be applied if `defaultCompression` is true.
 func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string, defaultCompression bool) error {
 	height := coverImage.Bounds().Dy()
@@ -115,16 +114,16 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 	}
 
 	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
-	
+
 	err := s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
-// DecodePngImage extracts embedded data from an image. 
+// DecodePngImage extracts embedded data from an image.
 // Decompression is applied if `isDefaultCompressed` is true.
 func (m PngEmbedder) DecodePngImage(coverImage image.Image, isDefaultCompressed bool) ([]byte, error) {
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)

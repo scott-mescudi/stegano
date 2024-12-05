@@ -1,8 +1,8 @@
 package jpeg
 
 import (
-	"image"
 	s "github.com/scott-mescudi/stegano/utils"
+	"image"
 )
 
 type RgbChannel struct {
@@ -26,7 +26,6 @@ func ExtractRGBChannelsFromJpeg(img image.Image) []RgbChannel {
 type bin struct {
 	r, g, b uint8
 }
-
 
 func getLSB(value uint32) uint8 {
 	return uint8(value & 1)

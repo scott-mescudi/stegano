@@ -23,14 +23,14 @@ func SaveImage(embeddedRGBChannels []RgbChannel, filename string, height, width 
 			})
 		}
 	}
-	
+
 	file, err := os.Create(filename)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
-	
+
 	err = png.Encode(file, img)
 	return err
-	
+
 }

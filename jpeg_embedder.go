@@ -2,30 +2,28 @@ package stegano
 
 import (
 	"fmt"
-	"image"
 	c "github.com/scott-mescudi/stegano/compression"
 	s "github.com/scott-mescudi/stegano/jpeg"
 	u "github.com/scott-mescudi/stegano/utils"
-	
+	"image"
 )
 
 type JpegEmbedder struct {
 }
 
-// NewJpegEncoder initializes and returns a new JPEG encoder instance 
+// NewJpegEncoder initializes and returns a new JPEG encoder instance
 // for embedding or extracting data.
 func NewJpegEncoder() JpegEmbedder {
 	return JpegEmbedder{}
 }
 
-// GetImageCapacity calculates the maximum amount of data (in bytes) 
+// GetImageCapacity calculates the maximum amount of data (in bytes)
 // that can be embedded into the given JPEG image.
 func (m JpegEmbedder) GetImageCapacity(coverImage image.Image) int {
 	return (len(s.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8
 }
 
-
-// EmbedDataIntoRgbChannels embeds the provided data into the RGB channels 
+// EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
 // of the given JPEG image. Compression can be applied if `defaultCompression` is true.
 func (m JpegEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byte, defaultCompression bool) ([]s.RgbChannel, error) {
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
@@ -46,7 +44,7 @@ func (m JpegEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []by
 	return embeddedRGBChannels, nil
 }
 
-// ExtractDataFromRgbChannels retrieves embedded data from the RGB channels 
+// ExtractDataFromRgbChannels retrieves embedded data from the RGB channels
 // of a JPEG image. Decompression is applied if `isDefaultCompressed` is true.
 func (m JpegEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isDefaultCompressed bool) ([]byte, error) {
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
@@ -73,7 +71,7 @@ func (m JpegEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isD
 	return moddedData, nil
 }
 
-// EncodeJPEGImage embeds data into a JPEG image and saves it as a new file. 
+// EncodeJPEGImage embeds data into a JPEG image and saves it as a new file.
 // Compression can be applied if `defaultCompression` is true.
 func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outputFilename string, defaultCompression bool) error {
 	height := coverImage.Bounds().Dy()
@@ -85,7 +83,7 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outpu
 	}
 
 	var indata []byte = data
-	if defaultCompression{
+	if defaultCompression {
 		compressedData, err := c.CompressZSTD(data)
 		if err != nil {
 			return err
@@ -93,18 +91,17 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, outpu
 		indata = compressedData
 	}
 
-	
 	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
-	
+
 	err := s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
-// DecodeJPEGImage extracts embedded data from a JPEG image. 
+// DecodeJPEGImage extracts embedded data from a JPEG image.
 // Decompression is applied if `isDefaultCompressed` is true.
 func (m JpegEmbedder) DecodeJPEGImage(coverImage image.Image, isDefaultCompressed bool) ([]byte, error) {
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)

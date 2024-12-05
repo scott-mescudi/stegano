@@ -1,8 +1,8 @@
 package compression
 
 import (
-	"testing"
 	"bytes"
+	"testing"
 )
 
 func TestCompressZSTD(t *testing.T) {

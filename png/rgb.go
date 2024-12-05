@@ -17,7 +17,6 @@ func getLSB(value uint32) uint8 {
 	return uint8(value & 1)
 }
 
-
 func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
 	var lsbs []RgbChannel
 	bounds := img.Bounds()

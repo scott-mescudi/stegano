@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestBytesToBinary(t *testing.T) {
@@ -68,4 +68,3 @@ func TestInt32ToBinary(t *testing.T) {
 		})
 	}
 }
-

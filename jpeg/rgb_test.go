@@ -11,37 +11,33 @@ import (
 )
 
 func TestExtractRGBChannelsFromJpeg(t *testing.T) {
-	
+
 	rect := image.Rect(0, 0, 2, 2)
 	img := image.NewRGBA(rect)
-	
-	img.Set(0, 0, color.RGBA{R: 255, G: 0, B: 0, A: 0}) 
-	img.Set(1, 0, color.RGBA{R: 0, G: 255, B: 0, A: 0}) 
-	img.Set(0, 1, color.RGBA{R: 0, G: 0, B: 255, A: 0}) 
+
+	img.Set(0, 0, color.RGBA{R: 255, G: 0, B: 0, A: 0})
+	img.Set(1, 0, color.RGBA{R: 0, G: 255, B: 0, A: 0})
+	img.Set(0, 1, color.RGBA{R: 0, G: 0, B: 255, A: 0})
 	img.Set(1, 1, color.RGBA{R: 255, G: 255, B: 0, A: 0})
 
-	
 	var buf bytes.Buffer
 	if err := jpeg.Encode(&buf, img, nil); err != nil {
 		t.Fatalf("failed to encode image to JPEG: %v", err)
 	}
-
 
 	decodedImg, _, err := image.Decode(&buf)
 	if err != nil {
 		t.Fatalf("failed to decode JPEG: %v", err)
 	}
 
-
 	result := ExtractRGBChannelsFromJpeg(decodedImg)
 	fmt.Println(result)
 
-
 	expected := []RgbChannel{
-		{R: 255, G: 0, B: 0},   
-		{R: 0, G: 255, B: 0},   
-		{R: 0, G: 0, B: 255},   
-		{R: 255, G: 255, B: 0}, 
+		{R: 255, G: 0, B: 0},
+		{R: 0, G: 255, B: 0},
+		{R: 0, G: 0, B: 255},
+		{R: 255, G: 255, B: 0},
 	}
 
 	// Compare result with expected
@@ -107,12 +103,12 @@ func TestEmbedIntoRGBchannels(t *testing.T) {
 	img := image.NewRGBA(image.Rect(0, 0, 10, 10))
 	for y := 0; y < 10; y++ {
 		for x := 0; x < 10; x++ {
-			img.Set(x, y, color.RGBA{255, 255, 255, 255}) 
+			img.Set(x, y, color.RGBA{255, 255, 255, 255})
 		}
 	}
 
 	var buffer bytes.Buffer
-	if err := jpeg.Encode(&buffer, img, nil); err != nil{
+	if err := jpeg.Encode(&buffer, img, nil); err != nil {
 		t.Fatalf("failed to encode image to jpeg: %v", err)
 	}
 
@@ -126,7 +122,6 @@ func TestEmbedIntoRGBchannels(t *testing.T) {
 	chans := EmbedIntoRGBchannels(testimg, []byte("hello world"))
 	dt := ExtractDataFromRGBchannels(chans)
 
-
 	if !strings.Contains(string(dt), "hello world") {
 		t.Fatalf("Failed to get data from image")
 	}
@@ -137,12 +132,12 @@ func TestExtractDataFromRGBchannels(t *testing.T) {
 	img := image.NewRGBA(image.Rect(0, 0, 10, 10))
 	for y := 0; y < 10; y++ {
 		for x := 0; x < 10; x++ {
-			img.Set(x, y, color.RGBA{255, 255, 255, 255}) 
+			img.Set(x, y, color.RGBA{255, 255, 255, 255})
 		}
 	}
 
 	var buffer bytes.Buffer
-	if err := jpeg.Encode(&buffer, img, nil); err != nil{
+	if err := jpeg.Encode(&buffer, img, nil); err != nil {
 		t.Fatalf("failed to encode image to jpeg: %v", err)
 	}
 
@@ -155,7 +150,6 @@ func TestExtractDataFromRGBchannels(t *testing.T) {
 
 	chans := EmbedIntoRGBchannels(testimg, []byte("epaovrhbvohebr"))
 	dt := ExtractDataFromRGBchannels(chans)
-
 
 	if !strings.Contains(string(dt), "epaovrhbvohebr") {
 		t.Fatalf("Failed to get data from image")
