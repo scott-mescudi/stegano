@@ -5,6 +5,7 @@ import (
 	"image"
 	c "github.com/scott-mescudi/stegano/compression"
 	s "github.com/scott-mescudi/stegano/png"
+	u "github.com/scott-mescudi/stegano/utils"
 )
 
 type PngEmbedder struct {
@@ -50,7 +51,7 @@ func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byt
 func (m PngEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isDefaultCompressed bool) ([]byte, error) {
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
-	lenData, err := s.GetlenOfData(data)
+	lenData, err := u.GetlenOfData(data)
 	if err != nil || lenData == 0 {
 		return nil, err
 	}
@@ -84,7 +85,7 @@ func (m PngEmbedder) HasData(coverImage image.Image) bool {
 
 	data := s.ExtractDataFromRGBchannels(lsbs)
 
-	lenData, _ := s.GetlenOfData(data)
+	lenData, _ := u.GetlenOfData(data)
 	fmt.Println(lenData)
 	if lenData == 0{
 		return false
@@ -129,7 +130,7 @@ func (m PngEmbedder) DecodePngImage(coverImage image.Image, isDefaultCompressed 
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
-	lenData, err := s.GetlenOfData(data)
+	lenData, err := u.GetlenOfData(data)
 	if err != nil || lenData == 0 {
 		return nil, err
 	}

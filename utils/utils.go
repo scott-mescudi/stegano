@@ -1,4 +1,4 @@
-package png
+package utils
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 // stringToBinary converts a string to a slice of bits (0s and 1s).
-func bytesToBinary(data []byte) []int {
+func BytesToBinary(data []byte) []int {
 	var bits []int
 	for _, b := range data {
 		for i := 7; i >= 0; i-- {
@@ -17,11 +17,11 @@ func bytesToBinary(data []byte) []int {
 	return bits
 }
 
-func flipLSB(num uint32) uint32 {
+func FlipLSB(num uint32) uint32 {
 	return num ^ 1 // Flip the LSB using XOR
 }		
 
-func int32ToBinary(num int32) []int {
+func Int32ToBinary(num int32) []int {
 	var bits []int
 	for i := 31; i >= 0; i-- {
 		bit := (num >> i) & 1

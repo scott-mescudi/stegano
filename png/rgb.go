@@ -1,6 +1,9 @@
 package png
 
-import "image"
+import (
+	s "github.com/scott-mescudi/stegano/utils"
+	"image"
+)
 
 type RgbChannel struct {
 	R, G, B uint32
@@ -48,23 +51,23 @@ func splitIntoGroupsOfThree(nums []int) []bin {
 }
 
 func EmbedIntoRGBchannels(RGBchannels []RgbChannel, data []byte) []RgbChannel {
-	lenOfDataInBinary := int32ToBinary(int32(len(data)))
-	binaryData := bytesToBinary(data)
+	lenOfDataInBinary := s.Int32ToBinary(int32(len(data)))
+	binaryData := s.BytesToBinary(data)
 	combinedData := append(lenOfDataInBinary, binaryData...)
 
 	z := splitIntoGroupsOfThree(combinedData)
 
 	for i := 0; i < len(z); i++ {
 		if z[i].r != getLSB(RGBchannels[i].R) {
-			RGBchannels[i].R = flipLSB(RGBchannels[i].R)
+			RGBchannels[i].R = s.FlipLSB(RGBchannels[i].R)
 		}
 
 		if z[i].g != getLSB(RGBchannels[i].G) {
-			RGBchannels[i].G = flipLSB(RGBchannels[i].G)
+			RGBchannels[i].G = s.FlipLSB(RGBchannels[i].G)
 		}
 
 		if z[i].b != getLSB(RGBchannels[i].B) {
-			RGBchannels[i].B = flipLSB(RGBchannels[i].B)
+			RGBchannels[i].B = s.FlipLSB(RGBchannels[i].B)
 		}
 	}
 

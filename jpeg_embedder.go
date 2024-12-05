@@ -5,6 +5,7 @@ import (
 	"image"
 	c "github.com/scott-mescudi/stegano/compression"
 	s "github.com/scott-mescudi/stegano/jpeg"
+	u "github.com/scott-mescudi/stegano/utils"
 	
 )
 
@@ -50,7 +51,7 @@ func (m JpegEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []by
 func (m JpegEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isDefaultCompressed bool) ([]byte, error) {
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
-	lenData, err := s.GetlenOfData(data)
+	lenData, err := u.GetlenOfData(data)
 	if err != nil || lenData == 0 {
 		return nil, err
 	}
@@ -109,7 +110,7 @@ func (m JpegEmbedder) DecodeJPEGImage(coverImage image.Image, isDefaultCompresse
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
 	data := s.ExtractDataFromRGBchannels(RGBchannels)
 
-	lenData, err := s.GetlenOfData(data)
+	lenData, err := u.GetlenOfData(data)
 	if err != nil || lenData == 0 {
 		return nil, err
 	}
