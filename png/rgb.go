@@ -14,6 +14,7 @@ func getLSB(value uint32) uint8 {
 	return uint8(value & 1)
 }
 
+
 func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
 	var lsbs []RgbChannel
 	bounds := img.Bounds()
@@ -57,9 +58,11 @@ func EmbedIntoRGBchannels(RGBchannels []RgbChannel, data []byte) []RgbChannel {
 		if z[i].r != getLSB(RGBchannels[i].R) {
 			RGBchannels[i].R = flipLSB(RGBchannels[i].R)
 		}
+
 		if z[i].g != getLSB(RGBchannels[i].G) {
 			RGBchannels[i].G = flipLSB(RGBchannels[i].G)
 		}
+
 		if z[i].b != getLSB(RGBchannels[i].B) {
 			RGBchannels[i].B = flipLSB(RGBchannels[i].B)
 		}

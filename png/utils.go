@@ -30,10 +30,10 @@ func int32ToBinary(num int32) []int {
 	return bits
 }
 
-func GetlenOfData(test []byte) (int, error) {
+func GetlenOfData(data []byte) (int, error) {
 	container := ""
 	for i := 0; i < 4; i++ {
-		b := test[i]
+		b := data[i]
 		binary := fmt.Sprintf("%08b", b)
 		container += binary
 	}

@@ -26,11 +26,10 @@ type bin struct {
 	r, g, b uint8
 }
 
+
 func getLSB(value uint32) uint8 {
 	return uint8(value & 1)
 }
-
-
 
 func splitIntoGroupsOfThree(nums []int) []bin {
 	var result []bin
@@ -116,6 +115,3 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 
 	return byteSlice
 }
-
-
-
