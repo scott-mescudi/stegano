@@ -175,4 +175,4 @@ func main() {
 
 - **Huffman Encoding:** Add support for Huffman-based compression.
 - **Encryption:** Integrate encryption options for better data security.
-- **Enhanced Formats:** Support for additional image formats such as BMP or GIF.
+- **Audio Support:** Add support for audio formats.
