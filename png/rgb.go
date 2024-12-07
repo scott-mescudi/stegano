@@ -77,7 +77,7 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 	bitCount := 0
 
 	for i := 0; i < len(RGBchannels); i++ {
-		r := s.GetLSB(RGBchannels[i].R)
+		r := s.GetBit(RGBchannels[i].R, 0)
 		currentByte = (currentByte << 1) | (r & 1)
 		bitCount++
 
@@ -87,7 +87,7 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 			bitCount = 0
 		}
 
-		g := s.GetLSB(RGBchannels[i].G)
+		g := s.GetBit(RGBchannels[i].G, 0)
 		currentByte = (currentByte << 1) | (g & 1)
 		bitCount++
 
@@ -97,7 +97,7 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 			bitCount = 0
 		}
 
-		b := s.GetLSB(RGBchannels[i].B)
+		b := s.GetBit(RGBchannels[i].B, 0)
 		currentByte = (currentByte << 1) | (b & 1)
 		bitCount++
 

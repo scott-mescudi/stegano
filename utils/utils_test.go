@@ -39,7 +39,7 @@ func TestFlipLSB(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("Input: %032b", tt.input), func(t *testing.T) {
-			result := FlipLSB(tt.input)
+			result := FlipBit(tt.input, 0)
 			if result != tt.expected {
 				t.Errorf("For input %032b, expected %032b but got %032b", tt.input, tt.expected, result)
 			}
