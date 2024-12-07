@@ -17,10 +17,6 @@ func BytesToBinary(data []byte) []int {
 	return bits
 }
 
-func FlipLSB(num uint32) uint32 {
-	return num ^ 1 // Flip the LSB using XOR
-}
-
 func Int32ToBinary(num int32) []int {
 	var bits []int
 	for i := 31; i >= 0; i-- {
@@ -44,4 +40,12 @@ func GetlenOfData(data []byte) (int, error) {
 	}
 
 	return int(n), nil
+}
+
+func FlipBit(num uint32, position uint8) uint32 {
+    return num ^ (1 << position)
+}
+
+func GetBit(value uint32, position uint8) uint8 {
+	return uint8((value >> position) & 1)
 }

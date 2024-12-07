@@ -13,9 +13,7 @@ type bin struct {
 	r, g, b uint8
 }
 
-func getLSB(value uint32) uint8 {
-	return uint8(value & 1)
-}
+
 
 func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
 	var lsbs []RgbChannel
@@ -57,16 +55,16 @@ func EmbedIntoRGBchannels(RGBchannels []RgbChannel, data []byte) []RgbChannel {
 	z := splitIntoGroupsOfThree(combinedData)
 
 	for i := 0; i < len(z); i++ {
-		if z[i].r != getLSB(RGBchannels[i].R) {
-			RGBchannels[i].R = s.FlipLSB(RGBchannels[i].R)
+		if z[i].r != s.GetBit(RGBchannels[i].R, 0) {
+			RGBchannels[i].R = s.FlipBit(RGBchannels[i].R, 0)
 		}
 
-		if z[i].g != getLSB(RGBchannels[i].G) {
-			RGBchannels[i].G = s.FlipLSB(RGBchannels[i].G)
+		if z[i].g != s.GetBit(RGBchannels[i].G, 0) {
+			RGBchannels[i].G = s.FlipBit(RGBchannels[i].G, 0)
 		}
 
-		if z[i].b != getLSB(RGBchannels[i].B) {
-			RGBchannels[i].B = s.FlipLSB(RGBchannels[i].B)
+		if z[i].b != s.GetBit(RGBchannels[i].B, 0) {
+			RGBchannels[i].B = s.FlipBit(RGBchannels[i].B, 0)
 		}
 	}
 
@@ -79,7 +77,7 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 	bitCount := 0
 
 	for i := 0; i < len(RGBchannels); i++ {
-		r := getLSB(RGBchannels[i].R)
+		r := s.GetLSB(RGBchannels[i].R)
 		currentByte = (currentByte << 1) | (r & 1)
 		bitCount++
 
@@ -89,7 +87,7 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 			bitCount = 0
 		}
 
-		g := getLSB(RGBchannels[i].G)
+		g := s.GetLSB(RGBchannels[i].G)
 		currentByte = (currentByte << 1) | (g & 1)
 		bitCount++
 
@@ -99,7 +97,7 @@ func ExtractDataFromRGBchannels(RGBchannels []RgbChannel) []byte {
 			bitCount = 0
 		}
 
-		b := getLSB(RGBchannels[i].B)
+		b := s.GetLSB(RGBchannels[i].B)
 		currentByte = (currentByte << 1) | (b & 1)
 		bitCount++
 
