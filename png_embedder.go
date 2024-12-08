@@ -31,7 +31,7 @@ func (m PngEmbedder) GetImageCapacity(coverImage image.Image, bitDepth uint8) in
 // of the given image. Compression can be applied if `defaultCompression` is true.
 func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byte, bitDepth uint8 , defaultCompression bool) ([]u.RgbChannel, error) {
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
-	if len(data)*8 > len(RGBchannels)*3 {
+	if len(data)*8 > (((len(RGBchannels)) * 3) / 8) * (int(bitDepth)+1) {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
 	}
 
@@ -83,6 +83,7 @@ func (m PngEmbedder) ExtractDataFromRgbChannels(RGBchannels []u.RgbChannel, bitD
 }
 
 // refactor this fuunction to work with variable depths
+
 // // HasData checks whether the given image contains any embedded data.
 // func (m PngEmbedder) HasData(coverImage image.Image) bool {
 // 	var lsbs []u.RgbChannel
@@ -111,7 +112,7 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, bitDept
 	width := coverImage.Bounds().Dx()
 
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
-	if len(data)*8 > (len(RGBchannels)*3)*int(bitDepth)+1 {
+	if len(data)*8 > (((len(RGBchannels)) * 3) / 8) * (int(bitDepth)+1) {
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
 

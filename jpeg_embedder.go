@@ -31,7 +31,7 @@ func (m JpegEmbedder) GetImageCapacity(coverImage image.Image, bitDepth uint8) i
 // of the given JPEG image. Compression can be applied if `defaultCompression` is true.
 func (m JpegEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byte, bitDepth uint8, defaultCompression bool) ([]u.RgbChannel, error) {
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
-	if len(data)*8 > len(RGBchannels)*3 {
+	if len(data)*8 > (((len(RGBchannels)) * 3) / 8) * (int(bitDepth)+1) {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
 	}
 
@@ -89,7 +89,7 @@ func (m JpegEmbedder) EncodeJPEGImage(coverImage image.Image, data []byte, bitDe
 	width := coverImage.Bounds().Dx()
 
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
-	if len(data)*8 > len(RGBchannels)*3 {
+	if len(data)*8 > (((len(RGBchannels)) * 3) / 8) * (int(bitDepth)+1) {
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
 
