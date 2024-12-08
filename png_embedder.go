@@ -24,7 +24,7 @@ func (m PngEmbedder) GetImageCapacity(coverImage image.Image, bitDepth uint8) in
 		return 0
 	}
 
-	return ((len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8) * int(bitDepth)+1
+	return ((len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8) * (int(bitDepth)+1)
 }
 
 // EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
