@@ -13,6 +13,7 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 - **JPEG Image Support:** Embed and extract data from JPEG images.
 - **Data Compression:** Utilizes ZSTD compression for efficient embedding.
 - **Capacity Calculation:** Calculate the maximum data capacity of an image for embedding.
+- **Variable Depth Encoding:** Can adjust how many bits in a byte are used to store data.
 
 
 ---
@@ -22,7 +23,7 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 To use this library, you'll need to install it and its dependencies. Add the package to your Go project by importing it and its required dependencies:
 
 ```bash
-go get github.com/scott-mescudi/stegano
+go get github.com/scott-mescudi/stegano@latest
 ```
 ---
 
