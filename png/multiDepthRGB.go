@@ -6,26 +6,7 @@ import (
 	s "github.com/scott-mescudi/stegano/utils"
 )
 
-// how the fuck am i going to do this?????
-// maybe try double loop since data is already spilt in to 3 just iterate ofer groups and embed them based on the depths
 
-// so with depth of 2(3 without 0 index) it would iterate over groups three times
-// first iteration would embed at bit index 2 
-// second iteration would embed on bitindex 1
-// third iteratioon would embed on index 0
-
-// but how will i do this?
-// kms?
-
-//same process for ewxtarction
-
-// bro  there  is no fucking way to test tjhos
-// aaaaaaaaaaahhdLSHREDDLJVFHAELHJFBVGLJHEFBVLJHWBHEFBVHGJEDFWKBGHJVBGJHDASWFVJGUHCDWUGVYFEVCITYGHbbbb
-
-// bok this might work
-// havnt tested it yet but if it does then omfg
-
-// teste stuff remoe in prod
 func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth uint8) ([]RgbChannel, error) {
 	if depth > 7 {
 		return nil, fmt.Errorf("bit depth exeeds 7")
