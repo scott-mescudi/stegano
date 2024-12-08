@@ -4,7 +4,7 @@ import (
 	"fmt"
 	c "github.com/scott-mescudi/stegano/compression"
 	s "github.com/scott-mescudi/stegano/png"
-	u "github.com/scott-mescudi/stegano/utils"
+	u "github.com/scott-mescudi/stegano/pkg"
 	"image"
 )
 
@@ -18,14 +18,18 @@ func NewPngEncoder() PngEmbedder {
 }
 
 // GetImageCapacity calculates the maximum amount of data (in bytes)
-// that can be embedded into the given image.
-func (m PngEmbedder) GetImageCapacity(coverImage image.Image) int {
-	return (len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8
+// that can be embedded into the given image. will return 0 if bith depth is greter than 7
+func (m PngEmbedder) GetImageCapacity(coverImage image.Image, bitDepth uint8) int {
+	if bitDepth > 7 {
+		return 0
+	}
+
+	return ((len(s.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8) * int(bitDepth)
 }
 
 // EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
 // of the given image. Compression can be applied if `defaultCompression` is true.
-func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byte, defaultCompression bool) ([]s.RgbChannel, error) {
+func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byte, bitDepth uint8 , defaultCompression bool) ([]u.RgbChannel, error) {
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
 	if len(data)*8 > len(RGBchannels)*3 {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
@@ -40,15 +44,21 @@ func (m PngEmbedder) EmbedDataIntoRgbChannels(coverImage image.Image, data []byt
 		indata = compressedData
 	}
 
-	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
+	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, indata, bitDepth)
+	if err != nil {
+		return nil, err
+	}
 
 	return embeddedRGBChannels, nil
 }
 
 // ExtractDataFromRgbChannels retrieves embedded data from the RGB channels
 // of an image. Decompression is applied if `isDefaultCompressed` is true.
-func (m PngEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isDefaultCompressed bool) ([]byte, error) {
-	data := s.ExtractDataFromRGBchannels(RGBchannels)
+func (m PngEmbedder) ExtractDataFromRgbChannels(RGBchannels []u.RgbChannel, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+	data, err := u.ExtractDataFromRGBchannelsWithDepth(RGBchannels, bitDepth)
+	if err != nil {
+		return nil, err
+	}
 
 	lenData, err := u.GetlenOfData(data)
 	if err != nil || lenData == 0 {
@@ -72,30 +82,31 @@ func (m PngEmbedder) ExtractDataFromRgbChannels(RGBchannels []s.RgbChannel, isDe
 	return moddedData, nil
 }
 
-// HasData checks whether the given image contains any embedded data.
-func (m PngEmbedder) HasData(coverImage image.Image) bool {
-	var lsbs []s.RgbChannel
-	bounds := coverImage.Bounds()
+// refactor this fuunction to work with variable depths
+// // HasData checks whether the given image contains any embedded data.
+// func (m PngEmbedder) HasData(coverImage image.Image) bool {
+// 	var lsbs []u.RgbChannel
+// 	bounds := coverImage.Bounds()
 
-	for x := bounds.Min.X; x < 11; x++ {
-		r, g, b, _ := coverImage.At(x, 0).RGBA()
-		lsbs = append(lsbs, s.RgbChannel{R: r, G: g, B: b})
-	}
+// 	for x := bounds.Min.X; x < 11; x++ {
+// 		r, g, b, _ := coverImage.At(x, 0).RGBA()
+// 		lsbs = append(lsbs, u.RgbChannel{R: r, G: g, B: b})
+// 	}
 
-	data := s.ExtractDataFromRGBchannels(lsbs)
+// 	data := s.ExtractDataFromRGBchannels(lsbs)
 
-	lenData, _ := u.GetlenOfData(data)
-	fmt.Println(lenData)
-	if lenData == 0 {
-		return false
-	}
+// 	lenData, _ := u.GetlenOfData(data)
+// 	fmt.Println(lenData)
+// 	if lenData == 0 {
+// 		return false
+// 	}
 
-	return true
-}
+// 	return true
+// }
 
 // EncodePngImage embeds data into an image and saves it as a new file.
 // Compression can be applied if `defaultCompression` is true.
-func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string, defaultCompression bool) error {
+func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 
@@ -113,9 +124,12 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 		indata = compressedData
 	}
 
-	embeddedRGBChannels := s.EmbedIntoRGBchannels(RGBchannels, indata)
+	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, indata, bitDepth)
+	if err != nil {
+		return err
+	}
 
-	err := s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
+	err = s.SaveImage(embeddedRGBChannels, outputFilename, height, width)
 	if err != nil {
 		return err
 	}
@@ -125,9 +139,12 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputF
 
 // DecodePngImage extracts embedded data from an image.
 // Decompression is applied if `isDefaultCompressed` is true.
-func (m PngEmbedder) DecodePngImage(coverImage image.Image, isDefaultCompressed bool) ([]byte, error) {
+func (m PngEmbedder) DecodePngImage(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
-	data := s.ExtractDataFromRGBchannels(RGBchannels)
+	data, err := u.ExtractDataFromRGBchannelsWithDepth(RGBchannels, bitDepth)
+	if err != nil {
+		return nil, err
+	}
 
 	lenData, err := u.GetlenOfData(data)
 	if err != nil || lenData == 0 {
