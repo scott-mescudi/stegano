@@ -111,7 +111,7 @@ func (m PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, bitDept
 	width := coverImage.Bounds().Dx()
 
 	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
-	if len(data)*8 > len(RGBchannels)*3 {
+	if len(data)*8 > (len(RGBchannels)*3)*int(bitDepth)+1 {
 		return fmt.Errorf("error: Data too large to embed into the image")
 	}
 
