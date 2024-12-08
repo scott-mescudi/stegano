@@ -1,11 +1,33 @@
-package png
+package pkg
 
-import (
-	"fmt"
+import "fmt"
 
-	s "github.com/scott-mescudi/stegano/utils"
-)
 
+type RgbChannel struct {
+	R, G, B uint32
+}
+
+type bin struct {
+	r, g, b uint8
+}
+
+func splitIntoGroupsOfThree(nums []int) []bin {
+	var result []bin
+	for i := 0; i < len(nums); i += 3 {
+		var b bin
+		if i < len(nums) {
+			b.r = uint8(nums[i])
+		}
+		if i+1 < len(nums) {
+			b.g = uint8(nums[i+1])
+		}
+		if i+2 < len(nums) {
+			b.b = uint8(nums[i+2])
+		}
+		result = append(result, b)
+	}
+	return result
+}
 
 func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth uint8) ([]RgbChannel, error) {
 	if depth > 7 {
@@ -17,8 +39,8 @@ func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth 
 	}
 
 	
-	lenOfDataInBinary := s.Int32ToBinary(int32(len(data)))
-	binaryData := s.BytesToBinary(data)
+	lenOfDataInBinary := Int32ToBinary(int32(len(data)))
+	binaryData := BytesToBinary(data)
 	combinedData := append(lenOfDataInBinary, binaryData...)
 
 	z := splitIntoGroupsOfThree(combinedData)
@@ -27,16 +49,16 @@ func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth 
 	index := 0
 
 	for i := 0; i < len(z); i++ {
-		if z[i].r != s.GetBit(RGBchannels[index].R, curbit) {
-			RGBchannels[index].R = s.FlipBit(RGBchannels[index].R, curbit)
+		if z[i].r != GetBit(RGBchannels[index].R, curbit) {
+			RGBchannels[index].R = FlipBit(RGBchannels[index].R, curbit)
 		}
 
-		if z[i].g != s.GetBit(RGBchannels[index].G, curbit) {
-			RGBchannels[index].G = s.FlipBit(RGBchannels[index].G, curbit)
+		if z[i].g != GetBit(RGBchannels[index].G, curbit) {
+			RGBchannels[index].G = FlipBit(RGBchannels[index].G, curbit)
 		}
 
-		if z[i].b != s.GetBit(RGBchannels[index].B, curbit) {
-			RGBchannels[index].B = s.FlipBit(RGBchannels[index].B, curbit)
+		if z[i].b != GetBit(RGBchannels[index].B, curbit) {
+			RGBchannels[index].B = FlipBit(RGBchannels[index].B, curbit)
 		}
 
 		if curbit != 0 {
@@ -50,14 +72,18 @@ func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth 
 	return RGBchannels, nil
 }
 
-func ExtractDataFromRGBchannelsWithDepth(RGBchannels []RgbChannel, depth uint8) []byte {
+func ExtractDataFromRGBchannelsWithDepth(RGBchannels []RgbChannel, depth uint8) ([]byte, error) {
+	if depth > 7 {
+		return nil, fmt.Errorf("bit depth exeeds 7")
+	}
+
 	var byteSlice = make([]byte, 0)
 	var currentByte uint8 = 0
 	bitCount := 0
 
 	for i := 0; i < len(RGBchannels); i++ {
 		for bd := depth+1; bd > 0; bd-- {
-			r := s.GetBit(RGBchannels[i].R, bd-1)
+			r := GetBit(RGBchannels[i].R, bd-1)
 			currentByte = (currentByte << 1) | (r & 1)
 			bitCount++
 
@@ -67,7 +93,7 @@ func ExtractDataFromRGBchannelsWithDepth(RGBchannels []RgbChannel, depth uint8) 
 				bitCount = 0
 			}
 
-			g := s.GetBit(RGBchannels[i].G, bd-1)
+			g := GetBit(RGBchannels[i].G, bd-1)
 			currentByte = (currentByte << 1) | (g & 1)
 			bitCount++
 
@@ -77,7 +103,7 @@ func ExtractDataFromRGBchannelsWithDepth(RGBchannels []RgbChannel, depth uint8) 
 				bitCount = 0
 			}
 
-			b := s.GetBit(RGBchannels[i].B, bd-1)
+			b := GetBit(RGBchannels[i].B, bd-1)
 			currentByte = (currentByte << 1) | (b & 1)
 			bitCount++
 
@@ -94,5 +120,5 @@ func ExtractDataFromRGBchannelsWithDepth(RGBchannels []RgbChannel, depth uint8) 
 		byteSlice = append(byteSlice, currentByte)
 	}
 
-	return byteSlice
+	return byteSlice, nil
 }

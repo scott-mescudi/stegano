@@ -5,9 +5,11 @@ import (
 	"image/color"
 	"image/png"
 	"os"
+
+	s "github.com/scott-mescudi/stegano/pkg"
 )
 
-func SaveImage(embeddedRGBChannels []RgbChannel, filename string, height, width int) error {
+func SaveImage(embeddedRGBChannels []s.RgbChannel, filename string, height, width int) error {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	for y := 0; y < height; y++ {
@@ -33,4 +35,18 @@ func SaveImage(embeddedRGBChannels []RgbChannel, filename string, height, width 
 	err = png.Encode(file, img)
 	return err
 
+}
+
+func ExtractRGBChannelsFromImage(img image.Image) []s.RgbChannel {
+	var lsbs []s.RgbChannel
+	bounds := img.Bounds()
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			lsbs = append(lsbs, s.RgbChannel{R: r, G: g, B: b})
+		}
+	}
+
+	return lsbs
 }
