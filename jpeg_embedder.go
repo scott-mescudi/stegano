@@ -19,8 +19,12 @@ func NewJpegEncoder() JpegEmbedder {
 
 // GetImageCapacity calculates the maximum amount of data (in bytes)
 // that can be embedded into the given JPEG image.
-func (m JpegEmbedder) GetImageCapacity(coverImage image.Image) int {
-	return (len(s.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8
+func (m JpegEmbedder) GetImageCapacity(coverImage image.Image, bitDepth uint8) int {
+	if bitDepth > 7 {
+		return 0
+	}
+
+	return ((len(s.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8) * (int(bitDepth)+1)
 }
 
 // EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
