@@ -2,7 +2,6 @@ package stegano
 
 import (
 	"fmt"
-	c "github.com/scott-mescudi/stegano/compression"
 	u "github.com/scott-mescudi/stegano/pkg"
 	"image"
 )
@@ -21,7 +20,7 @@ func (m *ImageHandler) GetImageCapacity(coverImage image.Image, bitDepth uint8) 
 // EmbedDataIntoImage embeds the given data into the RGB channels of the specified image.
 // Supports optional compression via the `defaultCompression` flag. Returns the modified
 // image or an error if the data exceeds the embedding capacity of the image.
-func (m *ImageHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8, defaultCompression bool) (image.Image, error) {
+func (m *ImageHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8) (image.Image, error) {
 	if coverImage == nil {
 		return nil, fmt.Errorf("coverimage is nil")
 	}
@@ -32,13 +31,6 @@ func (m *ImageHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 	}
 
 	var indata []byte = data
-	if defaultCompression {
-		compressedData, err := c.CompressZSTD(data)
-		if err != nil {
-			return nil, err
-		}
-		indata = compressedData
-	}
 
 	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, indata, bitDepth)
 	if err != nil {
@@ -51,7 +43,7 @@ func (m *ImageHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 // ExtractDataFromImage retrieves data embedded in the RGB channels of the specified image.
 // Decompresses the data if `isDefaultCompressed` is true. Returns the extracted data
 // or an error if the process fails.
-func (m *ImageHandler) ExtractDataFromImage(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+func (m *ImageHandler) ExtractDataFromImage(coverImage image.Image, bitDepth uint8) ([]byte, error) {
 	if coverImage == nil {
 		return nil, fmt.Errorf("coverimage is nil")
 	}
@@ -70,15 +62,6 @@ func (m *ImageHandler) ExtractDataFromImage(coverImage image.Image, bitDepth uin
 	var moddedData = make([]byte, 0)
 	for i := 4; i < lenData+4; i++ {
 		moddedData = append(moddedData, data[i])
-	}
-
-	if isDefaultCompressed {
-		outdata, err := c.DecompressZSTD(moddedData)
-		if err != nil {
-			return nil, err
-		}
-
-		return outdata, nil
 	}
 
 	return moddedData, nil
