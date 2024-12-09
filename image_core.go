@@ -116,5 +116,21 @@ func (m *ImageHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]by
 		return nil, fmt.Errorf("Failed to extract channels from image")
 	}
 
-	return u.ExtractAtDepth(channels, depth)
+	emdata, err := u.ExtractAtDepth(channels, depth)
+	if err != nil {
+		return nil, err
+	}
+
+	lenData, err := u.GetlenOfData(emdata)
+	if err != nil || lenData == 0 {
+		return nil, err
+	}
+	fmt.Println(lenData)
+
+	var moddedData = make([]byte, 0)
+	for i := 4; i < lenData+4; i++ {
+		moddedData = append(moddedData, emdata[i])
+	}
+
+	return moddedData, nil
 }
