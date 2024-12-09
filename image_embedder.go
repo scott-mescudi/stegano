@@ -35,7 +35,7 @@ func (m *ImageHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 
 	// Validate bit depth
 	if bitDepth < 0 || bitDepth > 7 {
-		return fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
+		return fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
 	}
 
 	// Validate data
