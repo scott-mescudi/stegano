@@ -179,5 +179,5 @@ func main() {
 ## Future Improvements
 
 - **Huffman Encoding:** Add support for Huffman-based compression.
-- **Encryption:** Integrate encryption options for better data security.
 - **Audio Support:** Add support for audio formats.
+- **Multi carrier Support:** if muliple carrier files are provided split data into each carrier, also include what part of the data it is
