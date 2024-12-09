@@ -1,10 +1,10 @@
 package pkg
 
 import (
+	"github.com/stretchr/testify/assert"
+	"image"
 	"image/color"
 	"testing"
-		"image"
-	"github.com/stretchr/testify/assert" 
 )
 
 func TestSaveImage(t *testing.T) {
@@ -125,15 +125,15 @@ func TestExtractRGBChannelsFromImage_AllSameColor(t *testing.T) {
 func TestExtractRGBChannelsFromImage_VaryingColors(t *testing.T) {
 	// Test with a 2x2 image where each pixel is a different color.
 	img := image.NewRGBA(image.Rect(0, 0, 2, 2))
-	img.Set(0, 0, color.RGBA{R: 255, G: 0, B: 0, A: 255}) // Red
-	img.Set(1, 0, color.RGBA{R: 0, G: 255, B: 0, A: 255}) // Green
-	img.Set(0, 1, color.RGBA{R: 0, G: 0, B: 255, A: 255}) // Blue
+	img.Set(0, 0, color.RGBA{R: 255, G: 0, B: 0, A: 255})   // Red
+	img.Set(1, 0, color.RGBA{R: 0, G: 255, B: 0, A: 255})   // Green
+	img.Set(0, 1, color.RGBA{R: 0, G: 0, B: 255, A: 255})   // Blue
 	img.Set(1, 1, color.RGBA{R: 255, G: 255, B: 0, A: 255}) // Yellow
 
 	expected := []RgbChannel{
-		{R: 255, G: 0, B: 0},  // Red
-		{R: 0, G: 255, B: 0},  // Green
-		{R: 0, G: 0, B: 255},  // Blue
+		{R: 255, G: 0, B: 0},   // Red
+		{R: 0, G: 255, B: 0},   // Green
+		{R: 0, G: 0, B: 255},   // Blue
 		{R: 255, G: 255, B: 0}, // Yellow
 	}
 

@@ -35,7 +35,7 @@ func SaveImage(embeddedRGBChannels []RgbChannel, height, width int) (image.Image
 
 func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
 	bounds := img.Bounds()
-	var pixels = make([]RgbChannel, img.Bounds().Dx()*img.Bounds().Dy())	
+	var pixels = make([]RgbChannel, img.Bounds().Dx()*img.Bounds().Dy())
 	index := 0
 
 	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
@@ -44,11 +44,11 @@ func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
 			if r > 255 || g > 255 || b > 255 {
 				pixels[index] = RgbChannel{R: r >> 8, G: g >> 8, B: b >> 8}
 				index++
-			}else {
+			} else {
 				pixels[index] = RgbChannel{R: r, G: g, B: b}
 				index++
 			}
-			
+
 		}
 	}
 	return pixels
