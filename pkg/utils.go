@@ -34,14 +34,13 @@ func GetlenOfData(data []byte) (int, error) {
 		container += binary
 	}
 
-	n, err := strconv.ParseInt(container, 2, 32)
+	n, err := strconv.ParseUint(container, 2, 32)
 	if err != nil {
 		return 0, fmt.Errorf("error parsing binary to int: %e", err)
 	}
 
 	return int(n), nil
 }
-
 func FlipBit(num uint32, position uint8) uint32 {
 	return num ^ (1 << position)
 }
