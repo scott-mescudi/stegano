@@ -85,7 +85,7 @@ func (m *JpegHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDept
 //
 // Parameters:
 // - coverImage: The JPEG image containing embedded data to be extracted.
-// - bitDepth: The number of bits per channel used during the embedding process (1-7).
+// - bitDepth: The number of bits per channel used during the embedding process (0-7).
 // - isDefaultCompressed: A flag indicating whether the embedded data was compressed before embedding.
 //
 // Returns:
