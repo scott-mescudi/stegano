@@ -43,7 +43,7 @@ func GetlenOfData(data []byte) (int, error) {
 }
 
 func FlipBit(num uint32, position uint8) uint32 {
-    return num ^ (1 << position)
+	return num ^ (1 << position)
 }
 
 func GetBit(value uint32, position uint8) uint8 {

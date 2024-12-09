@@ -1,9 +1,8 @@
 package jpeg
 
 import (
-        "image"
-        s "github.com/scott-mescudi/stegano/pkg"
-        
+	s "github.com/scott-mescudi/stegano/pkg"
+	"image"
 )
 
 func ExtractRGBChannelsFromJpeg(img image.Image) []s.RgbChannel {
