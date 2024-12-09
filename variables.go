@@ -1,7 +1,7 @@
 package stegano
 
 var (
-	DefaultpngOutputFileName string = "stegano_out.png"
+	DefaultpngOutputFileName  string = "stegano_out.png"
 	DefaultjpegOutputFileName string = "stegano_out.jpeg"
 )
 

@@ -72,6 +72,7 @@ func (m *JpegHandler) ExtractDataFromRgbChannels(RGBchannels []u.RgbChannel, bit
 
 	return moddedData, nil
 }
+
 // EmbedAtDepth embeds the provided data into a specific bit depth of the RGB channels of the image.
 // Unlike other embedding methods, this modifies a single bit per channel at the specified depth.
 func (m *JpegHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth uint8) (image.Image, error) {

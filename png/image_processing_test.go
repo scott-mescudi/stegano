@@ -5,8 +5,8 @@ import (
 	"image/color"
 	"testing"
 
-	"github.com/stretchr/testify/assert" 
-	s "github.com/scott-mescudi/stegano/pkg" 
+	s "github.com/scott-mescudi/stegano/pkg"
+	"github.com/stretchr/testify/assert"
 )
 
 // Helper function to create a 1x1 image with a specific color.
@@ -15,7 +15,6 @@ func createTestImage(c color.Color) image.Image {
 	img.Set(0, 0, c)
 	return img
 }
-
 
 func TestExtractRGBChannelsFromImage_BlackImage(t *testing.T) {
 	// Test with a single pixel black image.
@@ -28,8 +27,6 @@ func TestExtractRGBChannelsFromImage_BlackImage(t *testing.T) {
 	// Assert that the result matches the expected output.
 	assert.Equal(t, expected, result)
 }
-
-
 
 func TestExtractRGBChannelsFromImage_BlankImage(t *testing.T) {
 	// Test with a blank image (transparent).

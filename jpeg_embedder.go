@@ -39,7 +39,7 @@ func (m *JpegHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDept
 	}
 
 	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
-	if len(data)*8 > (((len(RGBchannels)) * 3) / 8) * (int(bitDepth) + 1) {
+	if len(data)*8 > (((len(RGBchannels))*3)/8)*(int(bitDepth)+1) {
 		return fmt.Errorf("data is too large to embed into the image: required space exceeds available capacity")
 	}
 

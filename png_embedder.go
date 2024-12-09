@@ -12,7 +12,6 @@ import (
 	s "github.com/scott-mescudi/stegano/png"
 )
 
-
 // EncodeAndSave embeds the provided data into the given image and saves the modified image to a new file.
 // The data is embedded using the specified bit depth. If `defaultCompression` is true, the data is compressed before embedding.
 // Returns an error if the data exceeds the embedding capacity of the image or if the saving process fails.
@@ -153,4 +152,3 @@ func (m *PngHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCom
 
 	return moddedData, nil
 }
-
