@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"fmt"
-	"strconv"
 )
 
 // stringToBinary converts a string to a slice of bits (0s and 1s).
@@ -27,20 +26,14 @@ func Int32ToBinary(num int32) []int {
 }
 
 func GetlenOfData(data []byte) (int, error) {
-	container := ""
-	for i := 0; i < 4; i++ {
-		b := data[i]
-		binary := fmt.Sprintf("%08b", b)
-		container += binary
-	}
+    if len(data) < 4 {
+        return 0, fmt.Errorf("insufficient data: expected at least 4 bytes")
+    }
 
-	n, err := strconv.ParseUint(container, 2, 32)
-	if err != nil {
-		return 0, fmt.Errorf("error parsing binary to int: %e", err)
-	}
-
-	return int(n), nil
+    n := int(data[0])<<24 | int(data[1])<<16 | int(data[2])<<8 | int(data[3])
+    return n, nil
 }
+
 func FlipBit(num uint32, position uint8) uint32 {
 	return num ^ (1 << position)
 }
