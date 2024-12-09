@@ -9,7 +9,6 @@ import (
 
 	c "github.com/scott-mescudi/stegano/compression"
 	u "github.com/scott-mescudi/stegano/pkg"
-	s "github.com/scott-mescudi/stegano/png"
 )
 
 // EncodeAndSave embeds the provided data into the given image and saves the modified image to a new file.
@@ -22,7 +21,7 @@ import (
 // - bitDepth: The number of bits per channel used for embedding (0-7).
 // - outputFilename: The name of the file where the modified image will be saved.
 // - defaultCompression: A flag indicating whether the data should be compressed before embedding.
-func (m *PngHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
+func (m *ImageHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return errors.New("coverImage is nil")
@@ -44,7 +43,7 @@ func (m *PngHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth
 	}
 
 	// Extract RGB channels
-	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if RGBchannels == nil {
 		return errors.New("failed to extract RGB channels from the image")
 	}
@@ -105,7 +104,7 @@ func (m *PngHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth
 // - coverImage: The image containing embedded data to be extracted.
 // - bitDepth: The bit depth used during the embedding process.
 // - isDefaultCompressed: A flag indicating whether the embedded data was compressed.
-func (m *PngHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+func (m *ImageHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return nil, errors.New("coverImage is nil")
@@ -115,7 +114,7 @@ func (m *PngHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCom
 	}
 
 	// Extract RGB channels
-	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if RGBchannels == nil {
 		return nil, errors.New("failed to extract RGB channels from the image")
 	}
