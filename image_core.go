@@ -97,7 +97,6 @@ func (m *ExtractHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]
 	if err != nil || lenData == 0 {
 		return nil, err
 	}
-	fmt.Println(lenData)
 
 	var moddedData = make([]byte, 0)
 	for i := 4; i < lenData+4; i++ {
