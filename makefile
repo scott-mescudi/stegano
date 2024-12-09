@@ -22,10 +22,6 @@ lint: ## Lint the code using go vet
 	@echo "Linting code..."
 	@go vet $(PKG)
 
-# Build the library
-build: ## Build the library
-	@echo "Building the library..."
-	@go build $(PKG)
 
 # Clean the build cache
 clean: ## Clean build cache
