@@ -8,8 +8,9 @@ import (
 )
 
 // GetImageCapacity calculates the maximum amount of data (in bytes)
-// that can be embedded into the given JPEG image.
-func (m *JpegHandler) GetImageCapacity(coverImage image.Image, bitDepth uint8) int {
+// that can be embedded in the given image, based on the specified bit depth.
+// Returns 0 if the bit depth exceeds 7, as higher depths are unsupported.
+func (m *ImageHandler) GetImageCapacity(coverImage image.Image, bitDepth uint8) int {
 	if bitDepth > 7 {
 		return 0
 	}
@@ -17,9 +18,14 @@ func (m *JpegHandler) GetImageCapacity(coverImage image.Image, bitDepth uint8) i
 	return ((len(u.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8) * (int(bitDepth) + 1)
 }
 
-// EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
-// of the given JPEG image. Compression can be applied if `defaultCompression` is true.
-func (m *JpegHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8, defaultCompression bool) (image.Image, error) {
+// EmbedDataIntoImage embeds the given data into the RGB channels of the specified image.
+// Supports optional compression via the `defaultCompression` flag. Returns the modified
+// image or an error if the data exceeds the embedding capacity of the image.
+func (m *ImageHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8, defaultCompression bool) (image.Image, error) {
+	if coverImage == nil {
+		return nil, fmt.Errorf("coverimage is nil")
+	}
+
 	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if len(data)*8 > (((len(RGBchannels))*3)/8)*(int(bitDepth)+1) {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
@@ -42,9 +48,15 @@ func (m *JpegHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bi
 	return u.SaveImage(embeddedRGBChannels, coverImage.Bounds().Dy(), coverImage.Bounds().Dx())
 }
 
-// ExtractDataFromRgbChannels retrieves embedded data from the RGB channels
-// of a JPEG image. Decompression is applied if `isDefaultCompressed` is true.
-func (m *JpegHandler) ExtractDataFromRgbChannels(RGBchannels []u.RgbChannel, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+// ExtractDataFromImage retrieves data embedded in the RGB channels of the specified image.
+// Decompresses the data if `isDefaultCompressed` is true. Returns the extracted data
+// or an error if the process fails.
+func (m *ImageHandler) ExtractDataFromImage(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+	if coverImage == nil {
+		return nil, fmt.Errorf("coverimage is nil")
+	}
+
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	data, err := u.ExtractDataFromRGBchannelsWithDepth(RGBchannels, bitDepth)
 	if err != nil {
 		return nil, err
@@ -71,9 +83,10 @@ func (m *JpegHandler) ExtractDataFromRgbChannels(RGBchannels []u.RgbChannel, bit
 
 	return moddedData, nil
 }
+
 // EmbedAtDepth embeds the provided data into a specific bit depth of the RGB channels of the image.
 // Unlike other embedding methods, this modifies a single bit per channel at the specified depth.
-func (m *JpegHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth uint8) (image.Image, error) {
+func (m *ImageHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth uint8) (image.Image, error) {
 	if coverimage == nil {
 		return nil, fmt.Errorf("coverimage is nil")
 	}
@@ -93,8 +106,11 @@ func (m *JpegHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth ui
 
 // ExtractAtDepth extracts data embedded at a specific bit depth from the RGB channels of an image.
 // Only retrieves data from the specified bit depth. Returns the extracted data or an error if the process fails.
-func (m *JpegHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]byte, error) {
-	
+func (m *ImageHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]byte, error) {
+	if coverimage == nil {
+		return nil, fmt.Errorf("coverimage is nil")
+	}
+
 	channels := u.ExtractRGBChannelsFromImage(coverimage)
 	if channels == nil {
 		return nil, fmt.Errorf("Failed to extract channels from image")
