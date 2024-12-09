@@ -8,7 +8,6 @@ import (
 	"os"
 
 	c "github.com/scott-mescudi/stegano/compression"
-	s "github.com/scott-mescudi/stegano/jpeg"
 	u "github.com/scott-mescudi/stegano/pkg"
 )
 
@@ -21,12 +20,16 @@ import (
 // - coverImage: The original JPEG image where data will be embedded.
 // - data: The data to embed into the image.
 // - bitDepth: The number of bits per channel used for embedding (0-7).
-// - outputFilename: The name of the file where the modified image will be saved. If empty, `stegano_out.jpg` is used.
+// - outputFilename: The name of the file where the modified image will be saved. If empty, `stegano_out.png` is used.
 // - defaultCompression: A flag indicating whether the data should be compressed before embedding.
 //
 // Returns:
 // - An error if the embedding or saving process fails, such as if the data is too large, or if the image dimensions are invalid.
 func (m *JpegHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
+	if coverImage == nil {
+		return fmt.Errorf("coverimage is nil")
+	}
+
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 
@@ -38,7 +41,7 @@ func (m *JpegHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDept
 		return errors.New("data is empty")
 	}
 
-	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if len(data)*8 > (((len(RGBchannels)) * 3) / 8) * (int(bitDepth) + 1) {
 		return fmt.Errorf("data is too large to embed into the image: required space exceeds available capacity")
 	}
@@ -63,7 +66,7 @@ func (m *JpegHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDept
 	}
 
 	if outputFilename == "" {
-		outputFilename = DefaultjpegOutputFileName
+		outputFilename = DefaultpngOutputFileName
 	}
 
 	file, err := os.Create(outputFilename)
@@ -95,7 +98,7 @@ func (m *JpegHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCo
 		return nil, fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
 	}
 
-	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if RGBchannels == nil {
 		return nil, errors.New("failed to extract RGB channels from the image")
 	}

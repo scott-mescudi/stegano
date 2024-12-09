@@ -3,7 +3,6 @@ package stegano
 import (
 	"fmt"
 	c "github.com/scott-mescudi/stegano/compression"
-	s "github.com/scott-mescudi/stegano/jpeg"
 	u "github.com/scott-mescudi/stegano/pkg"
 	"image"
 )
@@ -15,13 +14,13 @@ func (m *JpegHandler) GetImageCapacity(coverImage image.Image, bitDepth uint8) i
 		return 0
 	}
 
-	return ((len(s.ExtractRGBChannelsFromJpeg(coverImage)) * 3) / 8) * (int(bitDepth) + 1)
+	return ((len(u.ExtractRGBChannelsFromImage(coverImage)) * 3) / 8) * (int(bitDepth) + 1)
 }
 
 // EmbedDataIntoRgbChannels embeds the provided data into the RGB channels
 // of the given JPEG image. Compression can be applied if `defaultCompression` is true.
 func (m *JpegHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8, defaultCompression bool) (image.Image, error) {
-	RGBchannels := s.ExtractRGBChannelsFromJpeg(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if len(data)*8 > (((len(RGBchannels))*3)/8)*(int(bitDepth)+1) {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
 	}
@@ -75,7 +74,11 @@ func (m *JpegHandler) ExtractDataFromRgbChannels(RGBchannels []u.RgbChannel, bit
 // EmbedAtDepth embeds the provided data into a specific bit depth of the RGB channels of the image.
 // Unlike other embedding methods, this modifies a single bit per channel at the specified depth.
 func (m *JpegHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth uint8) (image.Image, error) {
-	channels := s.ExtractRGBChannelsFromJpeg(coverimage)
+	if coverimage == nil {
+		return nil, fmt.Errorf("coverimage is nil")
+	}
+
+	channels := u.ExtractRGBChannelsFromImage(coverimage)
 	if channels == nil {
 		return nil, fmt.Errorf("Failed to extract channels from image")
 	}
@@ -91,7 +94,8 @@ func (m *JpegHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth ui
 // ExtractAtDepth extracts data embedded at a specific bit depth from the RGB channels of an image.
 // Only retrieves data from the specified bit depth. Returns the extracted data or an error if the process fails.
 func (m *JpegHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]byte, error) {
-	channels := s.ExtractRGBChannelsFromJpeg(coverimage)
+	
+	channels := u.ExtractRGBChannelsFromImage(coverimage)
 	if channels == nil {
 		return nil, fmt.Errorf("Failed to extract channels from image")
 	}

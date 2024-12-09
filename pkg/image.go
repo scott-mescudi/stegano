@@ -32,3 +32,22 @@ func SaveImage(embeddedRGBChannels []RgbChannel, height, width int) (image.Image
 
 	return img, nil
 }
+
+func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
+	bounds := img.Bounds()
+	var pixels []RgbChannel
+
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			r, g, b, _ := img.At(x, y).RGBA()
+			if r > 255 || g > 255 || b > 255 {
+				pixels = append(pixels, RgbChannel{R: r >> 8, G: g >> 8, B: b >> 8})
+			}else {
+				pixels = append(pixels, RgbChannel{R: r, G: g, B: b})
+			}
+			
+		}
+	}
+
+	return pixels
+}

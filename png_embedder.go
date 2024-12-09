@@ -9,7 +9,6 @@ import (
 
 	c "github.com/scott-mescudi/stegano/compression"
 	u "github.com/scott-mescudi/stegano/pkg"
-	s "github.com/scott-mescudi/stegano/png"
 )
 
 
@@ -45,7 +44,7 @@ func (m *PngHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth
 	}
 
 	// Extract RGB channels
-	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if RGBchannels == nil {
 		return errors.New("failed to extract RGB channels from the image")
 	}
@@ -116,7 +115,7 @@ func (m *PngHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCom
 	}
 
 	// Extract RGB channels
-	RGBchannels := s.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
 	if RGBchannels == nil {
 		return nil, errors.New("failed to extract RGB channels from the image")
 	}
