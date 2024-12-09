@@ -21,7 +21,7 @@ import (
 // - bitDepth: The number of bits per channel used for embedding (0-7).
 // - outputFilename: The name of the file where the modified image will be saved.
 // - defaultCompression: A flag indicating whether the data should be compressed before embedding.
-func (m *ImageHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
+func (m *EmbedHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return errors.New("coverImage is nil")
@@ -33,8 +33,8 @@ func (m *ImageHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 	}
 
 	// Validate bit depth
-	if bitDepth < 1 || bitDepth > 7 {
-		return fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
+	if bitDepth < 0 || bitDepth > 7 {
+		return fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
 	}
 
 	// Validate data
@@ -104,7 +104,7 @@ func (m *ImageHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 // - coverImage: The image containing embedded data to be extracted.
 // - bitDepth: The bit depth used during the embedding process.
 // - isDefaultCompressed: A flag indicating whether the embedded data was compressed.
-func (m *ImageHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return nil, errors.New("coverImage is nil")

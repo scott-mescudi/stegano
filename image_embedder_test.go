@@ -31,7 +31,7 @@ func TestEncodeAndSave_Valid(t *testing.T) {
 	outputFilename := "test_output.jpg"
 
 	// Execute
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
@@ -53,7 +53,7 @@ func TestEncodeAndSave_EmptyData(t *testing.T) {
 	outputFilename := "test_output.jpg"
 
 	// Execute
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
@@ -69,7 +69,7 @@ func TestEncodeAndSave_DataTooLarge(t *testing.T) {
 	outputFilename := "test_output.jpg"
 
 	// Execute
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
@@ -85,7 +85,7 @@ func TestEncodeAndSave_CompressedData(t *testing.T) {
 	outputFilename := "test_compressed_output.jpg"
 
 	// Execute with compression enabled
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, true)
 
 	// Test if no error occurred and file was created
@@ -107,7 +107,7 @@ func TestEncodeAndSave_InvalidFileCreation(t *testing.T) {
 	outputFilename := "/invalid/path/test_output.jpg" // Invalid path
 
 	// Execute
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
@@ -123,7 +123,7 @@ func TestEncodeAndSave_SuccessWithSpecificFilename(t *testing.T) {
 	outputFilename := "specific_output.jpg"
 
 	// Execute
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
@@ -145,7 +145,7 @@ func TestEncodeAndSave_NullImage(t *testing.T) {
 	outputFilename := "test_output.jpg"
 
 	// Execute
-	handler := &ImageHandler{}
+	handler := &EmbedHandler{}
 	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned

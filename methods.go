@@ -1,9 +1,19 @@
 package stegano
 
-type ImageHandler struct{}
+type EmbedHandler struct {
+	// Fields and methods for embedding data
+}
 
-// NewImageHandler initializes and returns a new PNG Handler instance
-// for embedding or extracting data.
-func NewImageHandler() *ImageHandler {
-	return &ImageHandler{}
+type ExtractHandler struct {
+	// Fields and methods for extracting data
+}
+
+// NewEmbedHandler initializes an EmbedHandler
+func NewEmbedHandler() *EmbedHandler {
+	return &EmbedHandler{}
+}
+
+// NewExtractHandler initializes an ExtractHandler
+func NewExtractHandler() *ExtractHandler {
+	return &ExtractHandler{}
 }
