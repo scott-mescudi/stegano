@@ -1,7 +1,12 @@
 package stegano
 
 import (
+	"fmt"
 	"image"
+	"image/jpeg"
+	"image/png"
+	"os"
+	"path/filepath"
 )
 
 // GetImageCapacity calculates the maximum amount of data (in bytes)
@@ -13,4 +18,24 @@ func GetImageCapacity(coverImage image.Image, bitDepth uint8) int {
     }
  
     return ((coverImage.Bounds().Max.X * coverImage.Bounds().Max.Y * 3) / 8) * (int(bitDepth) + 1)
+}
+
+// takes in path to imaeg and returns image.image
+func Decodeimage(path string) (image.Image, error) {
+	ext := filepath.Ext(path)
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	
+	switch ext {
+	case ".jpg":
+		return jpeg.Decode(file)
+	case ".jpeg":
+		return jpeg.Decode(file)
+	case "png":
+		return png.Decode(file)
+	}
+
+	return nil, fmt.Errorf("invalid image format")
 }

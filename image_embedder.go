@@ -43,7 +43,7 @@ func (m *EmbedHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 	}
 
 	// Extract RGB channels
-	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
 		return errors.New("failed to extract RGB channels from the image")
 	}
@@ -114,7 +114,7 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 	}
 
 	// Extract RGB channels
-	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
 		return nil, errors.New("failed to extract RGB channels from the image")
 	}

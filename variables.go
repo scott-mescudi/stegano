@@ -7,4 +7,5 @@ var (
 const (
 	MinBitDepth uint8 = 0
 	MaxBitDepth uint8 = 7
+	Default int = 1
 )

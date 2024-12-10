@@ -33,7 +33,7 @@ func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth 
 		return nil, fmt.Errorf("bit depth exeeds 7")
 	}
 
-	if (len(data)*8)+32 > len(RGBchannels)*3*int(depth) {
+	if (len(data)*8)+32 > len(RGBchannels)* 3 * (int(depth)+1) {
 		return nil, fmt.Errorf("data is too big")
 	}
 

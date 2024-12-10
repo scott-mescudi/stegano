@@ -1,10 +1,12 @@
 package pkg
 
 import (
-	"github.com/stretchr/testify/assert"
 	"image"
 	"image/color"
+	"runtime"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSaveImage(t *testing.T) {
@@ -75,31 +77,31 @@ func createTestImage(c color.Color) image.Image {
 	return img
 }
 
-func TestExtractRGBChannelsFromImage_SinglePixel(t *testing.T) {
+func TestExtractRGBChannelsFromImageWithConCurrency_SinglePixel(t *testing.T) {
 	// Test with a single pixel image with red color.
 	img := createTestImage(color.RGBA{R: 255, G: 0, B: 0, A: 255})
 	expected := []RgbChannel{{R: 255, G: 0, B: 0}}
 
 	// Call the function.
-	result := ExtractRGBChannelsFromImage(img)
+	result := ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
 
 	// Assert that the result matches the expected output.
 	assert.Equal(t, expected, result)
 }
 
-func TestExtractRGBChannelsFromImage_BlackImage(t *testing.T) {
+func TestExtractRGBChannelsFromImageWithConCurrency_BlackImage(t *testing.T) {
 	// Test with a single pixel black image.
 	img := createTestImage(color.RGBA{R: 0, G: 0, B: 0, A: 255})
 	expected := []RgbChannel{{R: 0, G: 0, B: 0}}
 
 	// Call the function.
-	result := ExtractRGBChannelsFromImage(img)
+	result := ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
 
 	// Assert that the result matches the expected output.
 	assert.Equal(t, expected, result)
 }
 
-func TestExtractRGBChannelsFromImage_AllSameColor(t *testing.T) {
+func TestExtractRGBChannelsFromImageWithConCurrency_AllSameColor(t *testing.T) {
 	// Test with a small 2x2 image where all pixels are green.
 	img := image.NewRGBA(image.Rect(0, 0, 2, 2))
 	for y := 0; y < 2; y++ {
@@ -116,13 +118,13 @@ func TestExtractRGBChannelsFromImage_AllSameColor(t *testing.T) {
 	}
 
 	// Call the function.
-	result := ExtractRGBChannelsFromImage(img)
+	result := ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
 
 	// Assert that the result matches the expected output.
 	assert.Equal(t, expected, result)
 }
 
-func TestExtractRGBChannelsFromImage_VaryingColors(t *testing.T) {
+func TestExtractRGBChannelsFromImageWithConCurrency_VaryingColors(t *testing.T) {
 	// Test with a 2x2 image where each pixel is a different color.
 	img := image.NewRGBA(image.Rect(0, 0, 2, 2))
 	img.Set(0, 0, color.RGBA{R: 255, G: 0, B: 0, A: 255})   // Red
@@ -138,13 +140,13 @@ func TestExtractRGBChannelsFromImage_VaryingColors(t *testing.T) {
 	}
 
 	// Call the function.
-	result := ExtractRGBChannelsFromImage(img)
+	result := ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
 
 	// Assert that the result matches the expected output.
 	assert.Equal(t, expected, result)
 }
 
-func TestExtractRGBChannelsFromImage_BlankImage(t *testing.T) {
+func TestExtractRGBChannelsFromImageWithConCurrency_BlankImage(t *testing.T) {
 	// Test with a blank image (transparent).
 	img := image.NewRGBA(image.Rect(0, 0, 2, 2))
 	for y := 0; y < 2; y++ {
@@ -161,19 +163,49 @@ func TestExtractRGBChannelsFromImage_BlankImage(t *testing.T) {
 	}
 
 	// Call the function.
-	result := ExtractRGBChannelsFromImage(img)
+	result := ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
 
 	// Assert that the result matches the expected output.
 	assert.Equal(t, expected, result)
 }
 
-func TestExtractRGBChannelsFromImage_EmptyImage(t *testing.T) {
+func TestExtractRGBChannelsFromImageWithConCurrency_EmptyImage(t *testing.T) {
 	// Test with an empty image (0x0).
 	img := image.NewRGBA(image.Rect(0, 0, 0, 0))
 
 	// Call the function.
-	result := ExtractRGBChannelsFromImage(img)
+	result := ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
 
 	// Assert that the result is an empty slice.
 	assert.Empty(t, result)
+}
+
+
+func BenchmarkExtractRGBChannelsFromImageWithConCurrency(b *testing.B) {
+	// Generate a sample image for testing
+	width, height := 10000, 10000 // Modify as needed
+	img := generateTestImage(width, height)
+
+	// Reset the timer to exclude setup time from the benchmark
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_ = ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
+	}
+}
+
+// Helper function to generate a test image with random colors
+func generateTestImage(width, height int) image.Image {
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			img.Set(x, y, color.RGBA{
+				R: uint8(x % 256),
+				G: uint8(y % 256),
+				B: uint8((x + y) % 256),
+				A: 255,
+			})
+		}
+	}
+	return img
 }

@@ -2,8 +2,9 @@ package stegano
 
 import (
 	"fmt"
-	u "github.com/scott-mescudi/stegano/pkg"
 	"image"
+
+	u "github.com/scott-mescudi/stegano/pkg"
 )
 
 // EmbedDataIntoImage embeds the given data into the RGB channels of the specified image.
@@ -14,7 +15,7 @@ func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 		return nil, fmt.Errorf("coverimage is nil")
 	}
 
-	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if len(data)*8 > (((len(RGBchannels))*3)/8)*(int(bitDepth)+1) {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
 	}
@@ -37,7 +38,7 @@ func (m *ExtractHandler) ExtractDataFromImage(coverImage image.Image, bitDepth u
 		return nil, fmt.Errorf("coverimage is nil")
 	}
 
-	RGBchannels := u.ExtractRGBChannelsFromImage(coverImage)
+	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	data, err := u.ExtractDataFromRGBchannelsWithDepth(RGBchannels, bitDepth)
 	if err != nil {
 		return nil, err
@@ -63,7 +64,7 @@ func (m *EmbedHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth u
 		return nil, fmt.Errorf("coverimage is nil")
 	}
 
-	channels := u.ExtractRGBChannelsFromImage(coverimage)
+	channels := u.ExtractRGBChannelsFromImageWithConCurrency(coverimage, m.concurrency)
 	if channels == nil {
 		return nil, fmt.Errorf("Failed to extract channels from image")
 	}
@@ -83,7 +84,7 @@ func (m *ExtractHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]
 		return nil, fmt.Errorf("coverimage is nil")
 	}
 
-	channels := u.ExtractRGBChannelsFromImage(coverimage)
+	channels := u.ExtractRGBChannelsFromImageWithConCurrency(coverimage, m.concurrency)
 	if channels == nil {
 		return nil, fmt.Errorf("Failed to extract channels from image")
 	}

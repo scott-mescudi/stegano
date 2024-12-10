@@ -1,19 +1,29 @@
 package stegano
 
+import "fmt"
+
 type EmbedHandler struct {
-	// Fields and methods for embedding data
+	concurrency int
 }
 
 type ExtractHandler struct {
-	// Fields and methods for extracting data
+	concurrency int
 }
 
 // NewEmbedHandler initializes an EmbedHandler
-func NewEmbedHandler() *EmbedHandler {
-	return &EmbedHandler{}
+func NewEmbedHandler(concurrency int) (*EmbedHandler, error) {
+	if concurrency <= 0 {
+		return nil, fmt.Errorf("invalid go number of goroutines")
+	}
+
+	return &EmbedHandler{concurrency: concurrency}, nil
 }
 
 // NewExtractHandler initializes an ExtractHandler
-func NewExtractHandler() *ExtractHandler {
-	return &ExtractHandler{}
+func NewExtractHandler(concurrency int) (*ExtractHandler, error) {
+	if concurrency <= 0 {
+		return nil, fmt.Errorf("invalid go number of goroutines")
+	}
+
+	return &ExtractHandler{concurrency: concurrency}, nil
 }
