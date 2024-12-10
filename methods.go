@@ -13,7 +13,7 @@ type ExtractHandler struct {
 // NewEmbedHandler initializes an EmbedHandler
 func NewEmbedHandler(concurrency int) (*EmbedHandler, error) {
 	if concurrency <= 0 {
-		return nil, fmt.Errorf("invalid go number of goroutines")
+		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
 	return &EmbedHandler{concurrency: concurrency}, nil
@@ -22,7 +22,7 @@ func NewEmbedHandler(concurrency int) (*EmbedHandler, error) {
 // NewExtractHandler initializes an ExtractHandler
 func NewExtractHandler(concurrency int) (*ExtractHandler, error) {
 	if concurrency <= 0 {
-		return nil, fmt.Errorf("invalid go number of goroutines")
+		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
 	return &ExtractHandler{concurrency: concurrency}, nil
