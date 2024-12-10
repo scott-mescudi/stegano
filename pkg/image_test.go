@@ -180,7 +180,6 @@ func TestExtractRGBChannelsFromImageWithConCurrency_EmptyImage(t *testing.T) {
 	assert.Empty(t, result)
 }
 
-
 func BenchmarkExtractRGBChannelsFromImageWithConCurrency(b *testing.B) {
 	// Generate a sample image for testing
 	width, height := 10000, 10000 // Modify as needed

@@ -26,12 +26,12 @@ func Int32ToBinary(num int32) []int {
 }
 
 func GetlenOfData(data []byte) (int, error) {
-    if len(data) < 4 {
-        return 0, fmt.Errorf("insufficient data: expected at least 4 bytes")
-    }
+	if len(data) < 4 {
+		return 0, fmt.Errorf("insufficient data: expected at least 4 bytes")
+	}
 
-    n := int(data[0])<<24 | int(data[1])<<16 | int(data[2])<<8 | int(data[3])
-    return n, nil
+	n := int(data[0])<<24 | int(data[1])<<16 | int(data[2])<<8 | int(data[3])
+	return n, nil
 }
 
 func FlipBit(num uint32, position uint8) uint32 {
