@@ -28,7 +28,7 @@ func TestEncodeAndSave_Valid(t *testing.T) {
 	coverImage := createTestImage()
 	data := []byte("some secret data")
 	bitDepth := uint8(3)
-	outputFilename := "test_output.jpg"
+	outputFilename := "test_output.png"
 
 	// Execute
 	handler := &embedHandler{3}
@@ -50,7 +50,7 @@ func TestEncodeAndSave_EmptyData(t *testing.T) {
 	coverImage := createTestImage()
 	data := []byte{}
 	bitDepth := uint8(3)
-	outputFilename := "test_output.jpg"
+	outputFilename := "test_output.png"
 
 	// Execute
 	handler := &embedHandler{3}
@@ -66,7 +66,7 @@ func TestEncodeAndSave_DataTooLarge(t *testing.T) {
 	coverImage := createTestImage()
 	data := make([]byte, 10000) // This is more data than the image can hold
 	bitDepth := uint8(3)
-	outputFilename := "test_output.jpg"
+	outputFilename := "test_output.png"
 
 	// Execute
 	handler := &embedHandler{3}
@@ -82,7 +82,7 @@ func TestEncodeAndSave_CompressedData(t *testing.T) {
 	coverImage := createTestImage()
 	data := []byte("compressed test data")
 	bitDepth := uint8(3)
-	outputFilename := "test_compressed_output.jpg"
+	outputFilename := "test_compressed_output.png"
 
 	// Execute with compression enabled
 	handler := &embedHandler{3}
@@ -104,7 +104,7 @@ func TestEncodeAndSave_InvalidFileCreation(t *testing.T) {
 	coverImage := createTestImage()
 	data := []byte("test data")
 	bitDepth := uint8(3)
-	outputFilename := "/invalid/path/test_output.jpg" // Invalid path
+	outputFilename := "/invalid/path/test_output.png" // Invalid path
 
 	// Execute
 	handler := &embedHandler{3}
@@ -112,7 +112,6 @@ func TestEncodeAndSave_InvalidFileCreation(t *testing.T) {
 
 	// Test if the correct error is returned
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "failed to create output file")
 }
 
 func TestEncodeAndSave_SuccessWithSpecificFilename(t *testing.T) {
@@ -120,7 +119,7 @@ func TestEncodeAndSave_SuccessWithSpecificFilename(t *testing.T) {
 	coverImage := createTestImage()
 	data := []byte("another test data")
 	bitDepth := uint8(3)
-	outputFilename := "specific_output.jpg"
+	outputFilename := "specific_output.png"
 
 	// Execute
 	handler := &embedHandler{3}
@@ -142,7 +141,7 @@ func TestEncodeAndSave_NullImage(t *testing.T) {
 	var coverImage image.Image = nil
 	data := []byte("some data")
 	bitDepth := uint8(3)
-	outputFilename := "test_output.jpg"
+	outputFilename := "test_output.png"
 
 	// Execute
 	handler := &embedHandler{3}

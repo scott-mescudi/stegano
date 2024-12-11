@@ -4,8 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"image"
-	"image/png"
-	"os"
+
 
 	c "github.com/scott-mescudi/stegano/compression"
 	u "github.com/scott-mescudi/stegano/pkg"
@@ -48,11 +47,11 @@ func (m *embedHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 		return errors.New("failed to extract RGB channels from the image")
 	}
 
-	// Check if data fits into the image
-	maxCapacity := len(RGBchannels)*3*(int(bitDepth)+1)
+	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
 	if (len(data)*8)+32 > maxCapacity {
 		return fmt.Errorf("data is too large to embed into the image: maxCapacity=%d bytes, dataSize=%d bytes", maxCapacity, len(data))
 	}
+
 
 	// Compress data if required
 	var indata []byte = data
@@ -81,19 +80,8 @@ func (m *embedHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 		outputFilename = DefaultpngOutputFile
 	}
 
-	// Create file for output
-	file, err := os.Create(outputFilename)
-	if err != nil {
-		return fmt.Errorf("failed to create output file '%s': %w", outputFilename, err)
-	}
-	defer file.Close()
-
-	// Encode the PNG
-	if err := png.Encode(file, imgdata); err != nil {
-		return fmt.Errorf("failed to encode PNG: %w", err)
-	}
-
-	return nil
+	
+	return SaveImage(outputFilename, imgdata)
 }
 
 // Decode extracts data embedded in an image using the specified bit depth.
