@@ -34,28 +34,6 @@ func SaveImage(embeddedRGBChannels []RgbChannel, height, width int) (image.Image
 	return img, nil
 }
 
-// use 3 go routines to get chunks of an image. append to slice and after all are finished combine slices
-func ExtractRGBChannelsFromImage(img image.Image) []RgbChannel {
-	bounds := img.Bounds()
-	var pixels = make([]RgbChannel, img.Bounds().Dx()*img.Bounds().Dy())
-	index := 0
-
-	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-		for x := bounds.Min.X; x < bounds.Max.X; x++ {
-			r, g, b, _ := img.At(x, y).RGBA()
-			if r > 255 || g > 255 || b > 255 {
-				pixels[index] = RgbChannel{R: r >> 8, G: g >> 8, B: b >> 8}
-				index++
-			} else {
-				pixels[index] = RgbChannel{R: r, G: g, B: b}
-				index++
-			}
-
-		}
-	}
-	return pixels
-}
-
 type split struct {
 	start, end int
 }
