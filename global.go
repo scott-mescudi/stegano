@@ -33,7 +33,7 @@ func Decodeimage(path string) (image.Image, error) {
 		return jpeg.Decode(file)
 	case ".jpeg":
 		return jpeg.Decode(file)
-	case "png":
+	case ".png":
 		return png.Decode(file)
 	}
 
