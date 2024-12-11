@@ -39,3 +39,28 @@ func Decodeimage(path string) (image.Image, error) {
 
 	return nil, fmt.Errorf("invalid image format")
 }
+
+func SaveImage(outputfile string, embeddedImage image.Image) error {
+	if outputfile == "" {
+		return fmt.Errorf("invalid output path")
+	}
+
+	if embeddedImage == nil {
+		return fmt.Errorf("embeddedImage cannot be nil")
+	}
+
+	ff, err := os.Create(outputfile)
+	if err != nil {
+		return err
+	}
+
+	encoder := png.Encoder{
+    	CompressionLevel: png.NoCompression,
+	}
+
+	if err := encoder.Encode(ff, embeddedImage); err != nil {
+		return err
+	}
+
+	return nil
+}
