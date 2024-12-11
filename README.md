@@ -8,6 +8,7 @@
 Stegano is a powerful, flexible Go library designed for securely embedding and extracting data within image files using advanced steganographic techniques. It allows developers to hide secret information within image files (such as PNG and JPEG formats) without visible changes to the image. This functionality is enabled through the manipulation of pixel data at varying depths, ensuring that data can be embedded or extracted effectively.
 
 In addition to providing a seamless interface for image-based steganography, Stegano offers data compression support via ZSTD to optimize storage within images. This makes it a useful tool for embedding larger datasets while minimizing the file size. Future versions will expand support for additional compression methods and possibly other types of carrier files, such as audio.
+
 ---
 
 ## Features
