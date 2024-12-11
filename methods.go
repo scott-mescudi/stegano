@@ -2,28 +2,39 @@ package stegano
 
 import "fmt"
 
-type EmbedHandler struct {
+type embedHandler struct {
 	concurrency int
 }
 
-type ExtractHandler struct {
+type extractHandler struct {
 	concurrency int
 }
 
-// NewEmbedHandler initializes an EmbedHandler
-func NewEmbedHandler(concurrency int) (*EmbedHandler, error) {
+// NewembedHandler initializes an embedHandler
+func NewEmbedHandlerWithConcurrency(concurrency int) (*embedHandler, error) {
 	if concurrency <= 0 {
 		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
-	return &EmbedHandler{concurrency: concurrency}, nil
+	return &embedHandler{concurrency: concurrency}, nil
 }
 
-// NewExtractHandler initializes an ExtractHandler
-func NewExtractHandler(concurrency int) (*ExtractHandler, error) {
+// NewembedHandler initializes an embedHandler
+func NewEmbedHandler() (*embedHandler) {
+	return &embedHandler{concurrency: 1}
+}
+
+
+// NewextractHandler initializes an extractHandler
+func NewExtractHandlerWithConcurrency(concurrency int) (*extractHandler, error) {
 	if concurrency <= 0 {
 		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
-	return &ExtractHandler{concurrency: concurrency}, nil
+	return &extractHandler{concurrency: concurrency}, nil
+}
+
+// NewextractHandler initializes an extractHandler
+func NewExtractHandler() (*extractHandler) {
+	return &extractHandler{concurrency: 1}
 }

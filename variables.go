@@ -1,7 +1,7 @@
 package stegano
 
 var (
-	DefaultpngOutputFileName string = "stegano_out.png"
+	DefaultpngOutputFile string = "stegano_out.png"
 )
 
 const (
