@@ -8,12 +8,15 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 
 ## Features
 
-- **PNG Image Support:** Embed and extract data from PNG images.
-- **JPEG Image Support:** Embed and extract data from JPEG images.
-- **Data Compression:** Utilizes ZSTD compression for efficient embedding.
-- **Capacity Calculation:** Calculate the maximum data capacity of an image for embedding.
-- **Variable Depth Encoding:** Can adjust how many bits in a byte are used to store data.
 
+- **Multi-Image Support:** Supports all images compatible with the `image.Image` type in Go.  
+- **Data Compression:** Utilizes ZSTD compression for efficient embedding.  
+- **Capacity Calculation:** Calculates the maximum data capacity of an image for embedding.  
+- **Variable Depth Encoding:** Embeds bits up to and including the specified index.  
+- **Concurrency:** Increases speed at the cost of memory usage.  
+- **Embed at Certain Depth:** Embeds 1 bit per channel at the specified index.  
+- **Save Image:** Efficient PNG encoding.  
+- **Decode Image:** Helper function to decode images into the `image.Image` type.  
 
 ---
 
@@ -32,14 +35,13 @@ go get github.com/scott-mescudi/stegano@latest
 
 ```go
 import (
-    "image"
     "github.com/scott-mescudi/stegano"
 )
 ```
 
-### Working with PNG Images
+### Working with Images
 
-#### Encode Data into a PNG Image
+#### Encode Data into a Image
 
 ```go
 package main
@@ -65,93 +67,39 @@ func main() {
 }
 ```
 
-#### Decode Data from a PNG Image
+#### Decode Data from a Image
 
 ```go
 package main
 
 import (
-    "image"
-    "os"
-    "github.com/scott-mescudi/stegano"
-    _ "image/png" // Required for PNG decoding
+	"fmt"
+	"log"
+
+	"github.com/scott-mescudi/stegano"
 )
 
 func main() {
-    file, _ := os.Open("output.png")
-    defer file.Close()
-    
-    img, _ := png.Decode(file)
-    
-    pngEmbedder := stegano.NewPngEncoder()
-    data, err := pngEmbedder.DecodePngImage(img)
-    if err != nil {
-        panic(err)
-    }
-    
-    println(string(data)) // Output the hidden message
+	coverImage, err := stegano.Decodeimage("imageWithData.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	encoder := stegano.NewExtractHandler()
+	
+	data, err := encoder.Decode(coverImage, stegano.MinBitDepth, true)     
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	fmt.Println(string(data))
 }
 ```
 
----
+> **⚠ Disclaimer:**  
+> - The image used for embedding data must always be a **.png** file or another format with no compression; otherwise, data will be lost.  
+> - The **bitDepth** must match the one originally used, or a slice-out-of-bounds error will occur.
 
-### Working with JPEG Images
-
-#### Encode Data into a JPEG Image
-
-```go
-package main
-
-import (
-    "image"
-    "os"
-    "github.com/scott-mescudi/stegano"
-    _ "image/jpeg" // Required for JPEG decoding
-)
-
-func main() {
-    file, _ := os.Open("cover.jpg")
-    defer file.Close()
-    
-    img, _ := jpeg.Decode(file)
-    data := []byte("Hidden JPEG data")
-    outputFile := "output.jpg"
-    
-    jpegEmbedder := stegano.NewJpegEncoder()
-    err := jpegEmbedder.EncodeJPEGImage(img, data, outputFile)
-    if err != nil {
-        panic(err)
-    }
-}
-```
-
-#### Decode Data from a JPEG Image
-
-```go
-package main
-
-import (
-    "image"
-    "os"
-    "github.com/scott-mescudi/stegano"
-    _ "image/jpeg" // Required for JPEG decoding
-)
-
-func main() {
-    file, _ := os.Open("output.jpg")
-    defer file.Close()
-    
-    img, _ := jpeg.Decode(file)
-    
-    jpegEmbedder := stegano.NewJpegEncoder()
-    data, err := jpegEmbedder.DecodeJPEGImage(img)
-    if err != nil {
-        panic(err)
-    }
-    
-    println(string(data)) // Output the hidden message
-}
-```
 
 ---
 
