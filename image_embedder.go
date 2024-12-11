@@ -49,8 +49,8 @@ func (m *embedHandler) EncodeAndSave(coverImage image.Image, data []byte, bitDep
 	}
 
 	// Check if data fits into the image
-	maxCapacity := (((len(RGBchannels)) * 3) / 8) * (int(bitDepth) + 1)
-	if len(data)*8 > maxCapacity {
+	maxCapacity := len(RGBchannels)*3*(int(bitDepth)+1)
+	if (len(data)*8)+32 > maxCapacity {
 		return fmt.Errorf("data is too large to embed into the image: maxCapacity=%d bytes, dataSize=%d bytes", maxCapacity, len(data))
 	}
 
