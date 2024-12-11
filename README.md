@@ -41,7 +41,29 @@ import (
 
 #### Encode Data into a PNG Image
 
-![default embed](./docs/default_embed.png)
+```go
+package main
+
+import (
+	"log"
+
+	"github.com/scott-mescudi/stegano"
+)
+
+func main() {
+	coverImage, err := stegano.Decodeimage("image.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	encoder := stegano.NewEmbedHandler()
+	
+	err = encoder.EncodeAndSave(coverImage, []byte("Hello, World!"), stegano.MinBitDepth, stegano.DefaultpngOutputFile, true)     
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+```
 
 #### Decode Data from a PNG Image
 
