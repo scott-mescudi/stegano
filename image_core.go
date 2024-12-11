@@ -16,7 +16,7 @@ func (m *embedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 	}
 
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
-	if (len(data)*8)+32 >  (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8 {
+	if (len(data)*8)+32 > len(RGBchannels)*3*(int(bitDepth)+1) {
 		return nil, fmt.Errorf("error: Data too large to embed into the image")
 	}
 
