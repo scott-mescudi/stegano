@@ -41,31 +41,7 @@ import (
 
 #### Encode Data into a PNG Image
 
-```go
-package main
-
-import (
-    "image"
-    "os"
-    "github.com/scott-mescudi/stegano"
-    _ "image/png" // Required for PNG decoding
-)
-
-func main() {
-    file, _ := os.Open("cover.png")
-    defer file.Close()
-    
-    img, _ := png.Decode(file)
-    data := []byte("Secret message to hide")
-    outputFile := "output.png"
-    
-    pngEmbedder := stegano.NewPngEncoder()
-    err := pngEmbedder.EncodePngImage(img, data, outputFile)
-    if err != nil {
-        panic(err)
-    }
-}
-```
+![default embed](./docs/default_embed.png)
 
 #### Decode Data from a PNG Image
 
