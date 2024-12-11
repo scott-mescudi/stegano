@@ -134,11 +134,21 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 		return nil, errors.New("extracted data length is zero")
 	}
 
-	// Retrieve the actual embedded data
-	var moddedData = make([]byte, 0, lenData)
-	for i := 4; i < lenData+4; i++ {
-		moddedData = append(moddedData, data[i])
-	}
+  
+    var moddedData = make([]byte, 0, lenData) 
+    defer func() {
+        if r := recover(); r != nil {
+            moddedData = nil
+            err = fmt.Errorf("fatal error: %v", r)
+        }
+    }()
+
+    for i := 4; i < lenData+4; i++ {
+        if i >= len(data) {
+            return nil, fmt.Errorf("index out of range while accessing data: %d", i)
+        }
+        moddedData = append(moddedData, data[i])
+    }
 
 	// Decompress data if required
 	if isDefaultCompressed {
