@@ -40,26 +40,39 @@ func Decodeimage(path string) (image.Image, error) {
 	return nil, fmt.Errorf("invalid image format")
 }
 
+// SaveImage saves the provided image to the specified output file.
+//
+// Parameters:
+//   outputfile: The path to the output PNG file. Must not be empty and must have a .png extension.
+//   embeddedImage: The image to save. Must not be nil.
+//
+// Returns:
+//   An error if the input is invalid or if an issue occurs during the file creation or encoding process.
 func SaveImage(outputfile string, embeddedImage image.Image) error {
 	if outputfile == "" {
-		return fmt.Errorf("invalid output path")
+		return fmt.Errorf("output path cannot be empty")
+	}
+
+	if filepath.Ext(outputfile) != ".png" {
+		return fmt.Errorf("output file must have a .png extension, got '%s'", filepath.Ext(outputfile))
 	}
 
 	if embeddedImage == nil {
-		return fmt.Errorf("embeddedImage cannot be nil")
+		return fmt.Errorf("embeddedImage parameter cannot be nil")
 	}
 
 	ff, err := os.Create(outputfile)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create output file '%s': %v", outputfile, err)
 	}
+	defer ff.Close()
 
 	encoder := png.Encoder{
-    	CompressionLevel: png.NoCompression,
+		CompressionLevel: png.NoCompression,
 	}
 
 	if err := encoder.Encode(ff, embeddedImage); err != nil {
-		return err
+		return fmt.Errorf("failed to encode image to file '%s': %v", outputfile, err)
 	}
 
 	return nil
