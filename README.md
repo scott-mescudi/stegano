@@ -96,9 +96,10 @@ func main() {
 }
 ```
 
-> **⚠ Disclaimer:**  
-> - The image used for embedding data must always be a **.png** file or another format with no compression; otherwise, data will be lost.  
-> - The **bitDepth** must match the one originally used, or a slice-out-of-bounds error will occur.
+
+>> **⚠ Disclaimer:**  
+>> - The image used for embedding data must always be a **.png** file or another format with no compression; otherwise, data will be lost.  
+>> - The **bitDepth** must match the one originally used, or a slice-out-of-bounds error will occur.
 
 
 ---
