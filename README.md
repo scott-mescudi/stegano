@@ -49,7 +49,7 @@ Below is an example of how steganography works with an image. The original image
 
 | **Original Image** | **Embedded Data** | **Resulting Image** |
 |--------------------|-------------------|---------------------|
-| ![Original Image](https://example.com/original.png) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](https://example.com/result.png) |
+| ![Original Image](./examples/assets/example.JPG) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](./examples/assets/example.JPG) |
 
 In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye.
 
@@ -113,7 +113,7 @@ func main() {
         // - PNG output format by default.
         // - Optional compression enabled.
 
-        // This library by default embed up to and including the index.
+        // This library by default embeds data up to and including the index.
         // For example, if embedding at depth 3:
         // - A binary value of 0x11111111 will become 0x11110000.
 
