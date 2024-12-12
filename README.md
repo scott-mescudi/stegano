@@ -112,9 +112,13 @@ func main() {
 	// - Minimum bit depth for embedding.
 	// - PNG output format by default.
 	// - Optional compression enabled.
-    // This and all functions except the 'atDepth' functions embed up to and encluding the index
+
+    // This library by default embed up to and including the index.
 	// For example, if embedding at depth 3:
 	// - A binary value of 0x11111111 will become 0x11110000.
+
+    // to embed into the LSB use a bitdepth of 0 or stegano.MinBitDepth.
+
 	err = embedder.EncodeAndSave(coverFile, []byte("Hello, World!"), stegano.MinBitDepth, stegano.DefaultpngOutputFile, true)
 	if err != nil {
 		log.Fatalln(err)
