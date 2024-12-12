@@ -68,7 +68,6 @@ import (
 
 # Working with Images
 
-## Quick Start Examples
 
 ### **1. Embed a Message into an Image**
 This function demonstrates how to embed a message into a cover image.
