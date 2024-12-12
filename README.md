@@ -107,15 +107,15 @@ func main() {
 	// Create an EmbedHandler instance for managing the embedding process.
 	embedder := stegano.NewEmbedHandler()
 
-	// Encode and save the message in the cover image.
-	// The settings used are:
-	// - Minimum bit depth for embedding.
-	// - PNG output format by default.
-	// - Optional compression enabled.
+    // Encode and save the message in the cover image.
+    // The settings used are:
+    // - Minimum bit depth for embedding.
+    // - PNG output format by default.
+    // - Optional compression enabled.
 
     // This library by default embed up to and including the index.
-	// For example, if embedding at depth 3:
-	// - A binary value of 0x11111111 will become 0x11110000.
+    // For example, if embedding at depth 3:
+    // - A binary value of 0x11111111 will become 0x11110000.
 
     // to embed into the LSB use a bitdepth of 0 or stegano.MinBitDepth.
 
