@@ -4,17 +4,18 @@
 ![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano) [![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
 
 
-Stegano is a Go library that provides tools for embedding and extracting data within images using steganographic techniques. The library currently supports PNG and JPEG image formats and includes ZSTD compression to optimize data storage within images. Future improvements may include additional compression techniques such as Huffman encoding.
+Stegano is a Go library that provides tools for embedding and extracting data within images using steganographic techniques. The library currently supports any image that support the image.Iamge type in go and includes ZSTD compression to optimize data storage within images.
 
 ---
 
 ## Table of Contents
 
-1. [Features](#features)
-2. [Installation](#installation)
-3. [Usage](#usage)
+1. [What is Steganography?](#what-is-steganography)
+2. [Features](#features)
+3. [Installation](#installation)
+4. [Usage](#usage)
    - [Import the Library](#import-the-library)
-4. [Working with Images](#working-with-images)
+5. [Working with Images](#working-with-images)
     - [Embed a Message into an Image](#1-embed-a-message-into-an-image)
     - [Extract a Message from an Embedded Image](#2-extract-a-message-from-an-embedded-image)
     - [Embed Data Without Compression](#3-embed-data-without-compression)
@@ -22,12 +23,38 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
     - [Embed at a Specific Bit Depth](#5-embed-at-a-specific-bit-depth)
     - [Extract Data from a Specific Bit Depth](#6-extract-data-from-a-specific-bit-depth)
     - [Check Image Capacity](#7-check-image-capacity)
-5. [Advanced Options](#advanced-options)
-6. [Notes](#notes)
-7. [Benchmarks](#benchmarks)
-8. [Future Improvements](#future-improvements)
+6. [Advanced Options](#advanced-options)
+7. [Notes](#notes)
+8. [Benchmarks](#benchmarks)
+9. [Future Improvements](#future-improvements)
 
 ---
+
+## 1. What is Steganography?
+
+Steganography is the practice of hiding data inside other, non-suspicious data in such a way that it is imperceptible to an observer. This is different from encryption, where data is scrambled to make it unreadable, but still detectable. In steganography, the goal is to hide the data so that it goes unnoticed.
+
+### How Does Steganography Work?
+
+Steganography works by altering the least significant bits (LSBs) of the carrier medium, such as an image or audio file. These bits typically do not significantly affect the quality of the medium, making them ideal for storing hidden information. The process involves:
+
+1. **Embedding the Message**: A secret message is embedded into the carrier medium (for example, an image) by altering its least significant bits.
+2. **Extraction**: To retrieve the message, the algorithm extracts the hidden data from the least significant bits without making the change noticeable to the human eye or ear.
+
+For example, in an image, each pixel typically has three color channels (Red, Green, Blue). Data can be embedded in the least significant bits of each channel. When done correctly, the changes are so subtle that they are not visible to the human eye, but the hidden information can still be extracted.
+
+### Example Process
+
+Below is an example of how steganography works with an image. The original image, embedded data, and resulting image appear unchanged to the human eye.
+
+| **Original Image** | **Embedded Data** | **Resulting Image** |
+|--------------------|-------------------|---------------------|
+| ![Original Image](https://example.com/original.png) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](https://example.com/result.png) |
+
+In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye.
+
+---
+
 
 ## Features
 
