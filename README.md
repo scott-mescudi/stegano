@@ -10,8 +10,8 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 
 ## Table of Contents
 
-1. [What is Steganography?](#what-is-steganography)
-2. [Features](#features)
+1. [Features](#features)
+2. [What is Steganography?](#what-is-steganography)
 3. [Installation](#installation)
 4. [Usage](#usage)
    - [Import the Library](#import-the-library)
@@ -30,7 +30,21 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 
 ---
 
-## 1. What is Steganography?
+
+## Features
+
+- **Multi-Image Support:** Supports all images compatible with the `image.Image` type in Go.  
+- **Data Compression:** Utilizes ZSTD compression for efficient embedding.  
+- **Capacity Calculation:** Calculates the maximum data capacity of an image for embedding.  
+- **Variable Depth Encoding:** Embeds bits up to and including the specified index.  
+- **Concurrency:** Increases speed at the cost of memory usage.  
+- **Embed at Certain Depth:** Embeds 1 bit per channel at the specified index.  
+- **Save Image:** Efficient PNG encoding.  
+- **Decode Image:** Helper function to decode images into the `image.Image` type.  
+
+---
+
+## What is Steganography?
 
 Steganography is the practice of hiding data inside other, non-suspicious data in such a way that it is imperceptible to an observer. This is different from encryption, where data is scrambled to make it unreadable, but still detectable. In steganography, the goal is to hide the data so that it goes unnoticed.
 
@@ -52,20 +66,6 @@ Below is an example of how steganography works with an image. The original image
 | ![Original Image](./examples/assets/example.JPG) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](./examples/assets/example.JPG) |
 
 In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye.
-
----
-
-
-## Features
-
-- **Multi-Image Support:** Supports all images compatible with the `image.Image` type in Go.  
-- **Data Compression:** Utilizes ZSTD compression for efficient embedding.  
-- **Capacity Calculation:** Calculates the maximum data capacity of an image for embedding.  
-- **Variable Depth Encoding:** Embeds bits up to and including the specified index.  
-- **Concurrency:** Increases speed at the cost of memory usage.  
-- **Embed at Certain Depth:** Embeds 1 bit per channel at the specified index.  
-- **Save Image:** Efficient PNG encoding.  
-- **Decode Image:** Helper function to decode images into the `image.Image` type.  
 
 ---
 
