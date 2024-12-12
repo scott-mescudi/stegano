@@ -54,9 +54,9 @@ Below is an example of how steganography works with an image. The original image
 
 | **Original Image** | **Embedded Data** | **Resulting Image** |
 |--------------------|-------------------|---------------------|
-| ![Original Image](./examples/assets/example.JPG) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](./examples/assets/example.JPG) |
+| ![Original Image](./examples/assets/in.png) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](./examples/assets/out.png) |
 
-In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye.
+In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye (try to extract it using the tool with bitDepth 0 and compression).
 
 ---
 
