@@ -117,7 +117,7 @@ func main() {
         // For example, if embedding at depth 3:
         // - A binary value of 0x11111111 will become 0x11110000.
 
-    // to embed into the LSB use a bitdepth of 0 or stegano.MinBitDepth.
+        // to embed into the LSB use a bitdepth of 0 or stegano.MinBitDepth.
 
 	err = embedder.EncodeAndSave(coverFile, []byte("Hello, World!"), stegano.MinBitDepth, stegano.DefaultpngOutputFile, true)
 	if err != nil {
