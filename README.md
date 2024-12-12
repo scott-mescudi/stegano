@@ -1,11 +1,33 @@
 # Stegano: A Steganography Library in Go
 
-[![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml)
-![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano)
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/scott-mescudi/stegano)
+[![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml)  
+![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano)  
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/scott-mescudi/stegano)  
 [![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
 
 Stegano is a Go library that provides tools for embedding and extracting data within images using steganographic techniques. The library currently supports PNG and JPEG image formats and includes ZSTD compression to optimize data storage within images. Future improvements may include additional compression techniques such as Huffman encoding.
+
+---
+
+## Table of Contents
+
+1. [Features](#features)
+2. [Installation](#installation)
+3. [Usage](#usage)
+   - [Import the Library](#import-the-library)
+4. [Working with Images](#working-with-images)
+   - [Quick Start Examples](#quick-start-examples)
+     - [Embed a Message into an Image](#1-embed-a-message-into-an-image)
+     - [Extract a Message from an Embedded Image](#2-extract-a-message-from-an-embedded-image)
+     - [Embed Data Without Compression](#3-embed-data-without-compression)
+     - [Extract Data Without Compression](#4-extract-data-without-compression)
+     - [Embed at a Specific Bit Depth](#5-embed-at-a-specific-bit-depth)
+     - [Extract Data from a Specific Bit Depth](#6-extract-data-from-a-specific-bit-depth)
+     - [Check Image Capacity](#7-check-image-capacity)
+5. [Advanced Options](#advanced-options)
+6. [Notes](#notes)
+7. [Benchmarks](#benchmarks)
+8. [Future Improvements](#future-improvements)
 
 ---
 
@@ -44,7 +66,7 @@ import (
 
 ---
 
-#  Working with Images
+# Working with Images
 
 ## Quick Start Examples
 
