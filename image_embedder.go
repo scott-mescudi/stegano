@@ -97,7 +97,7 @@ func (m *extractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 	if coverImage == nil {
 		return nil, errors.New("coverImage is nil")
 	}
-	if bitDepth < 1 || bitDepth > 7 {
+	if bitDepth < 0 || bitDepth > 7 {
 		return nil, fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
 	}
 
