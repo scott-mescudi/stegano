@@ -1,9 +1,8 @@
 # Stegano: A Steganography Library in Go
 
-[![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml)  
-![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano)  
-![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/scott-mescudi/stegano)  
-[![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
+[![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml)
+![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/scott-mescudi/stegano) [![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
+
 
 Stegano is a Go library that provides tools for embedding and extracting data within images using steganographic techniques. The library currently supports PNG and JPEG image formats and includes ZSTD compression to optimize data storage within images. Future improvements may include additional compression techniques such as Huffman encoding.
 
