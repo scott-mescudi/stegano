@@ -12,10 +12,11 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 
 1. [Features](#features)
 2. [What is Steganography?](#what-is-steganography)
-3. [Installation](#installation)
-4. [Usage](#usage)
+3. [Use cases](./docs/usecases.md)
+4. [Installation](#installation)
+5. [Usage](#usage)
    - [Import the Library](#import-the-library)
-5. [Working with Images](#working-with-images)
+6. [Working with Images](#working-with-images)
     - [Embed a Message into an Image](#1-embed-a-message-into-an-image)
     - [Extract a Message from an Embedded Image](#2-extract-a-message-from-an-embedded-image)
     - [Embed Data Without Compression](#3-embed-data-without-compression)
@@ -23,10 +24,10 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
     - [Embed at a Specific Bit Depth](#5-embed-at-a-specific-bit-depth)
     - [Extract Data from a Specific Bit Depth](#6-extract-data-from-a-specific-bit-depth)
     - [Check Image Capacity](#7-check-image-capacity)
-6. [Advanced Options](#advanced-options)
-7. [Notes](#notes)
-8. [Benchmarks](#benchmarks)
-9. [Future Improvements](#future-improvements)
+7. [Advanced Options](#advanced-options)
+8. [Notes](#notes)
+9. [Benchmarks](#benchmarks)
+10. [Future Improvements](#future-improvements)
 
 ---
 
@@ -56,7 +57,7 @@ Below is an example of how steganography works with an image. The original image
 |--------------------|-------------------|---------------------|
 | ![Original Image](./examples/assets/in.png) | `Hello, World!` (Encoded in LSBs) | ![Resulting Image](./examples/assets/out.png) |
 
-In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye (try to extract it using the tool with bitDepth 0 and compression).
+In this example, the message "Hello, World!" is hidden within the image, but the image looks the same as the original one to the naked eye (try to extract it using the library with bitDepth 0 and compression).
 
 ---
 
