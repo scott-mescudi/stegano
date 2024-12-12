@@ -5,9 +5,7 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/scott-mescudi/stegano)
 [![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
 
-Stegano is a powerful, flexible Go library designed for securely embedding and extracting data within image files using advanced steganographic techniques. It allows developers to hide secret information within image files (such as PNG and JPEG formats) without visible changes to the image. This functionality is enabled through the manipulation of pixel data at varying depths, ensuring that data can be embedded or extracted effectively.
-
-In addition to providing a seamless interface for image-based steganography, Stegano offers data compression support via ZSTD to optimize storage within images. This makes it a useful tool for embedding larger datasets while minimizing the file size. Future versions will expand support for additional compression methods and possibly other types of carrier files, such as audio.
+Stegano is a Go library that provides tools for embedding and extracting data within images using steganographic techniques. The library currently supports PNG and JPEG image formats and includes ZSTD compression to optimize data storage within images. Future improvements may include additional compression techniques such as Huffman encoding.
 
 ---
 
@@ -46,89 +44,226 @@ import (
 
 ---
 
-## Working with Images
+#  Working with Images
 
-### Basic Usage
+## Quick Start Examples
 
-#### Encode Data into an Image
+### **1. Embed a Message into an Image**
+This function demonstrates how to embed a message into a cover image.
 
 ```go
-package main
-
-import (
-    "log"
-    "github.com/scott-mescudi/stegano"
-)
-
 func main() {
-    coverImage, err := stegano.DecodeImage("image.png")
-    if err != nil {
-        log.Fatalln(err)
-    }
+	coverFile, err := stegano.Decodeimage("coverimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-    encoder := stegano.NewEmbedHandler()
+	// Create an EmbedHandler instance for managing the embedding process.
+	embedder := stegano.NewEmbedHandler()
 
-    err = encoder.EncodeAndSave(coverImage, []byte("Hello, World!"), stegano.MinBitDepth, stegano.DefaultPngOutputFile, true)
-    if err != nil {
-        log.Fatalln(err)
-    }
+	// Encode and save the message in the cover image.
+	// The settings used are:
+	// - Minimum bit depth for embedding.
+	// - PNG output format by default.
+	// - Optional compression enabled.
+	err = embedder.EncodeAndSave(coverFile, []byte("Hello, World!"), stegano.MinBitDepth, stegano.DefaultpngOutputFile, true)
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
 ```
 
-> **⚠ Disclaimer:**  
-> - The image used for embedding data must always be a **.png** file or another format with no compression; otherwise, data will be lost.  
+> **Note:** You can also enable concurrency for embedding using `NewEmbedHandlerWithConcurrency(numGoroutines)` for better performance with large files.
 
-#### Decode Data from an Image
+---
+
+### **2. Extract a Message from an Embedded Image**
+This function demonstrates how to retrieve a hidden message from an image.
 
 ```go
-package main
-
-import (
-    "fmt"
-    "log"
-    "github.com/scott-mescudi/stegano"
-)
-
 func main() {
-    coverImage, err := stegano.DecodeImage("imageWithData.png")
-    if err != nil {
-        log.Fatalln(err)
-    }
+	coverFile, err := stegano.Decodeimage("embeddedimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-    encoder := stegano.NewExtractHandler()
+	// Create an ExtractHandler instance for managing the extraction process.
+	extractor := stegano.NewExtractHandler()
 
-    data, err := encoder.Decode(coverImage, stegano.MinBitDepth, true)
-    if err != nil {
-        log.Fatalln(err)
-    }
+	// Decode the message from the image.
+	// Ensure the following settings match those used during embedding:
+	// - Minimum bit depth.
+	// - Optional compression enabled/disabled.
+	data, err := extractor.Decode(coverFile, stegano.MinBitDepth, true)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-    fmt.Println(string(data))
+	// Print the extracted message.
+	fmt.Println(string(data))
 }
 ```
 
-> **⚠ Disclaimer:**  
-> - The image used for extracting data must always be a **.png** file or another format with no compression; otherwise, data will be lost.  
-> - The **bitDepth** must match the one originally used, or a slice-out-of-bounds error will occur.  
+> **Disclaimer:** Ensure that the bit depth, compression settings, and other parameters used during embedding are known, as incorrect settings may result in corrupted or irretrievable data.
 
 ---
 
-## API Documentation
+### **3. Embed Data Without Compression**
+This method embeds data without the use of automatic compression.
 
-### PNG Embedder
+```go
+func main() {
+	coverFile, err := stegano.Decodeimage("coverimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-- **`NewPngEncoder() PngEmbedder`**: Returns a new instance of `PngEmbedder`.
-- **`(PngEmbedder) GetImageCapacity(coverImage image.Image) int`**: Returns the maximum number of bytes that can be embedded in a PNG image.
-- **`(PngEmbedder) EncodePngImage(coverImage image.Image, data []byte, outputFilename string) error`**: Embeds the provided data into the image and saves it to the specified output file.
-- **`(PngEmbedder) DecodePngImage(coverImage image.Image) ([]byte, error)`**: Extracts embedded data from a PNG image.
+	// Create an EmbedHandler instance for managing the embedding process.
+	embedder := stegano.NewEmbedHandler()
 
-### JPEG Embedder
+	// Embed the message into the image without saving to a file directly.
+	embeddedImage, err := embedder.EmbedDataIntoImage(coverFile, []byte("Hello, World!"), stegano.MinBitDepth)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
-- **`NewJpegEncoder() JpegEmbedder`**: Returns a new instance of `JpegEmbedder`.
-- **`(JpegEmbedder) GetImageCapacity(coverImage image.Image) int`**: Returns the maximum number of bytes that can be embedded in a JPEG image.
-- **`(JpegEmbedder) EncodeJpegImage(coverImage image.Image, data []byte, outputFilename string) error`**: Embeds the provided data into the image and saves it to the specified output file.
-- **`(JpegEmbedder) DecodeJpegImage(coverImage image.Image) ([]byte, error)`**: Extracts embedded data from a JPEG image.
+	// Save the modified image to a file.
+	err = stegano.SaveImage(stegano.DefaultpngOutputFile, embeddedImage)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+```
 
 ---
+
+### **4. Extract Data Without Compression**
+This function demonstrates how to extract uncompressed data.
+
+```go
+func main() {
+	coverFile, err := stegano.Decodeimage("embeddedimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Create an ExtractHandler instance for managing the extraction process.
+	extractor := stegano.NewExtractHandler()
+
+	// Extract data from the image.
+	data, err := extractor.ExtractDataFromImage(coverFile, stegano.MinBitDepth)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Print the extracted message.
+	fmt.Println(string(data))
+}
+```
+
+---
+
+### **5. Embed at a Specific Bit Depth**
+For fine-grained control, embed data at a specific bit depth.
+
+```go
+func main() {
+	coverFile, err := stegano.Decodeimage("coverimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Create an EmbedHandler instance for managing the embedding process.
+	embedder := stegano.NewEmbedHandler()
+
+	// Embed the message at a specific bit depth.
+	// For example, if embedding at depth 3:
+	// - A binary value of 0x11111111 will become 0x11110111.
+	embeddedImage, err := embedder.EmbedAtDepth(coverFile, []byte("Hello, World!"), 3)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Save the modified image to a file.
+	err = stegano.SaveImage(stegano.DefaultpngOutputFile, embeddedImage)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+```
+
+> **Disclaimer:** Altering specific bit depths can affect image quality. Use bit depth settings carefully to maintain a balance between data embedding and visual fidelity.
+
+---
+
+### **6. Extract Data from a Specific Bit Depth**
+Retrieve data from an image, ensuring the correct bit depth is used.
+
+```go
+func main() {
+	coverFile, err := stegano.Decodeimage("embeddedimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Create an ExtractHandler instance for managing the extraction process.
+	extractor := stegano.NewExtractHandler()
+
+	// Extract data from the image at the specified bit depth.
+	data, err := extractor.ExtractAtDepth(coverFile, 3)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Print the extracted message.
+	fmt.Println(string(data))
+}
+```
+
+> **Disclaimer:** Extraction must use the exact bit depth specified during embedding. Mismatched settings will likely result in errors or incorrect data.
+
+---
+
+### **7. Check Image Capacity**
+Determine the maximum data capacity of an image for a given bit depth.
+
+```go
+func main() {
+	coverFile, err := stegano.Decodeimage("embeddedimage.png")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	// Calculate and print the data capacity for the given image.
+	capacity := stegano.GetImageCapacity(coverFile, stegano.MinBitDepth)
+	fmt.Printf("Image capacity at bit depth %d: %d bytes\n", stegano.MinBitDepth, capacity)
+}
+```
+
+> **Disclaimer:** The maximum data capacity depends on the image size and bit depth. Be aware that embedding too much data can visibly degrade the image.
+
+---
+
+## Advanced Options
+The library provides concurrency options for embedding and extraction. Use `NewEmbedHandlerWithConcurrency` or `NewExtractHandlerWithConcurrency` to control the number of goroutines for faster processing.
+
+```go
+embedder, err := stegano.NewEmbedHandlerWithConcurrency(12)
+if err != nil {
+	log.Fatalln(err)
+}
+
+extractor, err := stegano.NewExtractHandlerWithConcurrency(12)
+if err != nil {
+	log.Fatalln(err)
+}
+```
+
+---
+
+## Notes
+- Always use the same settings (bit depth, compression) for embedding and extraction.
+- Default output format MUST be PNG or any lossless image formats.
 
 ## Benchmarks
 
@@ -136,9 +271,9 @@ func main() {
 
 | **Library Name**              | **Test 1 (ns/op)** | **Test 2 (ns/op)** | **Test 3 (ns/op)** | **Avg Time (ns/op)** | **Avg Time (ms/op)** |
 |-------------------------------|--------------------|--------------------|--------------------|----------------------|----------------------|
-| **Stegano**                    | `352,531,567`      | `349,444,200`      | `348,196,967`      | **`350,390,578`**    | **`350.39`**      |
-| **Stegano with concurrency**   | `286,168,125`      | `293,260,925`      | `284,079,175`      | **`287,169,408`**    | **`287.17`**      |
-| [**auyer/steganography**](https://github.com/auyer/steganography)       | `1,405,256,700`    | `1,424,957,200`    | `1,401,682,600`    | **`1,410,965,500`**  | **`1,410.97`**    |
+| **Stegano**                    | `352,531,567`      | `349,444,200`      | `348,196,967`      | **`350,390,578`**    | **`350.39 ms`**      |
+| **Stegano with concurrency**   | `286,168,125`      | `293,260,925`      | `284,079,175`      | **`287,169,408`**    | **`287.17 ms`**      |
+| [**auyer/steganography**](https://github.com/auyer/steganography)       | `1,405,256,700`    | `1,424,957,200`    | `1,401,682,600`    | **`1,410,965,500`**  | **`1,410.97 ms`**    |
 
 > **Image size:** 10,473,459 bytes  
 > **Text size:** 641,788 bytes  
