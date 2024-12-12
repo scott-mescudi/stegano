@@ -48,15 +48,6 @@ Stegano is a Go library that provides tools for embedding and extracting data wi
 
 Steganography is the practice of hiding data inside other, non-suspicious data in such a way that it is imperceptible to an observer. This is different from encryption, where data is scrambled to make it unreadable, but still detectable. In steganography, the goal is to hide the data so that it goes unnoticed.
 
-### How Does Steganography Work?
-
-Steganography works by altering the least significant bits (LSBs) of the carrier medium, such as an image or audio file. These bits typically do not significantly affect the quality of the medium, making them ideal for storing hidden information. The process involves:
-
-1. **Embedding the Message**: A secret message is embedded into the carrier medium (for example, an image) by altering its least significant bits.
-2. **Extraction**: To retrieve the message, the algorithm extracts the hidden data from the least significant bits without making the change noticeable to the human eye or ear.
-
-For example, in an image, each pixel typically has three color channels (Red, Green, Blue). Data can be embedded in the least significant bits of each channel. When done correctly, the changes are so subtle that they are not visible to the human eye, but the hidden information can still be extracted.
-
 ### Example Process
 
 Below is an example of how steganography works with an image. The original image, embedded data, and resulting image appear unchanged to the human eye.
