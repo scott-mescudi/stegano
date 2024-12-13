@@ -5,22 +5,23 @@ import (
 )
 
 // stringToBinary converts a string to a slice of bits (0s and 1s).
-func BytesToBinary(data []byte) []int {
-	var bits []int
+func BytesToBinary(data []byte) []uint8 {
+	var bits []uint8
 	for _, b := range data {
 		for i := 7; i >= 0; i-- {
 			bit := (b >> i) & 1
-			bits = append(bits, int(bit))
+			bits = append(bits, uint8(bit))
 		}
 	}
 	return bits
 }
 
-func Int32ToBinary(num int32) []int {
-	var bits []int
+func Int32ToBinary(num int32) []uint8 {
+	var bits []uint8
+
 	for i := 31; i >= 0; i-- {
 		bit := (num >> i) & 1
-		bits = append(bits, int(bit))
+		bits = append(bits, uint8(bit))
 	}
 	return bits
 }

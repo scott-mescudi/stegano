@@ -10,7 +10,7 @@ type bin struct {
 	r, g, b uint8
 }
 
-func splitIntoGroupsOfThree(nums []int) []bin {
+func splitIntoGroupsOfThree(nums []uint8) []bin {
 	var result []bin
 	for i := 0; i < len(nums); i += 3 {
 		var b bin
