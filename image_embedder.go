@@ -292,7 +292,8 @@ func openFiles(coverImagePath, dataFilePath string) (coverImage image.Image, dat
 
 	return cimg, df, nil
 }
-const bd = 2
+
+const bd = 1
 
 func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (error) {
 	if coverImagePath == "" {
