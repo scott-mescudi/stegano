@@ -320,7 +320,7 @@ if err != nil {
 ## Notes
 
 > - **Bit Depth and Compression**: Ensure that the same bit depth and compression settings are used during both embedding and extraction.
-> - **Default Output Format**: By default, images are saved in PNG format to avoid any quality loss.
+> - **Default Output Format**: By default, images NEED to be saved in PNG format to avoid any data loss.
 
 ---
 
