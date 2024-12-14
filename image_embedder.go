@@ -81,7 +81,7 @@ func (m *embedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 
 	// Use default filename if none provided
 	if outputFilename == "" {
-		outputFilename = DefaultpngOutputFile
+		outputFilename = DefaultOutputFile
 	}
 
 	
@@ -216,7 +216,7 @@ func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 
 	// Use default filename if none provided
 	if outputFilename == "" {
-		outputFilename = DefaultpngOutputFile
+		outputFilename = DefaultOutputFile
 	}
 
 	
