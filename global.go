@@ -82,6 +82,16 @@ func SaveImage(outputfile string, embeddedImage image.Image) error {
 	return nil
 }
 
+// EncryptData encrypts the given data using the provided password.
+// It returns the encrypted ciphertext or an error if the encryption fails.
+//
+// Parameters:
+// - data ([]byte): The plaintext data to be encrypted.
+// - password (string): The password to be used for encryption.
+//
+// Returns:
+// - ciphertext ([]byte): The encrypted data.
+// - err (error): An error if the encryption fails. 
 func EncryptData(data []byte, password string) (ciphertext []byte, err error) {
 	if password == "" {
 		return nil, fmt.Errorf("invalid password")
@@ -94,6 +104,16 @@ func EncryptData(data []byte, password string) (ciphertext []byte, err error) {
 	return u.Encrypt(password, data)
 }
 
+// DecryptData decrypts the given ciphertext using the provided password.
+// It returns the decrypted plaintext or an error if the decryption fails.
+//
+// Parameters:
+// - ciphertext ([]byte): The encrypted data to be decrypted.
+// - password (string): The password to be used for decryption.
+//
+// Returns:
+// - plaintext ([]byte): The decrypted data.
+// - err (error): An error if the decryption fails. 
 func DecryptData(ciphertext []byte, password string) (plaintext []byte, err error) {
 	if password == "" {
 		return nil, fmt.Errorf("invalid password")
@@ -105,3 +125,4 @@ func DecryptData(ciphertext []byte, password string) (plaintext []byte, err erro
 
 	return u.Decrypt(password, ciphertext)
 }
+
