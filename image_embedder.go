@@ -25,7 +25,7 @@ import (
 // - bitDepth: The number of bits per channel used for embedding (0-7).
 // - outputFilename: The name of the file where the modified image will be saved.
 // - defaultCompression: A flag indicating whether the data should be compressed before embedding.
-func (m *embedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
+func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return errors.New("coverImage is nil")
@@ -46,6 +46,9 @@ func (m *embedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 		return errors.New("data is empty")
 	}
 
+	if m.concurrency <= 0 {
+		m.concurrency = 1
+	}
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
@@ -95,7 +98,7 @@ func (m *embedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 // - coverImage: The image containing embedded data to be extracted.
 // - bitDepth: The bit depth used during the embedding process.
 // - isDefaultCompressed: A flag indicating whether the embedded data was compressed.
-func (m *extractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
+func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return nil, errors.New("coverImage is nil")
@@ -104,6 +107,9 @@ func (m *extractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 		return nil, fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
 	}
 
+	if m.concurrency <= 0 {
+		m.concurrency = 1
+	}
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
@@ -161,7 +167,7 @@ func (m *extractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 // - password: The password used to encrypt the data.
 // Returns:
 // - error: An error if any part of the embedding process fails.
-func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, password string) error {
+func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, password string) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return errors.New("coverImage is nil")
@@ -184,6 +190,9 @@ func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 		return errors.New("data is empty")
 	}
 
+	if m.concurrency <= 0 {
+		m.concurrency = 1
+	}
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
@@ -233,7 +242,7 @@ func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 // Returns:
 // - []byte: The extracted original data.
 // - error: An error if the extraction process fails.
-func (m *secureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, password string) ([]byte, error) {
+func (m *SecureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, password string) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
 		return nil, errors.New("coverImage is nil")
@@ -243,6 +252,9 @@ func (m *secureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, pa
 		return nil, fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
 	}
 
+	if m.concurrency <= 0 {
+		m.concurrency = 1
+	}
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {

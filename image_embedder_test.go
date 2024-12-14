@@ -31,7 +31,7 @@ func TestEncode_Valid(t *testing.T) {
 	outputFilename := "test_output.png"
 
 	// Execute
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
@@ -53,7 +53,7 @@ func TestEncode_EmptyData(t *testing.T) {
 	outputFilename := "test_output.png"
 
 	// Execute
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
@@ -69,7 +69,7 @@ func TestEncode_DataTooLarge(t *testing.T) {
 	outputFilename := "test_output.png"
 
 	// Execute
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
@@ -85,7 +85,7 @@ func TestEncode_CompressedData(t *testing.T) {
 	outputFilename := "test_compressed_output.png"
 
 	// Execute with compression enabled
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, true)
 
 	// Test if no error occurred and file was created
@@ -107,7 +107,7 @@ func TestEncode_InvalidFileCreation(t *testing.T) {
 	outputFilename := "/invalid/path/test_output.png" // Invalid path
 
 	// Execute
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
@@ -122,7 +122,7 @@ func TestEncode_SuccessWithSpecificFilename(t *testing.T) {
 	outputFilename := "specific_output.png"
 
 	// Execute
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
@@ -144,7 +144,7 @@ func TestEncode_NullImage(t *testing.T) {
 	outputFilename := "test_output.png"
 
 	// Execute
-	handler := &embedHandler{3}
+	handler := &EmbedHandler{3}
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned

@@ -2,74 +2,74 @@ package stegano
 
 import "fmt"
 
-type embedHandler struct {
+type EmbedHandler struct {
 	concurrency int
 }
 
-type extractHandler struct {
+type ExtractHandler struct {
 	concurrency int
 }
 
-type secureEmbedHandler struct {
+type SecureEmbedHandler struct {
 	concurrency int
 }
 
-type secureExtractHandler struct {
+type SecureExtractHandler struct {
 	concurrency int
 }
 
-// NewEmbedHandlerWithConcurrency initializes an embedHandler with a specified concurrency
-func NewEmbedHandlerWithConcurrency(concurrency int) (*embedHandler, error) {
+// NewEmbedHandlerWithConcurrency initializes an EmbedHandler with a specified concurrency
+func NewEmbedHandlerWithConcurrency(concurrency int) (*EmbedHandler, error) {
 	if concurrency <= 0 {
 		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
-	return &embedHandler{concurrency: concurrency}, nil
+	return &EmbedHandler{concurrency: concurrency}, nil
 }
 
-// NewEmbedHandler initializes an embedHandler with default concurrency
-func NewEmbedHandler() *embedHandler {
-	return &embedHandler{concurrency: 1}
+// NewEmbedHandler initializes an EmbedHandler with default concurrency
+func NewEmbedHandler() *EmbedHandler {
+	return &EmbedHandler{concurrency: 1}
 }
 
-// NewExtractHandlerWithConcurrency initializes an extractHandler with a specified concurrency
-func NewExtractHandlerWithConcurrency(concurrency int) (*extractHandler, error) {
+// NewExtractHandlerWithConcurrency initializes an ExtractHandler with a specified concurrency
+func NewExtractHandlerWithConcurrency(concurrency int) (*ExtractHandler, error) {
 	if concurrency <= 0 {
 		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
-	return &extractHandler{concurrency: concurrency}, nil
+	return &ExtractHandler{concurrency: concurrency}, nil
 }
 
-// NewExtractHandler initializes an extractHandler with default concurrency
-func NewExtractHandler() *extractHandler {
-	return &extractHandler{concurrency: 1}
+// NewExtractHandler initializes an ExtractHandler with default concurrency
+func NewExtractHandler() *ExtractHandler {
+	return &ExtractHandler{concurrency: 1}
 }
 
-// NewSecureEmbedHandlerWithConcurrency initializes a secureEmbedHandler with a specified concurrency
-func NewSecureEmbedHandlerWithConcurrency(concurrency int) (*secureEmbedHandler, error) {
+// NewSecureEmbedHandlerWithConcurrency initializes a SecureEmbedHandler with a specified concurrency
+func NewSecureEmbedHandlerWithConcurrency(concurrency int) (*SecureEmbedHandler, error) {
 	if concurrency <= 0 {
 		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
-	return &secureEmbedHandler{concurrency: concurrency}, nil
+	return &SecureEmbedHandler{concurrency: concurrency}, nil
 }
 
-// NewSecureEmbedHandler initializes a secureEmbedHandler with default concurrency
-func NewSecureEmbedHandler() *secureEmbedHandler {
-	return &secureEmbedHandler{concurrency: 1}
+// NewSecureEmbedHandler initializes a SecureEmbedHandler with default concurrency
+func NewSecureEmbedHandler() *SecureEmbedHandler {
+	return &SecureEmbedHandler{concurrency: 1}
 }
 
-// NewSecureExtractHandlerWithConcurrency initializes a secureExtractHandler with a specified concurrency
-func NewSecureExtractHandlerWithConcurrency(concurrency int) (*secureExtractHandler, error) {
+// NewSecureExtractHandlerWithConcurrency initializes a SecureExtractHandler with a specified concurrency
+func NewSecureExtractHandlerWithConcurrency(concurrency int) (*SecureExtractHandler, error) {
 	if concurrency <= 0 {
 		return nil, fmt.Errorf("invalid number of goroutines")
 	}
 
-	return &secureExtractHandler{concurrency: concurrency}, nil
+	return &SecureExtractHandler{concurrency: concurrency}, nil
 }
 
-// NewSecureExtractHandler initializes a secureExtractHandler with default concurrency
-func NewSecureExtractHandler() *secureExtractHandler {
-	return &secureExtractHandler{concurrency: 1}
+// NewSecureExtractHandler initializes a SecureExtractHandler with default concurrency
+func NewSecureExtractHandler() *SecureExtractHandler {
+	return &SecureExtractHandler{concurrency: 1}
 }
