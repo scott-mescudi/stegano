@@ -7,6 +7,8 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+
+	u "github.com/scott-mescudi/stegano/pkg"
 )
 
 // GetImageCapacity calculates the maximum amount of data (in bytes)
@@ -76,4 +78,30 @@ func SaveImage(outputfile string, embeddedImage image.Image) error {
 	}
 
 	return nil
+}
+
+
+
+func EncryptData(data []byte, password string) (ciphertext []byte, err error) {
+	if password == "" {
+		return nil, fmt.Errorf("invalid password")
+	}
+
+	if len(data) <= 0 {
+		return nil, fmt.Errorf("data is empty")
+	}
+
+	return u.Encrypt(password, data)
+}
+
+func DecryptData(ciphertext []byte, password string) (plaintext []byte, err error) {
+	if password == "" {
+		return nil, fmt.Errorf("invalid password")
+	}
+
+	if len(ciphertext) <= 0 {
+		return nil, fmt.Errorf("ciphertext is empty")
+	}
+
+	return u.Decrypt(password, ciphertext)
 }

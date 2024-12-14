@@ -10,6 +10,14 @@ type extractHandler struct {
 	concurrency int
 }
 
+type secureEmbedHandler struct {
+	concurrency int
+}
+
+type secureExtractHandler struct {
+	concurrency int
+}
+
 // NewembedHandler initializes an embedHandler
 func NewEmbedHandlerWithConcurrency(concurrency int) (*embedHandler, error) {
 	if concurrency <= 0 {

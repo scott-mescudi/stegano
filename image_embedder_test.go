@@ -23,7 +23,7 @@ func createTestImage() image.Image {
 	return img
 }
 
-func TestEncodeAndSave_Valid(t *testing.T) {
+func TestEncode_Valid(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()
 	data := []byte("some secret data")
@@ -32,7 +32,7 @@ func TestEncodeAndSave_Valid(t *testing.T) {
 
 	// Execute
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
 	require.NoError(t, err)
@@ -45,7 +45,7 @@ func TestEncodeAndSave_Valid(t *testing.T) {
 	defer os.Remove(outputFilename)
 }
 
-func TestEncodeAndSave_EmptyData(t *testing.T) {
+func TestEncode_EmptyData(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()
 	data := []byte{}
@@ -54,14 +54,14 @@ func TestEncodeAndSave_EmptyData(t *testing.T) {
 
 	// Execute
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "data is empty")
 }
 
-func TestEncodeAndSave_DataTooLarge(t *testing.T) {
+func TestEncode_DataTooLarge(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()
 	data := make([]byte, 10000) // This is more data than the image can hold
@@ -70,14 +70,14 @@ func TestEncodeAndSave_DataTooLarge(t *testing.T) {
 
 	// Execute
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "data is too large to embed")
 }
 
-func TestEncodeAndSave_CompressedData(t *testing.T) {
+func TestEncode_CompressedData(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()
 	data := []byte("compressed test data")
@@ -86,7 +86,7 @@ func TestEncodeAndSave_CompressedData(t *testing.T) {
 
 	// Execute with compression enabled
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, true)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, true)
 
 	// Test if no error occurred and file was created
 	require.NoError(t, err)
@@ -99,7 +99,7 @@ func TestEncodeAndSave_CompressedData(t *testing.T) {
 	defer os.Remove(outputFilename)
 }
 
-func TestEncodeAndSave_InvalidFileCreation(t *testing.T) {
+func TestEncode_InvalidFileCreation(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()
 	data := []byte("test data")
@@ -108,13 +108,13 @@ func TestEncodeAndSave_InvalidFileCreation(t *testing.T) {
 
 	// Execute
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
 	assert.Error(t, err)
 }
 
-func TestEncodeAndSave_SuccessWithSpecificFilename(t *testing.T) {
+func TestEncode_SuccessWithSpecificFilename(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()
 	data := []byte("another test data")
@@ -123,7 +123,7 @@ func TestEncodeAndSave_SuccessWithSpecificFilename(t *testing.T) {
 
 	// Execute
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
 	require.NoError(t, err)
@@ -136,7 +136,7 @@ func TestEncodeAndSave_SuccessWithSpecificFilename(t *testing.T) {
 	defer os.Remove(outputFilename)
 }
 
-func TestEncodeAndSave_NullImage(t *testing.T) {
+func TestEncode_NullImage(t *testing.T) {
 	// Setup
 	var coverImage image.Image = nil
 	data := []byte("some data")
@@ -145,7 +145,7 @@ func TestEncodeAndSave_NullImage(t *testing.T) {
 
 	// Execute
 	handler := &embedHandler{3}
-	err := handler.EncodeAndSave(coverImage, data, bitDepth, outputFilename, false)
+	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
 	assert.Error(t, err)
