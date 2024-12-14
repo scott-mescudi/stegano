@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"sync"
 
 	c "github.com/scott-mescudi/stegano/compression"
 	u "github.com/scott-mescudi/stegano/pkg"
@@ -322,23 +323,43 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 
 	df = append([]byte(ext), df...)
 
-	// conc
-	df, err = c.CompressZSTD(df)
-	if err != nil {
+	var wg sync.WaitGroup
+	var erchan = make(chan error)
+	wg.Add(2)
+	var channels []u.RgbChannel
+	go func ()  {
+		defer wg.Done()
+		channels = u.ExtractRGBChannelsFromImageWithConCurrency(cf, runtime.NumCPU())
+		if (len(df)*8)+32 > len(channels)*3*(int(bd)+1) {
+			erchan <- fmt.Errorf("error: Data too large to embed into the image")
+			return
+		}
+	}()
+
+	go func ()  {
+		defer wg.Done()
+		df, err = c.CompressZSTD(df)
+		if err != nil {
+			erchan <- err
+			return
+		}
+
+		// conc
+		df, err = u.Encrypt(password, df)
+		if err != nil {
+			erchan <- err
+			return
+		}
+	}()
+
+
+	select {
+	case <- erchan:
 		return err
+	default:
 	}
 
-	// conc
-	df, err = u.Encrypt(password, df)
-	if err != nil {
-		return err
-	}
-
-	// conc
-	channels := u.ExtractRGBChannelsFromImageWithConCurrency(cf, runtime.NumCPU())
-	if (len(df)*8)+32 > len(channels)*3*(int(bd)+1) {
-		return fmt.Errorf("error: Data too large to embed into the image")
-	}
+	wg.Wait()
 
 	channels, err = u.EmbedIntoRGBchannelsWithDepth(channels, df, bd)
 	if err != nil {
@@ -353,7 +374,6 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 
 	return SaveImage(outputFilePath, newImage)
 }
-
 func ExtractFile(coverImagePath, password string) (error) {
 	if coverImagePath == "" {
 		return errors.New("invalid coverImagePath")
