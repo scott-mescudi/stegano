@@ -49,21 +49,20 @@ func (m *extractHandler) ExtractDataFromImage(coverImage image.Image, bitDepth u
 		return nil, err
 	}
 
-    
-    var moddedData = make([]byte, 0, lenData) 
-    defer func() {
-        if r := recover(); r != nil {
-            moddedData = nil
-            err = fmt.Errorf("fatal error: %v", r)
-        }
-    }()
+	var moddedData = make([]byte, 0, lenData)
+	defer func() {
+		if r := recover(); r != nil {
+			moddedData = nil
+			err = fmt.Errorf("fatal error: %v", r)
+		}
+	}()
 
-    for i := 4; i < lenData+4; i++ {
-        if i >= len(data) {
-            return nil, fmt.Errorf("index out of range while accessing data: %d", i)
-        }
-        moddedData = append(moddedData, data[i])
-    }
+	for i := 4; i < lenData+4; i++ {
+		if i >= len(data) {
+			return nil, fmt.Errorf("index out of range while accessing data: %d", i)
+		}
+		moddedData = append(moddedData, data[i])
+	}
 
 	return moddedData, nil
 }

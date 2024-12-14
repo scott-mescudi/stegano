@@ -57,7 +57,6 @@ func (m *embedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 		return fmt.Errorf("data is too large to embed into the image: maxCapacity=%d bytes, dataSize=%d bytes", maxCapacity, len(data))
 	}
 
-
 	// Compress data if required
 	var indata []byte = data
 	if defaultCompression {
@@ -85,7 +84,6 @@ func (m *embedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 		outputFilename = DefaultOutputFile
 	}
 
-	
 	return SaveImage(outputFilename, imgdata)
 }
 
@@ -127,21 +125,20 @@ func (m *extractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 		return nil, errors.New("extracted data length is zero")
 	}
 
-  
-    var moddedData = make([]byte, 0, lenData) 
-    defer func() {
-        if r := recover(); r != nil {
-            moddedData = nil
-            err = fmt.Errorf("fatal error: %v", r)
-        }
-    }()
+	var moddedData = make([]byte, 0, lenData)
+	defer func() {
+		if r := recover(); r != nil {
+			moddedData = nil
+			err = fmt.Errorf("fatal error: %v", r)
+		}
+	}()
 
-    for i := 4; i < lenData+4; i++ {
-        if i >= len(data) {
-            return nil, fmt.Errorf("index out of range while accessing data: %d", i)
-        }
-        moddedData = append(moddedData, data[i])
-    }
+	for i := 4; i < lenData+4; i++ {
+		if i >= len(data) {
+			return nil, fmt.Errorf("index out of range while accessing data: %d", i)
+		}
+		moddedData = append(moddedData, data[i])
+	}
 
 	// Decompress data if required
 	if isDefaultCompressed {
@@ -155,8 +152,15 @@ func (m *extractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 	return moddedData, nil
 }
 
-
-
+// Encode embeds data into a cover image using a specified bit depth, encrypts and compresses the data, and saves the resulting image to the specified output file.
+// Parameters:
+// - coverImage: The image to embed data into.
+// - data: The data to embed in the image.
+// - bitDepth: The bit depth used for embedding (valid range: 0-7).
+// - outputFilename: The file name to save the resulting image. Defaults to a pre-defined name if empty.
+// - password: The password used to encrypt the data.
+// Returns:
+// - error: An error if any part of the embedding process fails.
 func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, password string) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
@@ -196,12 +200,10 @@ func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 		return err
 	}
 
-
 	compressedData, err := c.CompressZSTD(cipher)
 	if err != nil {
 		return fmt.Errorf("failed to compress data: %w", err)
 	}
-	
 
 	// Embed data
 	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, compressedData, bitDepth)
@@ -220,10 +222,17 @@ func (m *secureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 		outputFilename = DefaultOutputFile
 	}
 
-	
 	return SaveImage(outputFilename, imgdata)
 }
 
+// Decode extracts embedded data from a cover image using a specified bit depth, decrypts and decompresses it, and returns the original data.
+// Parameters:
+// - coverImage: The image containing the embedded data.
+// - bitDepth: The bit depth used for extracting data (valid range: 0-7).
+// - password: The password used to decrypt the embedded data.
+// Returns:
+// - []byte: The extracted original data.
+// - error: An error if the extraction process fails.
 func (m *secureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, password string) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
@@ -255,22 +264,20 @@ func (m *secureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, pa
 		return nil, errors.New("extracted data length is zero")
 	}
 
-  
-    var moddedData = make([]byte, 0, lenData) 
-    defer func() {
-        if r := recover(); r != nil {
-            moddedData = nil
-            err = fmt.Errorf("fatal error: %v", r)
-        }
-    }()
+	var moddedData = make([]byte, 0, lenData)
+	defer func() {
+		if r := recover(); r != nil {
+			moddedData = nil
+			err = fmt.Errorf("fatal error: %v", r)
+		}
+	}()
 
-    for i := 4; i < lenData+4; i++ {
-        if i >= len(data) {
-            return nil, fmt.Errorf("index out of range while accessing data: %d", i)
-        }
-        moddedData = append(moddedData, data[i])
-    }
-
+	for i := 4; i < lenData+4; i++ {
+		if i >= len(data) {
+			return nil, fmt.Errorf("index out of range while accessing data: %d", i)
+		}
+		moddedData = append(moddedData, data[i])
+	}
 
 	outdata, err := c.DecompressZSTD(moddedData)
 	if err != nil {
@@ -296,7 +303,25 @@ func openFiles(coverImagePath, dataFilePath string) (coverImage image.Image, dat
 
 const bd = 1
 
-func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (error) {
+// EmbedFile embeds data from a file into an image using a default bit depth of 1 (the last two bits in a byte).
+// The data is first compressed and encrypted with the provided password before embedding into the image.
+// Returns an error if the process fails at any stage.
+//
+// Parameters:
+// - coverImagePath: The file path of the image to embed data into.
+// - dataFilePath: The file path of the data to embed.
+// - outputFilePath: The file path to save the resulting image with embedded data.
+// - password: A password used to encrypt the data before embedding.
+
+// ExtractFile extracts embedded data from an image using a default bit depth of 1 (the last two bits in a byte).
+// The embedded data is decrypted and decompressed using the provided password.
+// The extracted file is saved using its original name (stored within the embedded data).
+// Returns an error if the process fails at any stage.
+//
+// Parameters:
+// - coverImagePath: The file path of the image containing embedded data.
+// - password: A password used to decrypt the embedded data after extraction.
+func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) error {
 	if coverImagePath == "" {
 		return errors.New("invalid coverImagePath")
 	}
@@ -323,11 +348,15 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 
 	df = append([]byte(ext), df...)
 
-	var wg sync.WaitGroup
-	var erchan = make(chan error)
+	var (
+		wg       sync.WaitGroup
+		erchan   = make(chan error)
+		channels []u.RgbChannel
+	)
+
 	wg.Add(2)
-	var channels []u.RgbChannel
-	go func ()  {
+
+	go func() {
 		defer wg.Done()
 		channels = u.ExtractRGBChannelsFromImageWithConCurrency(cf, runtime.NumCPU())
 		if (len(df)*8)+32 > len(channels)*3*(int(bd)+1) {
@@ -336,7 +365,7 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 		}
 	}()
 
-	go func ()  {
+	go func() {
 		defer wg.Done()
 		df, err = c.CompressZSTD(df)
 		if err != nil {
@@ -344,7 +373,6 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 			return
 		}
 
-		// conc
 		df, err = u.Encrypt(password, df)
 		if err != nil {
 			erchan <- err
@@ -352,9 +380,8 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 		}
 	}()
 
-
 	select {
-	case <- erchan:
+	case <-erchan:
 		return err
 	default:
 	}
@@ -366,7 +393,6 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 		return err
 	}
 
-
 	newImage, err := u.SaveImage(channels, cf.Bounds().Max.Y, cf.Bounds().Max.X)
 	if err != nil {
 		return nil
@@ -374,7 +400,16 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) (e
 
 	return SaveImage(outputFilePath, newImage)
 }
-func ExtractFile(coverImagePath, password string) (error) {
+
+// ExtractFile extracts embedded data from an image using a default bit depth of 1 (the last two bits in a byte).
+// The embedded data is decrypted and decompressed using the provided password.
+// The extracted file is saved using its original name (stored within the embedded data).
+// Returns an error if the process fails at any stage.
+//
+// Parameters:
+// - coverImagePath: The file path of the image containing embedded data.
+// - password: A password used to decrypt the embedded data after extraction.
+func ExtractFile(coverImagePath, password string) error {
 	if coverImagePath == "" {
 		return errors.New("invalid coverImagePath")
 	}
@@ -388,7 +423,6 @@ func ExtractFile(coverImagePath, password string) (error) {
 		return err
 	}
 
-
 	channels := u.ExtractRGBChannelsFromImageWithConCurrency(cf, runtime.NumCPU())
 	embeddedData, err := u.ExtractDataFromRGBchannelsWithDepth(channels, bd)
 	if err != nil {
@@ -400,20 +434,20 @@ func ExtractFile(coverImagePath, password string) (error) {
 		return err
 	}
 
-    var cipherText = make([]byte, 0, lenData) 
-    defer func() {
-        if r := recover(); r != nil {
-            cipherText = nil
-            err = fmt.Errorf("fatal error: %v", r)
-        }
-    }()
+	var cipherText = make([]byte, 0, lenData)
+	defer func() {
+		if r := recover(); r != nil {
+			cipherText = nil
+			err = fmt.Errorf("fatal error: %v", r)
+		}
+	}()
 
-    for i := 4; i < lenData+4; i++ {
-        if i >= len(embeddedData) {
-            return  fmt.Errorf("index out of range while accessing data: %d", i)
-        }
-        cipherText = append(cipherText, embeddedData[i])
-    }
+	for i := 4; i < lenData+4; i++ {
+		if i >= len(embeddedData) {
+			return fmt.Errorf("index out of range while accessing data: %d", i)
+		}
+		cipherText = append(cipherText, embeddedData[i])
+	}
 
 	plaintext, err := u.Decrypt(password, cipherText)
 	if err != nil {
@@ -434,8 +468,7 @@ func ExtractFile(coverImagePath, password string) (error) {
 		size = len(scanner.Bytes())
 	}
 
-
-	ff, err := os.Create(filename[2:len(filename)-2])
+	ff, err := os.Create(filename[2 : len(filename)-2])
 	if err != nil {
 		return err
 	}
@@ -445,7 +478,6 @@ func ExtractFile(coverImagePath, password string) (error) {
 	if err != nil {
 		return err
 	}
-
 
 	return nil
 }

@@ -45,11 +45,13 @@ func Decodeimage(path string) (image.Image, error) {
 // SaveImage saves the provided image to the specified output file.
 //
 // Parameters:
-//   outputfile: The path to the output PNG file. Must not be empty and must have a .png extension.
-//   embeddedImage: The image to save. Must not be nil.
+//
+//	outputfile: The path to the output PNG file. Must not be empty and must have a .png extension.
+//	embeddedImage: The image to save. Must not be nil.
 //
 // Returns:
-//   An error if the input is invalid or if an issue occurs during the file creation or encoding process.
+//
+//	An error if the input is invalid or if an issue occurs during the file creation or encoding process.
 func SaveImage(outputfile string, embeddedImage image.Image) error {
 	if outputfile == "" {
 		return fmt.Errorf("output path cannot be empty")
@@ -79,8 +81,6 @@ func SaveImage(outputfile string, embeddedImage image.Image) error {
 
 	return nil
 }
-
-
 
 func EncryptData(data []byte, password string) (ciphertext []byte, err error) {
 	if password == "" {

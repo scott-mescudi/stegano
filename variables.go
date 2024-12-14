@@ -5,6 +5,6 @@ var (
 )
 
 const (
-	LSB uint8 = 0
+	LSB         uint8 = 0
 	MaxBitDepth uint8 = 7
 )

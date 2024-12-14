@@ -28,7 +28,7 @@ func NewEmbedHandlerWithConcurrency(concurrency int) (*embedHandler, error) {
 }
 
 // NewEmbedHandler initializes an embedHandler with default concurrency
-func NewEmbedHandler() (*embedHandler) {
+func NewEmbedHandler() *embedHandler {
 	return &embedHandler{concurrency: 1}
 }
 
@@ -42,7 +42,7 @@ func NewExtractHandlerWithConcurrency(concurrency int) (*extractHandler, error) 
 }
 
 // NewExtractHandler initializes an extractHandler with default concurrency
-func NewExtractHandler() (*extractHandler) {
+func NewExtractHandler() *extractHandler {
 	return &extractHandler{concurrency: 1}
 }
 
@@ -56,7 +56,7 @@ func NewSecureEmbedHandlerWithConcurrency(concurrency int) (*secureEmbedHandler,
 }
 
 // NewSecureEmbedHandler initializes a secureEmbedHandler with default concurrency
-func NewSecureEmbedHandler() (*secureEmbedHandler) {
+func NewSecureEmbedHandler() *secureEmbedHandler {
 	return &secureEmbedHandler{concurrency: 1}
 }
 
@@ -70,6 +70,6 @@ func NewSecureExtractHandlerWithConcurrency(concurrency int) (*secureExtractHand
 }
 
 // NewSecureExtractHandler initializes a secureExtractHandler with default concurrency
-func NewSecureExtractHandler() (*secureExtractHandler) {
+func NewSecureExtractHandler() *secureExtractHandler {
 	return &secureExtractHandler{concurrency: 1}
 }
