@@ -83,17 +83,21 @@ import (
 The following are high-level functions for embedding and extracting data easily:
 
 ```go
+func main() {
 	err := stegano.EmbedFile("cover.png", "data.txt", stegano.DefaultOutputFile, "password123")
 	if err != nil {
 		log.Fatalln("Error:", err)
 	}
+}
 ```
 
 ```go
+func main() {
 	err := stegano.ExtractFile(stegano.DefaultOutputFile, "password123")
 	if err != nil {
 		log.Fatalln("Error:", err)
 	}
+}
 ```
 
 For more control over the process, refer to the examples below:
