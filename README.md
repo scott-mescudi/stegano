@@ -17,6 +17,7 @@
 5. [Usage](#usage)
     - [Import the Library](#import-the-library)
 6. [Working with Images](#working-with-images)
+	- [Quickstart](#Quickstart)
     - [Embed a Message into an Image](#1-embed-a-message-into-an-image)
     - [Extract a Message from an Embedded Image](#2-extract-a-message-from-an-embedded-image)
     - [Embed Data Without Compression](#3-embed-data-without-compression)
