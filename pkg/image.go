@@ -77,11 +77,7 @@ func ExtractRGBChannelsFromImageWithConCurrency(img image.Image, numGoroutines i
 			for y := start; y < end; y++ {
 				for x := bounds.Min.X; x < bounds.Max.X; x++ {
 					r, g, b, _ := img.At(x, y).RGBA()
-					if r > 255 || g > 255 || b > 255 {
-						pixels[idx] = RgbChannel{R: r >> 8, G: g >> 8, B: b >> 8}
-					} else {
-						pixels[idx] = RgbChannel{R: r, G: g, B: b}
-					}
+					pixels[idx] = RgbChannel{R: r >> 8, G: g >> 8, B: b >> 8}
 					idx++
 				}
 			}
