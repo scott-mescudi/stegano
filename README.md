@@ -43,7 +43,7 @@
 - **Concurrency**: Supports concurrent processing for improved speed (higher memory usage).
 - **Custom Bit Depth Embedding**: Lets you specify the bit depth used for data embedding (e.g., LSB, MSB).
 - **Encryption**: Enables secure encryption of data before embedding into the image.
-- **Efficient PNG Encoding**: Saves the image in PNG format with no quality loss.
+- **Efficient PNG Encoding**: Saves the image in PNG format.
 
 ---
 
@@ -344,6 +344,7 @@ if err != nil {
 
 ## Notes
 
+> - This library CAN be used with any image type but works best witch **PNG** images.
 > - **Bit Depth and Compression**: Ensure that the same bit depth and compression settings are used during both embedding and extraction.
 > - **Default Output Format**: By default, images NEED to be saved in PNG format to avoid any data loss.
 
@@ -364,4 +365,3 @@ if err != nil {
 > - **Huffman Encoding**: Add support for more efficient compression techniques like Huffman coding.
 > - **Audio Support**: Extend support to audio file formats.
 > - **Multi-Carrier Support**: Enable splitting data across multiple images or files for larger data embedding.
-
