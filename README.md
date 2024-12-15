@@ -78,6 +78,26 @@ import (
 
 ## Working with Images
 
+### Quickstart
+
+The following are high-level functions for embedding and extracting data easily:
+
+```go
+	err := stegano.EmbedFile("cover.png", "data.txt", stegano.DefaultOutputFile, "password123")
+	if err != nil {
+		log.Fatalln("Error:", err)
+	}
+```
+
+```go
+	err := stegano.ExtractFile(stegano.DefaultOutputFile, "password123")
+	if err != nil {
+		log.Fatalln("Error:", err)
+	}
+```
+
+For more control over the process, refer to the examples below:
+
 ### 1. Embed a Message into an Image
 
 You can embed a message into an image using the `EmbedHandler` class.

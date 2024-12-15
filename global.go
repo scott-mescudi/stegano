@@ -22,7 +22,7 @@ func GetImageCapacity(coverImage image.Image, bitDepth uint8) int {
 	return ((coverImage.Bounds().Max.X * coverImage.Bounds().Max.Y * 3) / 8) * (int(bitDepth) + 1)
 }
 
-// takes in path to imaeg and returns image.image
+// takes in path to image and returns image.Image
 func Decodeimage(path string) (image.Image, error) {
 	ext := filepath.Ext(path)
 	file, err := os.Open(path)
