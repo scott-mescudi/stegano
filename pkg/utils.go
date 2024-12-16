@@ -6,14 +6,16 @@ import (
 
 // stringToBinary converts a string to a slice of bits (0s and 1s).
 func BytesToBinary(data []byte) []uint8 {
-	var bits []uint8
+	var bits = make([]uint8, len(data)*8)
+	idx := 0
 	for _, b := range data {
 		for i := 7; i >= 0; i-- {
 			bit := (b >> i) & 1
-			bits = append(bits, uint8(bit))
+			bits[idx] = uint8(bit)
+			idx++
 		}
 	}
-	return bits
+	return bits[:idx]
 }
 
 func Int32ToBinary(num int32) []uint8 {

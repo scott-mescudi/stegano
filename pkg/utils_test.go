@@ -68,3 +68,31 @@ func TestInt32ToBinary(t *testing.T) {
 		})
 	}
 }
+
+
+func BenchmarkBytesToBinary(b *testing.B) {
+	// Prepare a large input slice of bytes
+	largeData := make([]byte, 1000000) // 1 million bytes
+	for i := 0; i < len(largeData); i++ {
+		largeData[i] = byte(i % 256) // Fill with cyclic values 0-255
+	}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = BytesToBinary(largeData)
+	}
+}
+// before
+// 7772794 ns/op        41704331 B/op         43 allocs/op
+// after 
+// 4121559 ns/op         8003606 B/op          1 allocs/op
+
+func BenchmarkInt32ToBinary(b *testing.B) {
+	// Test with a random 32-bit integer
+	num := int32(123456789)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Int32ToBinary(num)
+	}
+}
