@@ -19,13 +19,16 @@ func BytesToBinary(data []byte) []uint8 {
 }
 
 func Int32ToBinary(num int32) []uint8 {
-	var bits []uint8
+	var bits =  make([]uint8, 32)
 
+	idx := 0
 	for i := 31; i >= 0; i-- {
 		bit := (num >> i) & 1
-		bits = append(bits, uint8(bit))
+		bits[idx] = uint8(bit)
+		idx++
 	}
-	return bits
+
+	return bits[:idx]
 }
 
 func GetlenOfData(data []byte) (int, error) {

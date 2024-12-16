@@ -82,10 +82,7 @@ func BenchmarkBytesToBinary(b *testing.B) {
 		_ = BytesToBinary(largeData)
 	}
 }
-// before
-// 7772794 ns/op        41704331 B/op         43 allocs/op
-// after 
-// 4121559 ns/op         8003606 B/op          1 allocs/op
+
 
 func BenchmarkInt32ToBinary(b *testing.B) {
 	// Test with a random 32-bit integer
