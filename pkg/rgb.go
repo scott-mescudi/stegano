@@ -11,7 +11,8 @@ type bin struct {
 }
 
 func splitIntoGroupsOfThree(nums []uint8) []bin {
-	var result []bin
+	var result = make([]bin,( len(nums)/3)+1)
+	idx := 0
 	for i := 0; i < len(nums); i += 3 {
 		var b bin
 		if i < len(nums) {
@@ -23,9 +24,12 @@ func splitIntoGroupsOfThree(nums []uint8) []bin {
 		if i+2 < len(nums) {
 			b.b = uint8(nums[i+2])
 		}
-		result = append(result, b)
+
+		result[idx] = b
+		idx++
 	}
-	return result
+
+	return result[:idx]
 }
 
 func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth uint8) ([]RgbChannel, error) {

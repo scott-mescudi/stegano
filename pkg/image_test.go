@@ -180,18 +180,7 @@ func TestExtractRGBChannelsFromImageWithConCurrency_EmptyImage(t *testing.T) {
 	assert.Empty(t, result)
 }
 
-func BenchmarkExtractRGBChannelsFromImageWithConCurrency(b *testing.B) {
-	// Generate a sample image for testing
-	width, height := 10000, 10000 // Modify as needed
-	img := generateTestImage(width, height)
 
-	// Reset the timer to exclude setup time from the benchmark
-	b.ResetTimer()
-
-	for i := 0; i < b.N; i++ {
-		_ = ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
-	}
-}
 
 // Helper function to generate a test image with random colors
 func generateTestImage(width, height int) image.Image {
@@ -207,4 +196,17 @@ func generateTestImage(width, height int) image.Image {
 		}
 	}
 	return img
+}
+
+func BenchmarkExtractRGBChannelsFromImageWithConCurrency(b *testing.B) {
+	// Generate a sample image for testing
+	width, height := 10000, 10000 // Modify as needed
+	img := generateTestImage(width, height)
+
+	// Reset the timer to exclude setup time from the benchmark
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_ = ExtractRGBChannelsFromImageWithConCurrency(img, runtime.NumCPU())
+	}
 }
