@@ -11,7 +11,7 @@ type bin struct {
 }
 
 func splitIntoGroupsOfThree(nums []uint8) []bin {
-	var result = make([]bin,( len(nums)/3)+1)
+	var result = make([]bin, ( len(nums)/3)+1)
 	idx := 0
 	for i := 0; i < len(nums); i += 3 {
 		var b bin
