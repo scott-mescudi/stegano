@@ -358,6 +358,10 @@ if err != nil {
 | **Stegano with Concurrency**    | 286,168,125        | 293,260,925        | 284,079,175        | **287,169,408**      | **287.17 ms**        |
 | [**auyer/steganography**](https://github.com/auyer/steganography) | 1,405,256,700      | 1,424,957,200      | 1,401,682,600      | **1,410,965,500**    | **1,410.97 ms**      |
 
+> **Image size:** 10,473,459 bytes  
+> **Text size:** 641,788 bytes  
+> Benchmark code can be found [here](./examples/steganobench)
+
 ---
 
 ## Future Improvements
