@@ -180,8 +180,6 @@ func TestExtractRGBChannelsFromImageWithConCurrency_EmptyImage(t *testing.T) {
 	assert.Empty(t, result)
 }
 
-
-
 // Helper function to generate a test image with random colors
 func generateTestImage(width, height int) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))

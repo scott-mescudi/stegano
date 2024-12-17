@@ -19,7 +19,7 @@ func BytesToBinary(data []byte) []uint8 {
 }
 
 func Int32ToBinary(num int32) []uint8 {
-	var bits =  make([]uint8, 32)
+	var bits = make([]uint8, 32)
 
 	idx := 0
 	for i := 31; i >= 0; i-- {

@@ -69,7 +69,6 @@ func TestInt32ToBinary(t *testing.T) {
 	}
 }
 
-
 func BenchmarkBytesToBinary(b *testing.B) {
 	// Prepare a large input slice of bytes
 	largeData := make([]byte, 1000000) // 1 million bytes
@@ -82,7 +81,6 @@ func BenchmarkBytesToBinary(b *testing.B) {
 		_ = BytesToBinary(largeData)
 	}
 }
-
 
 func BenchmarkInt32ToBinary(b *testing.B) {
 	// Test with a random 32-bit integer

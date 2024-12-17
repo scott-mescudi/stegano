@@ -91,7 +91,7 @@ func SaveImage(outputfile string, embeddedImage image.Image) error {
 //
 // Returns:
 // - ciphertext ([]byte): The encrypted data.
-// - err (error): An error if the encryption fails. 
+// - err (error): An error if the encryption fails.
 func EncryptData(data []byte, password string) (ciphertext []byte, err error) {
 	if password == "" {
 		return nil, fmt.Errorf("invalid password")
@@ -113,7 +113,7 @@ func EncryptData(data []byte, password string) (ciphertext []byte, err error) {
 //
 // Returns:
 // - plaintext ([]byte): The decrypted data.
-// - err (error): An error if the decryption fails. 
+// - err (error): An error if the decryption fails.
 func DecryptData(ciphertext []byte, password string) (plaintext []byte, err error) {
 	if password == "" {
 		return nil, fmt.Errorf("invalid password")
@@ -125,4 +125,3 @@ func DecryptData(ciphertext []byte, password string) (plaintext []byte, err erro
 
 	return u.Decrypt(password, ciphertext)
 }
-

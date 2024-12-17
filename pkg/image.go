@@ -63,7 +63,7 @@ func splitTask(n int, imgy int) []split {
 // use this wth numGoroutines := runtime.NumCPU()
 func ExtractRGBChannelsFromImageWithConCurrency(img image.Image, numGoroutines int) []RgbChannel {
 	bounds := img.Bounds()
-	pixels := make([]RgbChannel, bounds.Dx() * bounds.Dy())
+	pixels := make([]RgbChannel, bounds.Dx()*bounds.Dy())
 
 	splits := splitTask(numGoroutines, bounds.Max.Y)
 

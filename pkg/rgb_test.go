@@ -42,7 +42,6 @@ func TestEmbedAtDepth(t *testing.T) {
 			t.Fatal(err)
 		}
 
-
 		if data[0].R == 255 {
 			t.Fatalf("Data didnt change at index %v", i)
 		}
@@ -164,8 +163,3 @@ func BenchmarkSplitIntoGroupsOfThree(b *testing.B) {
 		_ = splitIntoGroupsOfThree(largeInput)
 	}
 }
-
-// before
-// 789349 ns/op         5712932 B/op         31 allocs/op
-// after 
-// 322274 ns/op         1007623 B/op          1 allocs/op
