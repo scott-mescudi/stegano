@@ -313,7 +313,6 @@ func openFiles(coverImagePath, dataFilePath string) (coverImage image.Image, dat
 	return cimg, df, nil
 }
 
-const bd = 1
 
 // EmbedFile embeds data from a file into an image using a default bit depth of 1 (the last two bits in a byte).
 // The data is first compressed and encrypted with the provided password before embedding into the image.
@@ -333,7 +332,7 @@ const bd = 1
 // Parameters:
 // - coverImagePath: The file path of the image containing embedded data.
 // - password: A password used to decrypt the embedded data after extraction.
-func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) error {
+func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string, bitDepth uint8) error {
 	if coverImagePath == "" {
 		return errors.New("invalid coverImagePath")
 	}
@@ -349,6 +348,10 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) er
 	if password == "" {
 		return errors.New("invalid password")
 	}
+
+	if bitDepth > 7 {
+		return errors.New("invalid bit Depth")
+	} 
 
 	fp := filepath.Base(dataFilePath)
 	ext := fmt.Sprintf("/-%s-/\n", fp)
@@ -371,7 +374,7 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) er
 	go func() {
 		defer wg.Done()
 		channels = u.ExtractRGBChannelsFromImageWithConCurrency(cf, runtime.NumCPU())
-		if (len(df)*8)+32 > len(channels)*3*(int(bd)+1) {
+		if (len(df)*8)+32 > len(channels)*3*(int(bitDepth)+1) {
 			erchan <- fmt.Errorf("error: Data too large to embed into the image")
 			return
 		}
@@ -400,7 +403,7 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) er
 
 	wg.Wait()
 
-	channels, err = u.EmbedIntoRGBchannelsWithDepth(channels, df, bd)
+	channels, err = u.EmbedIntoRGBchannelsWithDepth(channels, df, bitDepth)
 	if err != nil {
 		return err
 	}
@@ -421,7 +424,7 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string) er
 // Parameters:
 // - coverImagePath: The file path of the image containing embedded data.
 // - password: A password used to decrypt the embedded data after extraction.
-func ExtractFile(coverImagePath, password string) error {
+func ExtractFile(coverImagePath, password string, bitDepth uint8) error {
 	if coverImagePath == "" {
 		return errors.New("invalid coverImagePath")
 	}
@@ -430,13 +433,17 @@ func ExtractFile(coverImagePath, password string) error {
 		return errors.New("invalid password")
 	}
 
+	if bitDepth > 7 {
+		return errors.New("invalid bit Depth")
+	} 
+
 	cf, err := Decodeimage(coverImagePath)
 	if err != nil {
 		return err
 	}
 
 	channels := u.ExtractRGBChannelsFromImageWithConCurrency(cf, runtime.NumCPU())
-	embeddedData, err := u.ExtractDataFromRGBchannelsWithDepth(channels, bd)
+	embeddedData, err := u.ExtractDataFromRGBchannelsWithDepth(channels, bitDepth)
 	if err != nil {
 		return err
 	}
