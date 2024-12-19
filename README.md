@@ -85,7 +85,7 @@ The following are high-level functions for embedding and extracting data easily:
 
 ```go
 func main() {
-	err := stegano.EmbedFile("cover.png", "data.txt", stegano.DefaultOutputFile, "password123")
+	err := stegano.EmbedFile("cover.png", "data.txt", stegano.DefaultOutputFile, "password123", stegano.LSB)
 	if err != nil {
 		log.Fatalln("Error:", err)
 	}
@@ -94,7 +94,7 @@ func main() {
 
 ```go
 func main() {
-	err := stegano.ExtractFile(stegano.DefaultOutputFile, "password123")
+	err := stegano.ExtractFile(stegano.DefaultOutputFile, "password123", stegano.LSB)
 	if err != nil {
 		log.Fatalln("Error:", err)
 	}
