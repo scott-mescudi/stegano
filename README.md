@@ -51,7 +51,7 @@
 
 Steganography is the practice of concealing data within other, seemingly innocent data in such a way that it remains undetectable to the casual observer. Unlike encryption, which focuses on making data unreadable, steganography hides it entirely, making the data appear normal and undisturbed.
 
-The most common use case for steganography is hiding text or binary data within an image, audio file, or video. This library enables you to easily embed and extract such hidden information from images.
+The most common use case for steganography is hiding text or binary data within an image. This library enables you to easily embed and extract such hidden information from images.
 
 ---
 
@@ -109,6 +109,7 @@ You can embed a message into an image using the `EmbedHandler` class.
 
 ```go
 func main() {
+	// wrapper function around different image decoders.
 	coverFile, err := stegano.Decodeimage("coverimage.png")
 	if err != nil {
 		log.Fatalln(err)
