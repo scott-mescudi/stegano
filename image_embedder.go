@@ -104,7 +104,7 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 		return nil, errors.New("coverImage is nil")
 	}
 	if bitDepth < 0 || bitDepth > 7 {
-		return nil, fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
+		return nil, fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
 	}
 
 	if m.concurrency <= 0 {
@@ -249,7 +249,7 @@ func (m *SecureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, pa
 	}
 
 	if bitDepth < 0 || bitDepth > 7 {
-		return nil, fmt.Errorf("bitDepth is out of range (1-7): %d", bitDepth)
+		return nil, fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
 	}
 
 	if m.concurrency <= 0 {

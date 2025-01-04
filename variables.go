@@ -8,3 +8,9 @@ const (
 	LSB         uint8 = 0
 	MaxBitDepth uint8 = 7
 )
+
+// Errors
+
+const (
+	
+)
