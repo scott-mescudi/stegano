@@ -33,7 +33,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 	if height <= 0 || width <= 0 {
-		return fmt.Errorf("image size is invalid: height=%d, width=%d", height, width)
+		return ErrInvalidCoverImage
 	}
 
 	// Validate bit depth
@@ -43,7 +43,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 
 	// Validate data
 	if len(data) == 0 {
-		return errors.New("data is empty")
+		return ErrInvalidData
 	}
 
 	if m.concurrency <= 0 {
@@ -57,7 +57,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 
 	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
 	if (len(data)*8)+32 > maxCapacity {
-		return fmt.Errorf("data is too large to embed into the image: maxCapacity=%d bytes, dataSize=%d bytes", maxCapacity, len(data))
+		return ErrDataTooLarge
 	}
 
 	// Compress data if required
@@ -65,7 +65,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 	if defaultCompression {
 		compressedData, err := c.CompressZSTD(data)
 		if err != nil {
-			return fmt.Errorf("failed to compress data: %w", err)
+			return ErrFailedToCompressData
 		}
 		indata = compressedData
 	}
@@ -178,7 +178,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
 	if height <= 0 || width <= 0 {
-		return fmt.Errorf("image size is invalid: height=%d, width=%d", height, width)
+		return ErrInvalidCoverImage
 	}
 
 	// Validate bit depth
@@ -188,7 +188,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 
 	// Validate data
 	if len(data) == 0 {
-		return errors.New("data is empty")
+		return ErrInvalidData
 	}
 
 	if m.concurrency <= 0 {
@@ -202,7 +202,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 
 	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
 	if (len(data)*8)+32 > maxCapacity {
-		return fmt.Errorf("data is too large to embed into the image: maxCapacity=%d bytes, dataSize=%d bytes", maxCapacity, len(data))
+		return ErrDataTooLarge
 	}
 
 	cipher, err := EncryptData(data, password)
@@ -212,7 +212,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 
 	compressedData, err := c.CompressZSTD(cipher)
 	if err != nil {
-		return fmt.Errorf("failed to compress data: %w", err)
+		return ErrFailedToCompressData
 	}
 
 	// Embed data

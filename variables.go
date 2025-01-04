@@ -11,7 +11,7 @@ const (
 	MaxBitDepth uint8 = 7
 )
 
-// Errors
+// Errors for image_embedder.go
 var (
     ErrDepthOutOfRange      = errors.New("bitDepth is out of range (0-7)")
     ErrFailedToExtractRGB   = errors.New("failed to extract RGB channels from the image")
