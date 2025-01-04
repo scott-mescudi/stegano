@@ -1,6 +1,7 @@
 package stegano
 
 import (
+	"errors"
 	"image"
 	"image/color"
 	"os"
@@ -74,8 +75,9 @@ func TestEncode_DataTooLarge(t *testing.T) {
 
 	// Test if the correct error is returned
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "data is too large to embed")
+	assert.True(t, errors.Is(err, ErrDataTooLarge), "expected ErrDataTooLarge but got a different error")
 }
+
 
 func TestEncode_CompressedData(t *testing.T) {
 	// Setup
