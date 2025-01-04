@@ -1,7 +1,5 @@
 package stegano
 
-import "fmt"
-
 type EmbedHandler struct {
 	concurrency int
 }
@@ -21,7 +19,7 @@ type SecureExtractHandler struct {
 // NewEmbedHandlerWithConcurrency initializes an EmbedHandler with a specified concurrency
 func NewEmbedHandlerWithConcurrency(concurrency int) (*EmbedHandler, error) {
 	if concurrency <= 0 {
-		return nil, fmt.Errorf("invalid number of goroutines")
+		return nil, ErrInvalidGoroutines
 	}
 
 	return &EmbedHandler{concurrency: concurrency}, nil
@@ -35,7 +33,7 @@ func NewEmbedHandler() *EmbedHandler {
 // NewExtractHandlerWithConcurrency initializes an ExtractHandler with a specified concurrency
 func NewExtractHandlerWithConcurrency(concurrency int) (*ExtractHandler, error) {
 	if concurrency <= 0 {
-		return nil, fmt.Errorf("invalid number of goroutines")
+		return nil, ErrInvalidGoroutines
 	}
 
 	return &ExtractHandler{concurrency: concurrency}, nil
@@ -49,7 +47,7 @@ func NewExtractHandler() *ExtractHandler {
 // NewSecureEmbedHandlerWithConcurrency initializes a SecureEmbedHandler with a specified concurrency
 func NewSecureEmbedHandlerWithConcurrency(concurrency int) (*SecureEmbedHandler, error) {
 	if concurrency <= 0 {
-		return nil, fmt.Errorf("invalid number of goroutines")
+		return nil, ErrInvalidGoroutines
 	}
 
 	return &SecureEmbedHandler{concurrency: concurrency}, nil
@@ -63,7 +61,7 @@ func NewSecureEmbedHandler() *SecureEmbedHandler {
 // NewSecureExtractHandlerWithConcurrency initializes a SecureExtractHandler with a specified concurrency
 func NewSecureExtractHandlerWithConcurrency(concurrency int) (*SecureExtractHandler, error) {
 	if concurrency <= 0 {
-		return nil, fmt.Errorf("invalid number of goroutines")
+		return nil, ErrInvalidGoroutines
 	}
 
 	return &SecureExtractHandler{concurrency: concurrency}, nil

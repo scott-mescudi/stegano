@@ -24,3 +24,8 @@ var (
     ErrFailedToDecryptData  = errors.New("failed to decrypt data")
     ErrFailedToSaveImage    = errors.New("failed to save image")
 )
+
+// Errors for methods.go
+var (
+	ErrInvalidGoroutines = errors.New("invalid number of goroutines")
+)

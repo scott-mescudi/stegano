@@ -12,7 +12,7 @@ import (
 // image or an error if the data exceeds the embedding capacity of the image.
 func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8) (image.Image, error) {
 	if coverImage == nil {
-		return nil, fmt.Errorf("coverimage is nil")
+		return nil, ErrInvalidCoverImage
 	}
 
 	if m.concurrency <= 0 {
@@ -21,7 +21,7 @@ func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if (len(data)*8)+32 > len(RGBchannels)*3*(int(bitDepth)+1) {
-		return nil, fmt.Errorf("error: Data too large to embed into the image")
+		return nil, ErrDataTooLarge
 	}
 
 	var indata []byte = data
@@ -39,7 +39,7 @@ func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 // or an error if the process fails.
 func (m *ExtractHandler) ExtractDataFromImage(coverImage image.Image, bitDepth uint8) ([]byte, error) {
 	if coverImage == nil {
-		return nil, fmt.Errorf("coverimage is nil")
+		return nil, ErrInvalidCoverImage
 	}
 
 	if m.concurrency <= 0 {
@@ -79,7 +79,7 @@ func (m *ExtractHandler) ExtractDataFromImage(coverImage image.Image, bitDepth u
 // Unlike other embedding methods, this modifies a single bit per channel at the specified depth.
 func (m *EmbedHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth uint8) (image.Image, error) {
 	if coverimage == nil {
-		return nil, fmt.Errorf("coverimage is nil")
+		return nil, ErrInvalidCoverImage
 	}
 
 	if m.concurrency <= 0 {
@@ -88,7 +88,7 @@ func (m *EmbedHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth u
 
 	channels := u.ExtractRGBChannelsFromImageWithConCurrency(coverimage, m.concurrency)
 	if channels == nil {
-		return nil, fmt.Errorf("Failed to extract channels from image")
+		return nil, ErrFailedToExtractRGB
 	}
 
 	ec, err := u.EmbedAtDepth(channels, data, depth)
@@ -103,7 +103,7 @@ func (m *EmbedHandler) EmbedAtDepth(coverimage image.Image, data []byte, depth u
 // Only retrieves data from the specified bit depth. Returns the extracted data or an error if the process fails.
 func (m *ExtractHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]byte, error) {
 	if coverimage == nil {
-		return nil, fmt.Errorf("coverimage is nil")
+		return nil, ErrInvalidCoverImage
 	}
 
 	if m.concurrency <= 0 {
@@ -112,7 +112,7 @@ func (m *ExtractHandler) ExtractAtDepth(coverimage image.Image, depth uint8) ([]
 
 	channels := u.ExtractRGBChannelsFromImageWithConCurrency(coverimage, m.concurrency)
 	if channels == nil {
-		return nil, fmt.Errorf("Failed to extract channels from image")
+		return nil, ErrFailedToExtractRGB
 	}
 
 	emdata, err := u.ExtractAtDepth(channels, depth)
