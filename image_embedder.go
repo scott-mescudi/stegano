@@ -79,7 +79,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 	// Generate image from embedded RGB channels
 	imgdata, err := u.SaveImage(embeddedRGBChannels, height, width)
 	if err != nil {
-		return fmt.Errorf("failed to create embedded image: %w", err)
+		return ErrFailedToSaveImage
 	}
 
 	// Use default filename if none provided
@@ -224,7 +224,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 	// Generate image from embedded RGB channels
 	imgdata, err := u.SaveImage(embeddedRGBChannels, height, width)
 	if err != nil {
-		return fmt.Errorf("failed to create embedded image: %w", err)
+		return ErrFailedToSaveImage
 	}
 
 	// Use default filename if none provided
