@@ -28,3 +28,6 @@ go.work.sum
 /testies
 /testy
 /rust
+/cgo_tests
+/c_impl
+/c
