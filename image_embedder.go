@@ -28,7 +28,7 @@ import (
 func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
-		return errors.New("coverImage is nil")
+		return ErrInvalidCoverImage
 	}
 	height := coverImage.Bounds().Dy()
 	width := coverImage.Bounds().Dx()
@@ -38,7 +38,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 
 	// Validate bit depth
 	if bitDepth < 0 || bitDepth > 7 {
-		return fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
+		return ErrDepthOutOfRange
 	}
 
 	// Validate data
@@ -52,7 +52,7 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
-		return errors.New("failed to extract RGB channels from the image")
+		return ErrFailedToExtractRGB
 	}
 
 	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
@@ -101,10 +101,10 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaultCompressed bool) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
-		return nil, errors.New("coverImage is nil")
+		return nil, ErrInvalidCoverImage
 	}
 	if bitDepth < 0 || bitDepth > 7 {
-		return nil, fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
+		return nil, ErrDepthOutOfRange
 	}
 
 	if m.concurrency <= 0 {
@@ -113,13 +113,13 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
-		return nil, errors.New("failed to extract RGB channels from the image")
+		return nil, ErrFailedToExtractRGB
 	}
 
 	// Extract data
 	data, err := u.ExtractDataFromRGBchannelsWithDepth(RGBchannels, bitDepth)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract data from RGB channels: %w", err)
+		return nil, ErrFailedToExtractData
 	}
 
 	// Validate extracted data length
@@ -127,8 +127,9 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 	if err != nil {
 		return nil, fmt.Errorf("failed to get length of extracted data: %w", err)
 	}
+
 	if lenData == 0 {
-		return nil, errors.New("extracted data length is zero")
+		return nil, ErrInvalidDataLength
 	}
 
 	var moddedData = make([]byte, 0, lenData)
@@ -170,7 +171,7 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, password string) error {
 	// Validate coverImage dimensions
 	if coverImage == nil {
-		return errors.New("coverImage is nil")
+		return ErrInvalidCoverImage
 
 	}
 
@@ -182,7 +183,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 
 	// Validate bit depth
 	if bitDepth < 0 || bitDepth > 7 {
-		return fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
+		return ErrDepthOutOfRange
 	}
 
 	// Validate data
@@ -196,7 +197,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
-		return errors.New("failed to extract RGB channels from the image")
+		return ErrFailedToExtractRGB
 	}
 
 	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
@@ -245,11 +246,11 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 func (m *SecureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, password string) ([]byte, error) {
 	// Validate coverImage dimensions
 	if coverImage == nil {
-		return nil, errors.New("coverImage is nil")
+		return nil, ErrInvalidCoverImage
 	}
 
 	if bitDepth < 0 || bitDepth > 7 {
-		return nil, fmt.Errorf("bitDepth is out of range (0-7): %d", bitDepth)
+		return nil, ErrDepthOutOfRange
 	}
 
 	if m.concurrency <= 0 {
@@ -258,13 +259,13 @@ func (m *SecureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, pa
 	// Extract RGB channels
 	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
 	if RGBchannels == nil {
-		return nil, errors.New("failed to extract RGB channels from the image")
+		return nil, ErrFailedToExtractRGB
 	}
 
 	// Extract data
 	data, err := u.ExtractDataFromRGBchannelsWithDepth(RGBchannels, bitDepth)
 	if err != nil {
-		return nil, fmt.Errorf("failed to extract data from RGB channels: %w", err)
+		return nil, ErrFailedToExtractData
 	}
 
 	// Validate extracted data length
