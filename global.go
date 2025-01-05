@@ -150,12 +150,11 @@ func GetAudioData(file string) *wav.Decoder {
 }
 
 // WriteAudioFile writes the decoded and modified data to a new WAV file
-func WriteAudioFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuffer) {
+func WriteAudioFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuffer) (error) {
 	// Create a new file for writing the modified WAV data
 	outFile, err := os.Create(fileName)
 	if err != nil {
-		fmt.Println("Error creating output file:", err)
-		return
+		return fmt.Errorf("Error creating output file: %e\n", err)
 	}
 	defer outFile.Close()
 
@@ -164,13 +163,13 @@ func WriteAudioFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuff
 
 	// Write the modified buffer to the new file
 	if err := encoder.Write(buffer); err != nil {
-		fmt.Println("Error encoding WAV file:", err)
-		return
+		return fmt.Errorf("Error encoding WAV file: %e\n", err)
 	}
 
 	// Close the encoder to flush the output
 	if err := encoder.Close(); err != nil {
-		fmt.Println("Error closing encoder:", err)
-		return
+		return fmt.Errorf("Error closing encoder: %e\n", err)
 	}
+
+	return nil
 }
