@@ -36,8 +36,7 @@ func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 		}
 	}
 
-	leng, _ := GetlenOfData(data)
-	return data[4:(leng*2)+1]
+	return data
 }
 
 
@@ -90,7 +89,6 @@ func ExtractDataWithDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	}
 
 
-	leng, _ := GetlenOfData(byteSlice)
-	return byteSlice[4:(leng*2)+1]
+	return byteSlice
 }
 
