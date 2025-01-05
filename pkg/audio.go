@@ -1,10 +1,16 @@
 package pkg
 
 import (
+	"fmt"
+
 	"github.com/go-audio/audio"
 )
 
-func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) *audio.IntBuffer {
+func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) (*audio.IntBuffer, error) {
+	if len(data) == 0 {
+		return nil, fmt.Errorf("Data is empty")
+	}
+
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
 	lenBits = append(lenBits, dataBits...)
@@ -15,7 +21,7 @@ func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) *a
 		}
 	}
 
-	return buffer
+	return buffer, nil
 }
 
 func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
@@ -38,7 +44,11 @@ func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	return data
 }
 
-func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) *audio.IntBuffer {
+func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) (*audio.IntBuffer, error) {
+	if len(data) == 0 {
+		return nil, fmt.Errorf("Data is empty")
+	}
+
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
 	lenBits = append(lenBits, dataBits...)
@@ -59,7 +69,7 @@ func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint
 		}
 	}
 
-	return buffer
+	return buffer, nil
 }
 
 func ExtractDataWithDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {

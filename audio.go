@@ -24,7 +24,7 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVWithDepth(audioFilename, outputFilen
 		return err
 	}
 
-	buffer = u.EmbedDataWithDepthAudio(buffer, nd, bitDepth)
+	buffer, err = u.EmbedDataWithDepthAudio(buffer, nd, bitDepth)
 
 	err = WriteAudioFile(outputFilename, decoder, buffer)
 	if err != nil {
@@ -88,7 +88,10 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVAtDepth(audioFilename, outputFilenam
 		return err
 	}
 
-	buffer = u.EmbedDataAtDepthAudio(buffer, data, bitDepth)
+	buffer, err = u.EmbedDataAtDepthAudio(buffer, data, bitDepth)
+	if err != nil {
+		return ErrInvalidData
+	}
 
 	err = WriteAudioFile(outputFilename, decoder, buffer)
 	if err != nil {
