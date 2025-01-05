@@ -74,7 +74,7 @@ func EmbedIntoRGBchannelsWithDepth(RGBchannels []RgbChannel, data []byte, depth 
 	return RGBchannels, nil
 }
 
-// uses a single bit at specofoed index to embed data instead of last n
+// uses a single bit at specified index to embed data instead of last n
 func EmbedAtDepth(RGBchannels []RgbChannel, data []byte, depth uint8) ([]RgbChannel, error) {
 	if depth > 7 {
 		return nil, fmt.Errorf("bit depth exeeds 7")
