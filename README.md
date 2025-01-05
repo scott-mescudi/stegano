@@ -1,12 +1,6 @@
 # Stegano: The fastest Steganography Library for Go
 
-[![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml)  
-![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano)  
-[![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
-
-**Stegano** is a Go library that enables the embedding and extraction of data within images using steganographic techniques. It supports any image compatible with Go's `image.Image` type, includes ZSTD compression for optimizing data storage, and also offers encryption for securely hiding information.
-
----
+[![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml) ![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano) [![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)
 
 ## Table of Contents
 
