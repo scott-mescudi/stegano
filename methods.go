@@ -16,8 +16,8 @@ type SecureExtractHandler struct {
 	concurrency int
 }
 
-type AudioEmbedHandler struct {}
-type AudioExtractHandler struct {}
+type AudioEmbedHandler struct{}
+type AudioExtractHandler struct{}
 
 func NewAudioEmbedHandler() *AudioEmbedHandler {
 	return &AudioEmbedHandler{}
@@ -26,7 +26,6 @@ func NewAudioEmbedHandler() *AudioEmbedHandler {
 func NewAudioExtractHandler() *AudioExtractHandler {
 	return &AudioExtractHandler{}
 }
-
 
 // NewEmbedHandlerWithConcurrency initializes an EmbedHandler with a specified concurrency
 func NewEmbedHandlerWithConcurrency(concurrency int) (*EmbedHandler, error) {

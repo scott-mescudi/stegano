@@ -78,7 +78,6 @@ func TestEncode_DataTooLarge(t *testing.T) {
 	assert.True(t, errors.Is(err, ErrDataTooLarge), "expected ErrDataTooLarge but got a different error")
 }
 
-
 func TestEncode_CompressedData(t *testing.T) {
 	// Setup
 	coverImage := createTestImage()

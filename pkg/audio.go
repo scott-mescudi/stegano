@@ -4,7 +4,6 @@ import (
 	"github.com/go-audio/audio"
 )
 
-
 func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) *audio.IntBuffer {
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
@@ -39,7 +38,6 @@ func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	return data
 }
 
-
 func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) *audio.IntBuffer {
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
@@ -52,7 +50,7 @@ func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint
 		if lenBits[i] != GetBit(uint32(buffer.Data[index]), curbit) {
 			buffer.Data[index] = int(FlipBit(uint32(buffer.Data[index]), curbit))
 		}
-		
+
 		if curbit != 0 {
 			curbit--
 		} else {
@@ -88,7 +86,5 @@ func ExtractDataWithDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 		byteSlice = append(byteSlice, currentByte)
 	}
 
-
 	return byteSlice
 }
-

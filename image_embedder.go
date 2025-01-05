@@ -314,7 +314,6 @@ func openFiles(coverImagePath, dataFilePath string) (coverImage image.Image, dat
 	return cimg, df, nil
 }
 
-
 // EmbedFile embeds data from a file into an image using a default bit depth of 1 (the last two bits in a byte).
 // The data is first compressed and encrypted with the provided password before embedding into the image.
 // Returns an error if the process fails at any stage.
@@ -352,7 +351,7 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string, bi
 
 	if bitDepth > 7 {
 		return errors.New("invalid bit Depth")
-	} 
+	}
 
 	fp := filepath.Base(dataFilePath)
 	ext := fmt.Sprintf("/-%s-/\n", fp)
@@ -436,7 +435,7 @@ func ExtractFile(coverImagePath, password string, bitDepth uint8) error {
 
 	if bitDepth > 7 {
 		return errors.New("invalid bit Depth")
-	} 
+	}
 
 	cf, err := Decodeimage(coverImagePath)
 	if err != nil {
