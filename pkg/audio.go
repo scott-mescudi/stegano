@@ -9,7 +9,6 @@ import (
 )
 
 
-
 // GetAudioData opens the WAV file and returns a decoder
 func GetAudioData(file string) *wav.Decoder {
 	f, err := os.Open(file)
