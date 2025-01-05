@@ -19,7 +19,7 @@ type SecureExtractHandler struct {
 type AudioEmbedHandler struct {}
 type AudioExtractHandler struct {}
 
-func NewAudioEmbedder() *AudioEmbedHandler {
+func NewAudioEmbedHandler() *AudioEmbedHandler {
 	return &AudioEmbedHandler{}
 }
 

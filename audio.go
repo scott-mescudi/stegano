@@ -1,7 +1,6 @@
 package stegano
 
 import (
-	c "github.com/scott-mescudi/stegano/compression"
 	u "github.com/scott-mescudi/stegano/pkg"
 )
 
@@ -17,12 +16,8 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVWithDepth(audioFilename, outputFilen
 		return err
 	}
 
-	newdata, err := c.CompressZSTD(data)
-	if err != nil {
-		return err
-	}
 
-	buffer = u.EmbedDataWithDepthAudio(buffer, newdata, bitDepth)
+	buffer = u.EmbedDataWithDepthAudio(buffer, data, bitDepth)
 
 	err = WriteAudioFile(outputFilename, decoder, buffer)
 	if err != nil {
@@ -45,12 +40,8 @@ func (s *AudioExtractHandler) ExtractDataFromWAVWithDepth(audioFilename string, 
 	}
 
 	data := u.ExtractDataWithDepthAudio(buffer, bitDepth)
-	newdata, err := c.DecompressZSTD(data)
-	if err != nil {
-		return nil, err
-	}
 
-	return newdata, nil
+	return data, nil
 }
 
 // EmbedDataIntoWAVAtDepth embeds compressed data into a WAV file at a specified bit depth.
@@ -65,12 +56,8 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVAtDepth(audioFilename, outputFilenam
 		return err
 	}
 
-	newdata, err := c.CompressZSTD(data)
-	if err != nil {
-		return err
-	}
 
-	buffer = u.EmbedDataAtDepthAudio(buffer, newdata, bitDepth)
+	buffer = u.EmbedDataAtDepthAudio(buffer, data, bitDepth)
 
 	err = WriteAudioFile(outputFilename, decoder, buffer)
 	if err != nil {
@@ -93,10 +80,6 @@ func (s *AudioExtractHandler) ExtractDataFromWAVAtDepth(audioFilename string, bi
 	}
 
 	data := u.ExtractDataAtDepthAudio(buffer, bitDepth)
-	newdata, err := c.DecompressZSTD(data)
-	if err != nil {
-		return nil, err
-	}
 
-	return newdata, nil
+	return data, nil
 }
