@@ -9,6 +9,9 @@ import (
 	"path/filepath"
 
 	u "github.com/scott-mescudi/stegano/pkg"
+
+	"github.com/go-audio/audio"
+	"github.com/go-audio/wav"
 )
 
 // GetImageCapacity calculates the maximum amount of data (in bytes)
@@ -124,4 +127,50 @@ func DecryptData(ciphertext []byte, password string) (plaintext []byte, err erro
 	}
 
 	return u.Decrypt(password, ciphertext)
+}
+
+
+// GetAudioData opens the WAV file and returns a decoder
+func GetAudioData(file string) *wav.Decoder {
+	f, err := os.Open(file)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return nil
+	}
+
+	decoder := wav.NewDecoder(f)
+
+	// Decode the WAV file header and check if it's valid
+	if !decoder.IsValidFile() {
+		fmt.Println("Invalid WAV file")
+		return nil
+	}
+
+	return decoder
+}
+
+// WriteAudioFile writes the decoded and modified data to a new WAV file
+func WriteAudioFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuffer) {
+	// Create a new file for writing the modified WAV data
+	outFile, err := os.Create(fileName)
+	if err != nil {
+		fmt.Println("Error creating output file:", err)
+		return
+	}
+	defer outFile.Close()
+
+	// Create a new encoder for the output file
+	encoder := wav.NewEncoder(outFile, int(decoder.SampleRate), int(decoder.BitDepth), int(decoder.NumChans), 1)
+
+	// Write the modified buffer to the new file
+	if err := encoder.Write(buffer); err != nil {
+		fmt.Println("Error encoding WAV file:", err)
+		return
+	}
+
+	// Close the encoder to flush the output
+	if err := encoder.Close(); err != nil {
+		fmt.Println("Error closing encoder:", err)
+		return
+	}
 }
