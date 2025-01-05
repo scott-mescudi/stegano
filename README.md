@@ -368,5 +368,4 @@ if err != nil {
 ## Future Improvements
 
 > - **Huffman Encoding**: Add support for more efficient compression techniques like Huffman coding.
-> - **Audio Support**: Extend support to audio file formats.
 > - **Multi-Carrier Support**: Enable splitting data across multiple images or files for larger data embedding.
