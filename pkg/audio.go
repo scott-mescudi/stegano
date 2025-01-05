@@ -1,4 +1,4 @@
-package audio
+package pkg
 
 import (
 	"fmt"
@@ -8,48 +8,7 @@ import (
 	"github.com/go-audio/wav"
 )
 
-func BytesToBinary(data []byte) []uint8 {
-	var bits = make([]uint8, len(data)*8)
-	idx := 0
-	for _, b := range data {
-		for i := 7; i >= 0; i-- {
-			bit := (b >> i) & 1
-			bits[idx] = uint8(bit)
-			idx++
-		}
-	}
-	return bits[:idx]
-}
 
-func Int32ToBinary(num int32) []uint8 {
-	var bits = make([]uint8, 32)
-
-	idx := 0
-	for i := 31; i >= 0; i-- {
-		bit := (num >> i) & 1
-		bits[idx] = uint8(bit)
-		idx++
-	}
-
-	return bits[:idx]
-}
-
-func GetlenOfData(data []byte) (int, error) {
-	if len(data) < 4 {
-		return 0, fmt.Errorf("insufficient data: expected at least 4 bytes")
-	}
-
-	n := int(data[0])<<24 | int(data[1])<<16 | int(data[2])<<8 | int(data[3])
-	return n, nil
-}
-
-func FlipBit(num uint32, position uint8) uint32 {
-	return num ^ (1 << position)
-}
-
-func GetBit(value uint32, position uint8) uint8 {
-	return uint8((value >> position) & 1)
-}
 
 // GetAudioData opens the WAV file and returns a decoder
 func GetAudioData(file string) *wav.Decoder {
@@ -70,7 +29,7 @@ func GetAudioData(file string) *wav.Decoder {
 	return decoder
 }
 
-func EmbedDataAtDepth(buffer *audio.IntBuffer, data []byte, depth uint8) *audio.IntBuffer {
+func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) *audio.IntBuffer {
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
 	lenBits = append(lenBits, dataBits...)
@@ -84,7 +43,7 @@ func EmbedDataAtDepth(buffer *audio.IntBuffer, data []byte, depth uint8) *audio.
 	return buffer
 }
 
-func ExtractDataAtDepth(buffer *audio.IntBuffer, depth uint8) []byte {
+func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	var data = make([]byte, 0)
 
 	var currentByte uint8
@@ -106,7 +65,7 @@ func ExtractDataAtDepth(buffer *audio.IntBuffer, depth uint8) []byte {
 }
 
 
-func EmbedDataWithDepth(buffer *audio.IntBuffer, data []byte, bitDepth uint8) *audio.IntBuffer {
+func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) *audio.IntBuffer {
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
 	lenBits = append(lenBits, dataBits...)
@@ -130,7 +89,7 @@ func EmbedDataWithDepth(buffer *audio.IntBuffer, data []byte, bitDepth uint8) *a
 	return buffer
 }
 
-func ExtractDataWithDepth(buffer *audio.IntBuffer, depth uint8) []byte {
+func ExtractDataWithDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	var byteSlice = make([]byte, 0)
 	var currentByte uint8 = 0
 	bitCount := 0
@@ -184,24 +143,3 @@ func WriteAudioFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuff
 		return
 	}
 }
-
-
-func main() {
-	decoder := GetAudioData("song.wav")
-	if decoder == nil {
-		return
-	}
-
-
-	buffer, err := decoder.FullPCMBuffer()
-	if err != nil {
-		fmt.Println("Error decoding WAV file:", err)
-		return
-	}
-
-
-	buffer = EmbedDataAtDepth(buffer, []byte("hello world"), 2)
-	fmt.Println(string(ExtractDataAtDepth(buffer, 2)))
-}
-
-
