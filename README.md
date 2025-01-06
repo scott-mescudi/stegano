@@ -402,7 +402,7 @@ if err != nil {
 
 ## Notes
 
-> - This library CAN be used with any image type but works best with **PNG** images.
+> - This library can be used with any image type but works best with **PNG** images.
 > - **Bit Depth and Compression**: Ensure that the same bit depth and compression settings are used during both embedding and extraction.
 > - **Default Output Format**: By default, images NEED to be saved in PNG format to avoid any data loss.
 
