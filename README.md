@@ -21,10 +21,15 @@
     - [Check Image Capacity](#7-check-image-capacity)
     - [Embed Encrypted Data](#8-embed-encrypted-data)
     - [Extract and Decrypt Data](#9-extract-and-decrypt-data)
-7. [Advanced Options](#advanced-options)
-8. [Notes](#notes)
-9. [Benchmarks](#benchmarks)
-10. [Future Improvements](#future-improvements)
+7. [Working with Audio](#working-with-audio)
+    - [Embed Data into WAV Files](#1-embed-data-into-wav-files)
+    - [Extract Data from WAV Files](#2-extract-data-from-wav-files)
+    - [Embed at Specific Bit Depth](#3-embed-at-specific-bit-depth)
+    - [Extract from Specific Bit Depth](#4-extract-from-specific-bit-depth)
+8. [Advanced Options](#advanced-options)
+9. [Notes](#notes)
+10. [Benchmarks](#benchmarks)
+11. [Future Improvements](#future-improvements)
 
 ---
 
@@ -314,6 +319,64 @@ func main() {
 
 	// Print the decrypted message.
 	fmt.Println(string(decryptedData))
+}
+```
+
+---
+
+## Working with Audio (Experimental)
+
+### 1. Embed Data into WAV Files
+
+```go
+func main() {
+    embedder := stegano.NewAudioEmbedHandler()
+    
+    err := embedder.EmbedIntoWAVWithDepth("input.wav", "output.wav", []byte("Hello World"), stegano.LSB)
+    if err != nil {
+        log.Fatalln(err)
+    }
+}
+```
+
+### 2. Extract Data from WAV Files
+
+```go
+func main() {
+    extractor := stegano.NewAudioExtractHandler()
+    
+    data, err := extractor.ExtractFromWAVWithDepth("embedded.wav", stegano.LSB)
+    if err != nil {
+        log.Fatalln(err)
+    }
+    fmt.Println(string(data))
+}
+```
+
+### 3. Embed at Specific Bit Depth
+
+```go
+func main() {
+    embedder := stegano.NewAudioEmbedHandler()
+    
+    err := embedder.EmbedIntoWAVAtDepth("input.wav", "output.wav", []byte("Hello World"), 3)
+    if err != nil {
+        log.Fatalln(err)
+    }
+}
+```
+
+### 4. Extract from Specific Bit Depth
+
+```go
+func main() {
+    extractor := stegano.NewAudioExtractHandler()
+    
+    data, err := extractor.ExtractFromWAVAtDepth("embedded.wav", 3)
+    if err != nil {
+        log.Fatalln(err)
+    }
+    fmt.Println(string(data))
 }
 ```
 
