@@ -362,5 +362,5 @@ if err != nil {
 ## Future Improvements
 
 > - **Huffman Encoding**: Add support for more efficient compression techniques like Huffman coding.
-> -**Reed Solomon codes**: Make embedded data more resistant to changes.
+> - **Reed Solomon codes**: Make embedded data more resistant to changes.
 > - **Multi-Carrier Support**: Enable splitting data across multiple images or files for larger data embedding.

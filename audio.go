@@ -8,7 +8,7 @@ import (
 )
 
 // EmbedDataIntoWAVWithDepth embeds compressed data into a WAV file with a specified bit depth.
-func (s *AudioEmbedHandler) EmbedDataIntoWAVWithDepth(audioFilename, outputFilename string, data []byte, bitDepth uint8) error {
+func (s *AudioEmbedHandler) EmbedIntoWAVWithDepth(audioFilename, outputFilename string, data []byte, bitDepth uint8) error {
 	if bitDepth >= 8 {
 		return ErrDepthOutOfRange
 	}
@@ -18,7 +18,7 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVWithDepth(audioFilename, outputFilen
 		return err
 	}
 
-	decoder := GetAudioData(audioFilename)
+	decoder := LoadAudioData(audioFilename)
 	buffer, err := decoder.FullPCMBuffer()
 	if err != nil {
 		return err
@@ -26,7 +26,7 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVWithDepth(audioFilename, outputFilen
 
 	buffer, err = u.EmbedDataWithDepthAudio(buffer, nd, bitDepth)
 
-	err = WriteAudioFile(outputFilename, decoder, buffer)
+	err = SaveAudioToFile(outputFilename, decoder, buffer)
 	if err != nil {
 		return err
 	}
@@ -35,12 +35,12 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVWithDepth(audioFilename, outputFilen
 }
 
 // ExtractDataFromWAVWithDepth extracts compressed data from a WAV file with a specified bit depth.
-func (s *AudioExtractHandler) ExtractDataFromWAVWithDepth(audioFilename string, bitDepth uint8) ([]byte, error) {
+func (s *AudioExtractHandler) ExtractFromWAVWithDepth(audioFilename string, bitDepth uint8) ([]byte, error) {
 	if bitDepth >= 8 {
 		return nil, ErrDepthOutOfRange
 	}
 
-	decoder := GetAudioData(audioFilename)
+	decoder := LoadAudioData(audioFilename)
 	buffer, err := decoder.FullPCMBuffer()
 	if err != nil {
 		return nil, err
@@ -77,12 +77,12 @@ func (s *AudioExtractHandler) ExtractDataFromWAVWithDepth(audioFilename string, 
 }
 
 // EmbedDataIntoWAVAtDepth embeds compressed data into a WAV file at a specified bit depth.
-func (s *AudioEmbedHandler) EmbedDataIntoWAVAtDepth(audioFilename, outputFilename string, data []byte, bitDepth uint8) error {
+func (s *AudioEmbedHandler) EmbedIntoWAVAtDepth(audioFilename, outputFilename string, data []byte, bitDepth uint8) error {
 	if bitDepth >= 8 {
 		return ErrDepthOutOfRange
 	}
 
-	decoder := GetAudioData(audioFilename)
+	decoder := LoadAudioData(audioFilename)
 	buffer, err := decoder.FullPCMBuffer()
 	if err != nil {
 		return err
@@ -93,7 +93,7 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVAtDepth(audioFilename, outputFilenam
 		return ErrInvalidData
 	}
 
-	err = WriteAudioFile(outputFilename, decoder, buffer)
+	err = SaveAudioToFile(outputFilename, decoder, buffer)
 	if err != nil {
 		return err
 	}
@@ -102,12 +102,12 @@ func (s *AudioEmbedHandler) EmbedDataIntoWAVAtDepth(audioFilename, outputFilenam
 }
 
 // ExtractDataFromWAVAtDepth extracts compressed data from a WAV file at a specified bit depth.
-func (s *AudioExtractHandler) ExtractDataFromWAVAtDepth(audioFilename string, bitDepth uint8) ([]byte, error) {
+func (s *AudioExtractHandler) ExtractFromWAVAtDepth(audioFilename string, bitDepth uint8) ([]byte, error) {
 	if bitDepth >= 8 {
 		return nil, ErrDepthOutOfRange
 	}
 
-	decoder := GetAudioData(audioFilename)
+	decoder := LoadAudioData(audioFilename)
 	buffer, err := decoder.FullPCMBuffer()
 	if err != nil {
 		return nil, err

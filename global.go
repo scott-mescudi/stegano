@@ -130,7 +130,7 @@ func DecryptData(ciphertext []byte, password string) (plaintext []byte, err erro
 }
 
 // GetAudioData opens the WAV file and returns a decoder
-func GetAudioData(file string) *wav.Decoder {
+func LoadAudioData(file string) *wav.Decoder {
 	f, err := os.Open(file)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
@@ -149,7 +149,7 @@ func GetAudioData(file string) *wav.Decoder {
 }
 
 // WriteAudioFile writes the decoded and modified data to a new WAV file
-func WriteAudioFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuffer) error {
+func SaveAudioToFile(fileName string, decoder *wav.Decoder, buffer *audio.IntBuffer) error {
 	// Create a new file for writing the modified WAV data
 	outFile, err := os.Create(fileName)
 	if err != nil {
