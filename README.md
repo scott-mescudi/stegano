@@ -112,7 +112,7 @@ func main() {
 	embedder := stegano.NewEmbedHandler()
 
 	// Encode and save the message in the cover image.
-	err = embedder.EncodeAndSave(coverFile, []byte("Hello, World!"), stegano.MinBitDepth, stegano.DefaultpngOutputFile, true)
+	err = embedder.Encode(coverFile, []byte("Hello, World!"), stegano.MaxBitDepth, stegano.DefaultOutputFile, true)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -133,7 +133,7 @@ func main() {
 	extractor := stegano.NewExtractHandler()
 
 	// Decode the message from the image.
-	data, err := extractor.Decode(coverFile, stegano.MinBitDepth, true)
+	data, err := extractor.Decode(coverFile, stegano.MaxBitDepth, true)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -157,12 +157,12 @@ func main() {
 	embedder := stegano.NewEmbedHandler()
 
 	// Embed the message into the image without compression.
-	embeddedImage, err := embedder.EmbedDataIntoImage(coverFile, []byte("Hello, World!"), stegano.MinBitDepth)
+	embeddedImage, err := embedder.EmbedDataIntoImage(coverFile, []byte("Hello, World!"), stegano.LSB)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	err = stegano.SaveImage(stegano.DefaultpngOutputFile, embeddedImage)
+	err = stegano.SaveImage(stegano.DefaultOutputFile, embeddedImage)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -183,7 +183,7 @@ func main() {
 	extractor := stegano.NewExtractHandler()
 
 	// Extract uncompressed data from the image.
-	data, err := extractor.ExtractDataFromImage(coverFile, stegano.MinBitDepth)
+	data, err := extractor.ExtractDataFromImage(coverFile, stegano.LSB)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -212,7 +212,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	err = stegano.SaveImage(stegano.DefaultpngOutputFile, embeddedImage)
+	err = stegano.SaveImage(stegano.DefaultOutputFile, embeddedImage)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -255,8 +255,8 @@ func main() {
 	}
 
 	// Calculate and print the data capacity of the image.
-	capacity := stegano.GetImageCapacity(coverFile, stegano.MinBitDepth)
-	fmt.Printf("Image capacity at bit depth %d: %d bytes\n", stegano.MinBitDepth, capacity)
+	capacity := stegano.GetImageCapacity(coverFile, stegano.MaxBitDepth)
+	fmt.Printf("Image capacity at bit depth %d: %d bytes\n", stegano.MaxBitDepth, capacity)
 }
 ```
 
@@ -280,7 +280,7 @@ func main() {
 	embedder := stegano.NewEmbedHandler()
 
 	// Embed the encrypted data into the image.
-	err = embedder.EncodeAndSave(coverFile, encryptedData, stegano.MinBitDepth, stegano.DefaultpngOutputFile, true)
+	err = embedder.Encode(coverFile, encryptedData, stegano.LSB, stegano.DefaultOutputFile, true)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -301,7 +301,7 @@ func main() {
 	extractor := stegano.NewExtractHandler()
 
 	// Extract the encrypted data.
-	encryptedData, err := extractor.Decode(coverFile, stegano.MinBitDepth, true)
+	encryptedData, err := extractor.Decode(coverFile, stegano.LSB, true)
 	if err != nil {
 		log.Fatalln(err)
 	}
