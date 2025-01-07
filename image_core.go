@@ -22,8 +22,6 @@ func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 		return nil, ErrDataTooLarge
 	}
 
-	
-
 	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, data, bitDepth)
 	if err != nil {
 		return nil, err
