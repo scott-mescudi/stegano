@@ -8,8 +8,6 @@ import (
 )
 
 // EmbedDataIntoImage embeds the given data into the RGB channels of the specified image.
-// Supports optional compression via the `defaultCompression` flag. Returns the modified
-// image or an error if the data exceeds the embedding capacity of the image.
 func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, bitDepth uint8) (image.Image, error) {
 	if coverImage == nil {
 		return nil, ErrInvalidCoverImage
@@ -24,9 +22,9 @@ func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 		return nil, ErrDataTooLarge
 	}
 
-	var indata []byte = data
+	
 
-	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, indata, bitDepth)
+	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, data, bitDepth)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +33,6 @@ func (m *EmbedHandler) EmbedDataIntoImage(coverImage image.Image, data []byte, b
 }
 
 // ExtractDataFromImage retrieves data embedded in the RGB channels of the specified image.
-// Decompresses the data if `isDefaultCompressed` is true. Returns the extracted data
-// or an error if the process fails.
 func (m *ExtractHandler) ExtractDataFromImage(coverImage image.Image, bitDepth uint8) ([]byte, error) {
 	if coverImage == nil {
 		return nil, ErrInvalidCoverImage
