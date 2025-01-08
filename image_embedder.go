@@ -362,7 +362,11 @@ func EmbedFile(coverImagePath, dataFilePath, outputFilePath, password string, bi
 	}
 
 	if bitDepth > 7 {
-		return errors.New("invalid bit Depth")
+		return ErrDepthOutOfRange
+	}
+
+	if ext := filepath.Ext(outputFilePath); ext != ".png" {
+		return fmt.Errorf("output file must have a .png extension, got '%s'", ext)
 	}
 
 	fp := filepath.Base(dataFilePath)
@@ -446,7 +450,7 @@ func ExtractFile(coverImagePath, password string, bitDepth uint8) error {
 	}
 
 	if bitDepth > 7 {
-		return errors.New("invalid bit Depth")
+		return ErrDepthOutOfRange
 	}
 
 	cf, err := Decodeimage(coverImagePath)
