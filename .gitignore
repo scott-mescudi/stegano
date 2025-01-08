@@ -15,7 +15,7 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+vendor/
 
 # Go workspace file
 go.work
@@ -28,6 +28,7 @@ go.work.sum
 /testies
 /testy
 /rust
+/vendor
 /cgo_tests
 /c_impl
 /c
