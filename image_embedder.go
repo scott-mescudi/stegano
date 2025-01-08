@@ -201,7 +201,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 	}
 
 	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
-	if (len(data)*8)+32 > maxCapacity {
+	if (((len(data)*8)+32)*5)+8 > maxCapacity {
 		return ErrDataTooLarge
 	}
 
@@ -215,8 +215,13 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 		return ErrFailedToCompressData
 	}
 
+	RsData, err := u.RsEncode(compressedData, 4)
+	if err != nil {
+		return err
+	}
+
 	// Embed data
-	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, compressedData, bitDepth)
+	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, RsData, bitDepth)
 	if err != nil {
 		return fmt.Errorf("failed to embed data into RGB channels: %w", err)
 	}
@@ -292,7 +297,12 @@ func (m *SecureExtractHandler) Decode(coverImage image.Image, bitDepth uint8, pa
 		moddedData = append(moddedData, data[i])
 	}
 
-	outdata, err := c.DecompressZSTD(moddedData)
+	RsUnpacked, err := u.RsDecode(moddedData, 1, 4)
+	if err != nil {
+		return nil, err
+	}
+
+	outdata, err := c.DecompressZSTD(RsUnpacked)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decompress extracted data: %w", err)
 	}
