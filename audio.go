@@ -25,6 +25,9 @@ func (s *AudioEmbedHandler) EmbedIntoWAVWithDepth(audioFilename, outputFilename 
 	}
 
 	buffer, err = u.EmbedDataWithDepthAudio(buffer, nd, bitDepth)
+	if err != nil {
+		return err
+	}
 
 	err = SaveAudioToFile(outputFilename, decoder, buffer)
 	if err != nil {
