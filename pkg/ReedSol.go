@@ -5,7 +5,7 @@ import (
 	"github.com/klauspost/reedsolomon"
 )
 
-func intToArr(num int) ([]byte) {
+func intToArr(num int) []byte {
 	return []byte{
 		byte(num >> 24),
 		byte(num >> 16),

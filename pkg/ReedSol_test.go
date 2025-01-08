@@ -32,8 +32,9 @@ func TestIntToArr(t *testing.T) {
 			expected: []byte{0, 0, 0, 42},
 		},
 	}
+
 	for _, test := range tests {
-		t.Run(test.name, func (t *testing.T)  {
+		t.Run(test.name, func(t *testing.T) {
 			res := intToArr(test.input)
 			if !reflect.DeepEqual(res, test.expected) {
 				t.Errorf("For input %v, expected %v but got %v", test.input, test.expected, res)
@@ -56,7 +57,7 @@ func TestArrToInt(t *testing.T) {
 		{
 			name:     "Zero",
 			input:    []byte{0, 0, 0, 0},
-			expected:  0,
+			expected: 0,
 		},
 		{
 			name:     "Maximum 4-byte int",
@@ -71,11 +72,12 @@ func TestArrToInt(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func (t *testing.T)  {
+		t.Run(test.name, func(t *testing.T) {
 			res, err := arrToInt(test.input)
 			if err != nil {
 				t.Error(err)
 			}
+
 			if !reflect.DeepEqual(res, test.expected) {
 				t.Errorf("For input %v, expected %v but got %v", test.input, test.expected, res)
 			}
@@ -98,11 +100,12 @@ func TestMatrixToSlice(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func (t *testing.T)  {
+		t.Run(test.name, func(t *testing.T) {
 			res, err := matrixToSlice(test.input)
 			if err != nil {
 				t.Error(err)
 			}
+
 			if !reflect.DeepEqual(res, test.expected) {
 				t.Errorf("For input %v, expected %v but got %v", test.input, test.expected, res)
 			}
@@ -119,17 +122,18 @@ func TestSliceToMatrix(t *testing.T) {
 	}{
 		{
 			name:     "Normal",
-			input:	[]byte{0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 9, 41, 0, 0, 9, 41, 0, 0, 9, 41, 0, 0, 9, 41, 0, 0, 9, 41},
+			input:    []byte{0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 9, 41, 0, 0, 9, 41, 0, 0, 9, 41, 0, 0, 9, 41, 0, 0, 9, 41},
 			expected: [][]byte{{0, 0, 9, 41}, {0, 0, 9, 41}, {0, 0, 9, 41}, {0, 0, 9, 41}, {0, 0, 9, 41}},
 		},
 	}
 
 	for _, test := range tests {
-		t.Run(test.name, func (t *testing.T)  {
+		t.Run(test.name, func(t *testing.T) {
 			res, err := sliceToMatrix(test.input)
 			if err != nil {
 				t.Error(err)
 			}
+
 			if !reflect.DeepEqual(res, test.expected) {
 				t.Errorf("For input %v, expected %v but got %v", test.input, test.expected, res)
 			}
@@ -146,18 +150,18 @@ func TestRsEncode(t *testing.T) {
 	}{
 		{
 			name:     "Normal",
-			input:	[]byte("hello world"),
+			input:    []byte("hello world"),
 			expected: []byte{0, 0, 0, 11, 0, 0, 0, 5, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100},
-
 		},
 	}
-	
+
 	for _, test := range tests {
-		t.Run(test.name, func (t *testing.T)  {
+		t.Run(test.name, func(t *testing.T) {
 			res, err := RsEncode(test.input, 4)
 			if err != nil {
 				t.Error(err)
 			}
+
 			if !reflect.DeepEqual(res, test.expected) {
 				t.Errorf("For input %v, expected %v but got %v", test.input, test.expected, res)
 			}
@@ -173,18 +177,18 @@ func TestRsDecode(t *testing.T) {
 	}{
 		{
 			name:     "Normal",
-			input:	[]byte{0, 0, 0, 11, 0, 0, 0, 5, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100},
+			input:    []byte{0, 0, 0, 11, 0, 0, 0, 5, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100},
 			expected: []byte("hello world"),
-
 		},
 	}
-	
+
 	for _, test := range tests {
-		t.Run(test.name, func (t *testing.T)  {
+		t.Run(test.name, func(t *testing.T) {
 			res, err := RsDecode(test.input, 1, 4)
 			if err != nil {
 				t.Error(err)
 			}
+
 			if !reflect.DeepEqual(res, test.expected) {
 				t.Errorf("For input %v, expected %v but got %v", test.input, test.expected, res)
 			}
