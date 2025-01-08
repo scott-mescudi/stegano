@@ -6,9 +6,6 @@ import (
 	"image/color"
 	"os"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 // Mock function to create a test image
@@ -36,11 +33,14 @@ func TestEncode_Valid(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
 
 	// Check if output file exists
-	_, err = os.Stat(outputFilename)
-	require.NoError(t, err)
+	if _, err := os.Stat(outputFilename); err != nil {
+		t.Fatalf("output file does not exist: %v", err)
+	}
 
 	// Cleanup
 	defer os.Remove(outputFilename)
@@ -58,8 +58,12 @@ func TestEncode_EmptyData(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
-	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "data is empty")
+	if err == nil {
+		t.Fatalf("expected an error, got nil")
+	}
+	if !errors.Is(err, ErrInvalidData) {
+		t.Fatalf("expected error: %v, got: %v", ErrInvalidData, err)
+	}
 }
 
 func TestEncode_DataTooLarge(t *testing.T) {
@@ -74,8 +78,12 @@ func TestEncode_DataTooLarge(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
-	assert.Error(t, err)
-	assert.True(t, errors.Is(err, ErrDataTooLarge), "expected ErrDataTooLarge but got a different error")
+	if err == nil {
+		t.Fatalf("expected an error, got nil")
+	}
+	if !errors.Is(err, ErrDataTooLarge) {
+		t.Fatalf("expected error: %v, got: %v", ErrDataTooLarge, err)
+	}
 }
 
 func TestEncode_CompressedData(t *testing.T) {
@@ -90,11 +98,14 @@ func TestEncode_CompressedData(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, true)
 
 	// Test if no error occurred and file was created
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
 
 	// Check if output file exists
-	_, err = os.Stat(outputFilename)
-	require.NoError(t, err)
+	if _, err := os.Stat(outputFilename); err != nil {
+		t.Fatalf("output file does not exist: %v", err)
+	}
 
 	// Cleanup
 	defer os.Remove(outputFilename)
@@ -112,7 +123,9 @@ func TestEncode_InvalidFileCreation(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
-	assert.Error(t, err)
+	if err == nil {
+		t.Fatalf("expected an error, got nil")
+	}
 }
 
 func TestEncode_SuccessWithSpecificFilename(t *testing.T) {
@@ -127,11 +140,14 @@ func TestEncode_SuccessWithSpecificFilename(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if no error occurred and file was created
-	require.NoError(t, err)
+	if err != nil {
+		t.Fatalf("expected no error, got: %v", err)
+	}
 
 	// Check if the output file exists
-	_, err = os.Stat(outputFilename)
-	require.NoError(t, err)
+	if _, err := os.Stat(outputFilename); err != nil {
+		t.Fatalf("output file does not exist: %v", err)
+	}
 
 	// Cleanup
 	defer os.Remove(outputFilename)
@@ -149,5 +165,7 @@ func TestEncode_NullImage(t *testing.T) {
 	err := handler.Encode(coverImage, data, bitDepth, outputFilename, false)
 
 	// Test if the correct error is returned
-	assert.Error(t, err)
+	if err == nil {
+		t.Fatalf("expected an error, got nil")
+	}
 }
