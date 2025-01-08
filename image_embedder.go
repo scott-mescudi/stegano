@@ -160,6 +160,7 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 }
 
 // Encode embeds data into a cover image using a specified bit depth, encrypts and compresses the data, and saves the resulting image to the specified output file.
+// Secure uses reed solomon codes for persistency
 // Parameters:
 // - coverImage: The image to embed data into.
 // - data: The data to embed in the image.
@@ -241,6 +242,7 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 }
 
 // Decode extracts embedded data from a cover image using a specified bit depth, decrypts and decompresses it, and returns the original data.
+// Secure uses reed solomon codes for persistency
 // Parameters:
 // - coverImage: The image containing the embedded data.
 // - bitDepth: The bit depth used for extracting data (valid range: 0-7).
