@@ -82,7 +82,7 @@ func sliceToMatrix(fullData []byte) ([][]byte, error) {
 	return matrix, nil
 }
 
-// RsEncode encodes data into shards with parity
+// RsEncode encodes data into shards with parity and transfroms reed sol matrix to slice for embbeding
 func RsEncode(data []byte, parity int) ([]byte, error) {
 	if parity <= 0 {
 		return nil, fmt.Errorf("parity must be greater than zero")
@@ -114,7 +114,7 @@ func RsEncode(data []byte, parity int) ([]byte, error) {
 	return packed, nil
 }
 
-// RsDecode decodes and reconstructs missing shards
+// RsDecode decodes and reconstructs missing shards from packed matrix and returns a slice first elm in matrix
 func RsDecode(packedShards []byte, dataShards, parityShards int) ([]byte, error) {
 	enc, err := reedsolomon.New(dataShards, parityShards)
 	if err != nil {
