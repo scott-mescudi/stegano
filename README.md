@@ -33,16 +33,17 @@
 
 ---
 
-## Features
+	## Features
 
-- **Multi-Image Support**: Works with any image type compatible with Go's `image.Image`.
-- **Data Compression**: Supports ZSTD compression to minimize the size of embedded data.
-- **Capacity Calculation**: Automatically calculates the maximum capacity of an image for data embedding.
-- **Variable Depth Encoding**: Allows you to embed data up to a specified bit depth.
-- **Concurrency**: Supports concurrent processing for improved speed (higher memory usage).
-- **Custom Bit Depth Embedding**: Lets you specify the bit depth used for data embedding (e.g., LSB, MSB).
-- **Encryption**: Enables secure encryption of data before embedding into the image.
-- **Efficient PNG Encoding**: Saves the image in PNG format.
+	- **Multi-Image Support**: Works with any image type compatible with Go's `image.Image`.
+	- **Data Compression**: Supports ZSTD compression to minimize the size of embedded data.
+	- **Reed-Solomon Codes**: Implements Reed-Solomon error correction.
+	- **Capacity Calculation**: Automatically calculates the maximum capacity of an image for data embedding.
+	- **Variable Depth Encoding**: Allows you to embed data up to a specified bit depth.
+	- **Concurrency**: Supports concurrent processing for improved speed (higher memory usage).
+	- **Custom Bit Depth Embedding**: Lets you specify the bit depth used for data embedding (e.g., LSB, MSB).
+	- **Encryption**: Enables secure encryption of data before embedding into the image.
+	- **Efficient PNG Encoding**: Saves the image in PNG format.
 
 ---
 
