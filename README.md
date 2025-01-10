@@ -21,7 +21,7 @@
     - [Check Image Capacity](#7-check-image-capacity)
     - [Embed Encrypted Data](#8-embed-encrypted-data)
     - [Extract and Decrypt Data](#9-extract-and-decrypt-data)
-7. [Working with Audio](#Working-with-Audio-(Experimental))
+7. [Working with Audio](#working-with-audio)
     - [Embed Data into WAV Files](#1-embed-data-into-wav-files)
     - [Extract Data from WAV Files](#2-extract-data-from-wav-files)
     - [Embed at Specific Bit Depth](#3-embed-at-specific-bit-depth)
@@ -325,7 +325,7 @@ func main() {
 
 ---
 
-## Working with Audio (Experimental)
+## Working with Audio
 
 ### 1. Embed Data into WAV Files
 
