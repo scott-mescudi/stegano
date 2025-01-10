@@ -21,7 +21,7 @@
     - [Check Image Capacity](#7-check-image-capacity)
     - [Embed Encrypted Data](#8-embed-encrypted-data)
     - [Extract and Decrypt Data](#9-extract-and-decrypt-data)
-7. [Working with Audio](#working-with-audio)
+7. [Working with Audio](#Working-with-Audio-(Experimental))
     - [Embed Data into WAV Files](#1-embed-data-into-wav-files)
     - [Extract Data from WAV Files](#2-extract-data-from-wav-files)
     - [Embed at Specific Bit Depth](#3-embed-at-specific-bit-depth)
@@ -33,17 +33,17 @@
 
 ---
 
-	## Features
+## Features
 
-	- **Multi-Image Support**: Works with any image type compatible with Go's `image.Image`.
-	- **Data Compression**: Supports ZSTD compression to minimize the size of embedded data.
-	- **Reed-Solomon Codes**: Implements Reed-Solomon error correction.
-	- **Capacity Calculation**: Automatically calculates the maximum capacity of an image for data embedding.
-	- **Variable Depth Encoding**: Allows you to embed data up to a specified bit depth.
-	- **Concurrency**: Supports concurrent processing for improved speed (higher memory usage).
-	- **Custom Bit Depth Embedding**: Lets you specify the bit depth used for data embedding (e.g., LSB, MSB).
-	- **Encryption**: Enables secure encryption of data before embedding into the image.
-	- **Efficient PNG Encoding**: Saves the image in PNG format.
+- **Multi-Image Support**: Works with any image type compatible with Go's `image.Image`.
+- **Data Compression**: Supports ZSTD compression to minimize the size of embedded data.
+- **Reed-Solomon Codes**: Implements Reed-Solomon error correction.
+- **Capacity Calculation**: Automatically calculates the maximum capacity of an image for data embedding.
+- **Variable Depth Encoding**: Allows you to embed data up to a specified bit depth.
+- **Concurrency**: Supports concurrent processing for improved speed (higher memory usage).
+- **Custom Bit Depth Embedding**: Lets you specify the bit depth used for data embedding (e.g., LSB, MSB).
+- **Encryption**: Enables secure encryption of data before embedding into the image.
+- **Efficient PNG Encoding**: Saves the image in PNG format.
 
 ---
 
