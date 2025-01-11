@@ -424,6 +424,4 @@ if err != nil {
 ---
 
 ## Future Improvements
-> - **More tests**
-> - **Huffman Encoding**: Add support for more efficient compression techniques like Huffman coding.
 > - **Multi-Carrier Support**: Enable splitting data across multiple images or files for larger data embedding.
