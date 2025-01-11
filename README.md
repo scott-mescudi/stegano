@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml/badge.svg?event=push)](https://github.com/scott-mescudi/stegano/actions/workflows/go.yml) ![GitHub License](https://img.shields.io/github/license/scott-mescudi/stegano) [![Go Reference](https://pkg.go.dev/badge/github.com/scott-mescudi/stegano.svg)](https://pkg.go.dev/github.com/scott-mescudi/stegano)  [![Go Report Card](https://goreportcard.com/badge/github.com/scott-mescudi/stegano)](https://goreportcard.com/badge/github.com/scott-mescudi/stegano)
 
-<img src="./docs/gopher.png" alt="Description of the image" width="300" height="200"/>
+
 
 ## Table of Contents
 
