@@ -14,6 +14,15 @@ import (
 	"github.com/go-audio/wav"
 )
 
+// Wrapper around rsEncode private function
+func RsEncode(data []byte, parity int) ([]byte, error) {
+	return u.RsEncode(data, parity)
+}
+
+// Wrapper around rsDecode private function
+func RsDecode(packedDataShards []byte, parity int) ([]byte, error) {
+	return u.RsDecode(packedDataShards, 1, parity)
+}
 // GetImageCapacity calculates the maximum amount of data (in bytes)
 // that can be embedded in the given image, based on the specified bit depth.
 // Returns 0 if the bit depth exceeds 7, as higher depths are unsupported.
