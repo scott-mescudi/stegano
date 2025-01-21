@@ -13,7 +13,7 @@ func SaveImage(embeddedRGBChannels []RgbChannel, height, width int) (image.Image
 	}
 
 	if height <= 0 || width <= 0 {
-		return nil, fmt.Errorf("Inavalid image dimensions")
+		return nil, fmt.Errorf("inavalid image dimensions")
 	}
 
 	img := image.NewRGBA(image.Rect(0, 0, width, height))

@@ -1,14 +1,21 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-audio/audio"
 )
 
+var ErrDataToLarge = errors.New("data exceeds the embedding capacity of the audio file")
+
 func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) (*audio.IntBuffer, error) {
 	if len(data) == 0 {
-		return nil, fmt.Errorf("Data is empty")
+		return nil, fmt.Errorf("data is empty")
+	}
+
+	if ((len(data) * 8) + 32) >= len(buffer.Data)*8 {
+		return nil, ErrDataToLarge
 	}
 
 	dataBits := BytesToBinary(data)
@@ -46,8 +53,14 @@ func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 
 func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) (*audio.IntBuffer, error) {
 	if len(data) == 0 {
-		return nil, fmt.Errorf("Data is empty")
+		return nil, fmt.Errorf("data is empty")
 	}
+
+	if ((len(data)*8)+32)*(int(bitDepth)+1) >= len(buffer.Data)*8 {
+		return nil, ErrDataToLarge
+	}
+
+	fmt.Println(len(buffer.Data))
 
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))

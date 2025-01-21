@@ -2,10 +2,84 @@ package pkg
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
-	"github.com/go-audio/audio"
 	"testing"
+
+	"github.com/go-audio/audio"
 )
+
+func TestEmbedDataToLargeAtDepth(t *testing.T) {
+	tests := []struct {
+		data      []byte
+		audioSize int
+		bitDepth  uint8
+	}{
+		{
+			data:      make([]byte, 20000),
+			audioSize: 1200,
+			bitDepth:  1,
+		},
+		{
+			data:      make([]byte, 1200),
+			audioSize: 1200,
+			bitDepth:  1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("bitDepth=%d", tt.bitDepth), func(t *testing.T) {
+			buffer := &audio.IntBuffer{
+				Data: make([]int, tt.audioSize),
+				Format: &audio.Format{
+					SampleRate:  44100,
+					NumChannels: 1,
+				},
+			}
+
+			_, err := EmbedDataAtDepthAudio(buffer, tt.data, tt.bitDepth)
+			if !errors.Is(err, ErrDataToLarge) {
+				t.Errorf("Failed to raise error")
+			}
+		})
+	}
+}
+
+func TestEmbedDataToLarge(t *testing.T) {
+	tests := []struct {
+		data      []byte
+		audioSize int
+		bitDepth  uint8
+	}{
+		{
+			data:      make([]byte, 20000),
+			audioSize: 1200,
+			bitDepth:  1,
+		},
+		{
+			data:      make([]byte, 1200),
+			audioSize: 1200,
+			bitDepth:  1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("bitDepth=%d", tt.bitDepth), func(t *testing.T) {
+			buffer := &audio.IntBuffer{
+				Data: make([]int, tt.audioSize),
+				Format: &audio.Format{
+					SampleRate:  44100,
+					NumChannels: 1,
+				},
+			}
+
+			_, err := EmbedDataWithDepthAudio(buffer, tt.data, tt.bitDepth)
+			if !errors.Is(err, ErrDataToLarge) {
+				t.Errorf("Failed to raise error")
+			}
+		})
+	}
+}
 
 func TestEmbedDataWithDepthAudio(t *testing.T) {
 	tests := []struct {
