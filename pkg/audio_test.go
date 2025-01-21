@@ -25,6 +25,11 @@ func TestEmbedDataToLargeAtDepth(t *testing.T) {
 			audioSize: 1200,
 			bitDepth:  1,
 		},
+		{
+			data: make([]byte, 6063398 ),
+			audioSize: 39357454 ,
+			bitDepth: 1,
+		},
 	}
 
 	for _, tt := range tests {
@@ -60,6 +65,11 @@ func TestEmbedDataToLarge(t *testing.T) {
 			data:      make([]byte, 1200),
 			audioSize: 1200,
 			bitDepth:  1,
+		},
+		{
+			data: make([]byte, 6063398 ),
+			audioSize: 39357454 ,
+			bitDepth: 1,
 		},
 	}
 
