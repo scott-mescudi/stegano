@@ -2,16 +2,26 @@ package pkg
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/go-audio/audio"
 )
 
 var ErrDataToLarge = errors.New("data exceeds the embedding capacity of the audio file")
+var ErrInvalidAudioBuffer = errors.New("invalid or nil audio buffer")
+var ErrDataIsEmpty = errors.New("data is empty or invalid")
+var ErrDepthOutOfRange = errors.New("bitDepth is out of range (0-7)")
 
 func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) (*audio.IntBuffer, error) {
 	if len(data) == 0 {
-		return nil, fmt.Errorf("data is empty")
+		return nil, ErrDataIsEmpty
+	}
+
+	if depth > 7 {
+		return nil, ErrDepthOutOfRange
+	}
+
+	if len(buffer.Data) == 0 || buffer.Data == nil {
+		return nil, ErrInvalidAudioBuffer
 	}
 
 	if ((len(data) * 8) + 32) >= len(buffer.Data) {
@@ -33,7 +43,15 @@ func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) (*
 
 func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) (*audio.IntBuffer, error) {
 	if len(data) == 0 {
-		return nil, fmt.Errorf("data is empty")
+		return nil, ErrDataIsEmpty
+	}
+
+	if bitDepth > 7 {
+		return nil, ErrDepthOutOfRange
+	}
+
+	if len(buffer.Data) == 0 || buffer.Data == nil {
+		return nil, ErrInvalidAudioBuffer
 	}
 
 	if ((len(data)*8)+32)*(int(bitDepth)+1) >= len(buffer.Data) {

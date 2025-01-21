@@ -91,6 +91,89 @@ func TestEmbedDataToLarge(t *testing.T) {
 	}
 }
 
+func TestEmbedDataEdgeCases(t *testing.T) {
+	tests := []struct {
+		name      string
+		data      []byte
+		audioSize int
+		bitDepth  uint8
+		expectErr bool
+		err       error
+	}{
+		{
+			name:      "Zero data size",
+			data:      []byte{},
+			audioSize: 1200,
+			bitDepth:  1,
+			expectErr: true,
+			err:       ErrDataIsEmpty,
+		},
+		{
+			name:      "Zero audio size",
+			data:      make([]byte, 100),
+			audioSize: 0,
+			bitDepth:  1,
+			expectErr: true,
+			err:       ErrInvalidAudioBuffer,
+		},
+		{
+			name:      "High bit depth",
+			data:      make([]byte, 100),
+			audioSize: 1200,
+			bitDepth:  255,
+			expectErr: true,
+			err:       ErrDepthOutOfRange,
+		},
+		{
+			name:      "Low bit depth with large data",
+			data:      make([]byte, 100000),
+			audioSize: 1200,
+			bitDepth:  1,
+			expectErr: true,
+			err:       ErrDataToLarge,
+		},
+		{
+			name:      "Exact fit",
+			data:      make([]byte, 1200),
+			audioSize: 1200,
+			bitDepth:  7,
+			expectErr: true,
+			err:       ErrDataToLarge,
+		},
+		{
+			name:      "Large data with max audio size",
+			data:      make([]byte, 1000000),
+			audioSize: 1000000,
+			bitDepth:  7,
+			expectErr: true,
+			err:       ErrDataToLarge,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			buffer := &audio.IntBuffer{
+				Data: make([]int, tt.audioSize),
+				Format: &audio.Format{
+					SampleRate:  44100,
+					NumChannels: 1,
+				},
+			}
+
+			_, err := EmbedDataWithDepthAudio(buffer, tt.data, tt.bitDepth)
+			if tt.expectErr {
+				if !errors.Is(err, tt.err) {
+					t.Errorf("Did not get expected error, got %v", err)
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Unexpected error: %v", err)
+				}
+			}
+		})
+	}
+}
+
 func TestEmbedDataWithDepthAudio(t *testing.T) {
 	tests := []struct {
 		data     []byte
