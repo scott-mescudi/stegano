@@ -60,7 +60,6 @@ func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint
 		return nil, ErrDataToLarge
 	}
 
-	fmt.Println(len(buffer.Data))
 
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
