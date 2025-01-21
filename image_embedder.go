@@ -27,59 +27,9 @@ import (
 // - defaultCompression: A flag indicating whether the data should be compressed before embedding.
 func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, defaultCompression bool) error {
 	// Validate coverImage dimensions
-	if coverImage == nil {
-		return ErrInvalidCoverImage
-	}
-	height := coverImage.Bounds().Dy()
-	width := coverImage.Bounds().Dx()
-	if height <= 0 || width <= 0 {
-		return ErrInvalidCoverImage
-	}
-
-	// Validate bit depth
-	if bitDepth < 0 || bitDepth > 7 {
-		return ErrDepthOutOfRange
-	}
-
-	// Validate data
-	if len(data) == 0 {
-		return ErrInvalidData
-	}
-
-	if m.concurrency <= 0 {
-		m.concurrency = 1
-	}
-	// Extract RGB channels
-	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
-	if RGBchannels == nil {
-		return ErrFailedToExtractRGB
-	}
-
-	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
-	if (len(data)*8)+32 > maxCapacity {
-		return ErrDataTooLarge
-	}
-
-	// Compress data if required
-	var indata []byte = data
-	if defaultCompression {
-		compressedData, err := c.CompressZSTD(data)
-		if err != nil {
-			return ErrFailedToCompressData
-		}
-		indata = compressedData
-	}
-
-	// Embed data
-	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, indata, bitDepth)
+	imgdata, err := m.EncodeToImage(coverImage, data, bitDepth, defaultCompression)
 	if err != nil {
-		return fmt.Errorf("failed to embed data into RGB channels: %w", err)
-	}
-
-	// Generate image from embedded RGB channels
-	imgdata, err := u.SaveImage(embeddedRGBChannels, height, width)
-	if err != nil {
-		return ErrFailedToSaveImage
+		return err
 	}
 
 	// Use default filename if none provided
@@ -88,6 +38,71 @@ func (m *EmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint
 	}
 
 	return SaveImage(outputFilename, imgdata)
+}
+
+// Parameters:
+// - coverImage: The original image where data will be embedded.
+// - data: The data to embed into the image.
+// - bitDepth: The number of bits per channel used for embedding (0-7).
+// - defaultCompression: A flag indicating whether the data should be compressed before embedding.
+func (m *EmbedHandler) EncodeToImage(coverImage image.Image, data []byte, bitDepth uint8, defaultCompression bool) (image.Image, error) {
+	// Validate coverImage dimensions
+	if coverImage == nil {
+		return nil, ErrInvalidCoverImage
+	}
+	height := coverImage.Bounds().Dy()
+	width := coverImage.Bounds().Dx()
+	if height <= 0 || width <= 0 {
+		return nil, ErrInvalidCoverImage
+	}
+
+	// Validate bit depth
+	if bitDepth < 0 || bitDepth > 7 {
+		return nil, ErrDepthOutOfRange
+	}
+
+	// Validate data
+	if len(data) == 0 {
+		return nil, ErrInvalidData
+	}
+
+	if m.concurrency <= 0 {
+		m.concurrency = 1
+	}
+	// Extract RGB channels
+	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
+	if RGBchannels == nil {
+		return nil, ErrFailedToExtractRGB
+	}
+
+	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
+	if (len(data)*8)+32 > maxCapacity {
+		return nil, ErrDataTooLarge
+	}
+
+	// Compress data if required
+	var indata []byte = data
+	if defaultCompression {
+		compressedData, err := c.CompressZSTD(data)
+		if err != nil {
+			return nil, ErrFailedToCompressData
+		}
+		indata = compressedData
+	}
+
+	// Embed data
+	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, indata, bitDepth)
+	if err != nil {
+		return nil, fmt.Errorf("failed to embed data into RGB channels: %w", err)
+	}
+
+	// Generate image from embedded RGB channels
+	imgdata, err := u.SaveImage(embeddedRGBChannels, height, width)
+	if err != nil {
+		return nil, ErrFailedToSaveImage
+	}
+
+	return imgdata, nil
 }
 
 // Decode extracts data embedded in an image using the specified bit depth.
@@ -170,67 +185,9 @@ func (m *ExtractHandler) Decode(coverImage image.Image, bitDepth uint8, isDefaul
 // Returns:
 // - error: An error if any part of the embedding process fails.
 func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDepth uint8, outputFilename string, password string) error {
-	// Validate coverImage dimensions
-	if coverImage == nil {
-		return ErrInvalidCoverImage
-
-	}
-
-	height := coverImage.Bounds().Dy()
-	width := coverImage.Bounds().Dx()
-	if height <= 0 || width <= 0 {
-		return ErrInvalidCoverImage
-	}
-
-	// Validate bit depth
-	if bitDepth < 0 || bitDepth > 7 {
-		return ErrDepthOutOfRange
-	}
-
-	// Validate data
-	if len(data) == 0 {
-		return ErrInvalidData
-	}
-
-	if m.concurrency <= 0 {
-		m.concurrency = 1
-	}
-	// Extract RGB channels
-	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
-	if RGBchannels == nil {
-		return ErrFailedToExtractRGB
-	}
-
-	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
-	if (((len(data)*8)+32)*5)+8 > maxCapacity {
-		return ErrDataTooLarge
-	}
-
-	cipher, err := EncryptData(data, password)
+	imgdata, err := m.EncodeToImage(coverImage, data, bitDepth, password)
 	if err != nil {
 		return err
-	}
-
-	compressedData, err := c.CompressZSTD(cipher)
-	if err != nil {
-		return ErrFailedToCompressData
-	}
-
-	RsData, err := u.RsEncode(compressedData, 4)
-	if err != nil {
-		return err
-	}
-
-	// Embed data
-	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, RsData, bitDepth)
-	if err != nil {
-		return fmt.Errorf("failed to embed data into RGB channels: %w", err)
-	}
-
-	// Generate image from embedded RGB channels
-	imgdata, err := u.SaveImage(embeddedRGBChannels, height, width)
-	if err != nil {
-		return ErrFailedToSaveImage
 	}
 
 	// Use default filename if none provided
@@ -239,6 +196,82 @@ func (m *SecureEmbedHandler) Encode(coverImage image.Image, data []byte, bitDept
 	}
 
 	return SaveImage(outputFilename, imgdata)
+}
+
+// EncodeToImage embeds data into a cover image using a specified bit depth, encrypts and compresses the data, and returns the resulting image.
+// Secure uses reed solomon codes for persistency
+// Parameters:
+// - coverImage: The image to embed data into.
+// - data: The data to embed in the image.
+// - bitDepth: The bit depth used for embedding (valid range: 0-7).
+// - password: The password used to encrypt the data.
+// Returns:
+// - error: An error if any part of the embedding process fails.
+func (m *SecureEmbedHandler) EncodeToImage(coverImage image.Image, data []byte, bitDepth uint8, password string) (image.Image, error) {
+	// Validate coverImage dimensions
+	if coverImage == nil {
+		return nil, ErrInvalidCoverImage
+
+	}
+
+	height := coverImage.Bounds().Dy()
+	width := coverImage.Bounds().Dx()
+	if height <= 0 || width <= 0 {
+		return nil, ErrInvalidCoverImage
+	}
+
+	// Validate bit depth
+	if bitDepth < 0 || bitDepth > 7 {
+		return nil, ErrDepthOutOfRange
+	}
+
+	// Validate data
+	if len(data) == 0 {
+		return nil, ErrInvalidData
+	}
+
+	if m.concurrency <= 0 {
+		m.concurrency = 1
+	}
+	// Extract RGB channels
+	RGBchannels := u.ExtractRGBChannelsFromImageWithConCurrency(coverImage, m.concurrency)
+	if RGBchannels == nil {
+		return nil, ErrFailedToExtractRGB
+	}
+
+	maxCapacity := (len(RGBchannels) * 3 * (int(bitDepth) + 1)) / 8
+	if (((len(data)*8)+32)*5)+8 > maxCapacity {
+		return nil, ErrDataTooLarge
+	}
+
+	cipher, err := EncryptData(data, password)
+	if err != nil {
+		return nil, err
+	}
+
+	compressedData, err := c.CompressZSTD(cipher)
+	if err != nil {
+		return nil, ErrFailedToCompressData
+	}
+
+	RsData, err := u.RsEncode(compressedData, 4)
+	if err != nil {
+		return nil, err
+	}
+
+	// Embed data
+	embeddedRGBChannels, err := u.EmbedIntoRGBchannelsWithDepth(RGBchannels, RsData, bitDepth)
+	if err != nil {
+		return nil, fmt.Errorf("failed to embed data into RGB channels: %w", err)
+	}
+
+	// Generate image from embedded RGB channels
+	imgdata, err := u.SaveImage(embeddedRGBChannels, height, width)
+	if err != nil {
+		return nil, ErrFailedToSaveImage
+	}
+
+	return imgdata, nil
 }
 
 // Decode extracts embedded data from a cover image using a specified bit depth, decrypts and decompresses it, and returns the original data.
