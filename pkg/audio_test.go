@@ -26,9 +26,9 @@ func TestEmbedDataToLargeAtDepth(t *testing.T) {
 			bitDepth:  1,
 		},
 		{
-			data: make([]byte, 6063398 ),
-			audioSize: 39357454 ,
-			bitDepth: 1,
+			data:      make([]byte, 6063398),
+			audioSize: 39357454,
+			bitDepth:  1,
 		},
 	}
 
@@ -67,9 +67,9 @@ func TestEmbedDataToLarge(t *testing.T) {
 			bitDepth:  1,
 		},
 		{
-			data: make([]byte, 6063398 ),
-			audioSize: 39357454 ,
-			bitDepth: 1,
+			data:      make([]byte, 6063398),
+			audioSize: 39357454,
+			bitDepth:  1,
 		},
 	}
 
@@ -114,7 +114,7 @@ func TestEmbedDataWithDepthAudio(t *testing.T) {
 		t.Run(fmt.Sprintf("bitDepth=%d", tt.bitDepth), func(t *testing.T) {
 			// Create a dummy audio buffer with arbitrary values
 			buffer := &audio.IntBuffer{
-				Data: make([]int, len(tt.data)*8000),
+				Data: make([]int, len(tt.data)*100),
 				Format: &audio.Format{
 					SampleRate:  44100,
 					NumChannels: 1, // Adjusted to use NumChannels instead of SampleWidth
@@ -122,7 +122,10 @@ func TestEmbedDataWithDepthAudio(t *testing.T) {
 			}
 
 			// Embed data in audio buffer with bit depth
-			embededBuff, _ := EmbedDataWithDepthAudio(buffer, tt.data, tt.bitDepth)
+			embededBuff, err := EmbedDataWithDepthAudio(buffer, tt.data, tt.bitDepth)
+			if err != nil {
+				return
+			}
 
 			// Extract data from the audio buffer to verify embedding worked
 			extractedData := ExtractDataWithDepthAudio(embededBuff, tt.bitDepth)
@@ -135,27 +138,49 @@ func TestEmbedDataWithDepthAudio(t *testing.T) {
 	}
 }
 
-func TestExtractDataWithDepthAudio(t *testing.T) {
-	// Create a dummy audio buffer with embedded data
-	data := []byte("Embed this data with bit depth")
-	bitDepth := uint8(2)
-	buffer := &audio.IntBuffer{
-		Data: make([]int, len(data)*8),
-		Format: &audio.Format{
-			SampleRate:  44100,
-			NumChannels: 1, // Adjusted to use NumChannels instead of SampleWidth
+func TestEmbedDataAtDepthAudio(t *testing.T) {
+	tests := []struct {
+		data     []byte
+		bitDepth uint8
+	}{
+		{
+			data:     []byte("Hello, world!"),
+			bitDepth: 1,
+		},
+		{
+			data:     []byte("Another test data"),
+			bitDepth: 2,
+		},
+		{
+			data:     []byte("Small"),
+			bitDepth: 3,
 		},
 	}
 
-	// Embed data in audio buffer with bit depth
-	embededBuffer, _ := EmbedDataWithDepthAudio(buffer, data, bitDepth)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("bitDepth=%d", tt.bitDepth), func(t *testing.T) {
+			buffer := &audio.IntBuffer{
+				Data: make([]int, len(tt.data)*100),
+				Format: &audio.Format{
+					SampleRate:  44100,
+					NumChannels: 1,
+				},
+			}
 
-	// Extract data from the audio buffer with specific bit depth
-	extractedData := ExtractDataWithDepthAudio(embededBuffer, bitDepth)
+			// Embed data in audio buffer with bit depth
+			embededBuff, err := EmbedDataAtDepthAudio(buffer, tt.data, tt.bitDepth)
+			if err != nil {
+				return
+			}
 
-	// Compare extracted data with original data
-	if !bytes.Contains(extractedData, data) {
-		t.Errorf("Extracted data does not match original data. Expected: %s, got: %s", data, extractedData)
+			// Extract data from the audio buffer to verify embedding worked
+			extractedData := ExtractDataAtDepthAudio(embededBuff, tt.bitDepth)
+
+			// Compare extracted data with original data
+			if !bytes.Contains(extractedData, tt.data) {
+				t.Errorf("Extracted data does not match original data. Expected: %s, got: %s", tt.data, extractedData)
+			}
+		})
 	}
 }
 

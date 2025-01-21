@@ -18,7 +18,6 @@ func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) (*
 		return nil, ErrDataToLarge
 	}
 
-	var err error
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
 	lenBits = append(lenBits, dataBits...)
@@ -29,7 +28,7 @@ func EmbedDataAtDepthAudio(buffer *audio.IntBuffer, data []byte, depth uint8) (*
 		}
 	}
 
-	return buffer, err
+	return buffer, nil
 }
 
 func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint8) (*audio.IntBuffer, error) {
@@ -41,12 +40,9 @@ func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint
 		return nil, ErrDataToLarge
 	}
 
-	
 	dataBits := BytesToBinary(data)
 	lenBits := Int32ToBinary(int32(len(data)))
 	lenBits = append(lenBits, dataBits...)
-
-
 
 	curbit := bitDepth
 	index := 0
@@ -67,7 +63,6 @@ func EmbedDataWithDepthAudio(buffer *audio.IntBuffer, data []byte, bitDepth uint
 	return buffer, nil
 }
 
-
 func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	var data = make([]byte, 0)
 
@@ -87,7 +82,6 @@ func ExtractDataAtDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 
 	return data
 }
-
 
 func ExtractDataWithDepthAudio(buffer *audio.IntBuffer, depth uint8) []byte {
 	var byteSlice = make([]byte, 0)
